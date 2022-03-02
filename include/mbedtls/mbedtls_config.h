@@ -25,7 +25,7 @@
  */
 
 /**
- * This is an optional version symbol that enables comatibility handling of
+ * This is an optional version symbol that enables compatibility handling of
  * config files.
  *
  * It is equal to the #MBEDTLS_VERSION_NUMBER of the Mbed TLS version that
@@ -176,7 +176,7 @@
  *
  * Enable this layer to allow use of alternative memory allocators.
  */
-//#define MBEDTLS_PLATFORM_MEMORY
+#define MBEDTLS_PLATFORM_MEMORY
 
 /**
  * \def MBEDTLS_PLATFORM_NO_STD_FUNCTIONS
@@ -2421,7 +2421,7 @@
  *
  * Enable this module to enable the buffer memory allocator.
  */
-//#define MBEDTLS_MEMORY_BUFFER_ALLOC_C
+#define MBEDTLS_MEMORY_BUFFER_ALLOC_C
 
 /**
  * \def MBEDTLS_NET_C
