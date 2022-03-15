@@ -1925,7 +1925,7 @@
  *
  * PEM_PARSE uses AES for decrypting encrypted keys.
  */
-#define MBEDTLS_AES_C
+//#define MBEDTLS_AES_C
 
 /**
  * \def MBEDTLS_ASN1_PARSE_C
