@@ -2089,7 +2089,7 @@
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_ARIA_128_CBC_SHA256
  *      MBEDTLS_TLS_ECDHE_PSK_WITH_ARIA_256_CBC_SHA384
  */
-#define MBEDTLS_ARIA_C
+// #define MBEDTLS_ARIA_C
 
 /**
  * \def MBEDTLS_CCM_C
@@ -2103,7 +2103,7 @@
  * This module enables the AES-CCM ciphersuites, if other requisites are
  * enabled as well.
  */
-#define MBEDTLS_CCM_C
+// #define MBEDTLS_CCM_C
 
 /**
  * \def MBEDTLS_CHACHA20_C
