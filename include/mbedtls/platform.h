@@ -203,6 +203,9 @@ int mbedtls_platform_set_printf( int (*printf_func)( const char *, ... ) );
 #endif /* MBEDTLS_PLATFORM_PRINTF_MACRO */
 #endif /* MBEDTLS_PLATFORM_PRINTF_ALT */
 
+#include <xalTypes.h>
+#include <xalStdio.h>
+#include <xalString.h>
 
 /*#if defined(MBEDTLS_PLATFORM_SIZET_MACRO)
 #define xalSize_t     MBEDTLS_PLATFORM_SIZET_MACRO
