@@ -1,4 +1,4 @@
-#include <xalTypes.h>
+#include <xalStdio.h>
 
 /**
  * \file mbedtls_config.h
