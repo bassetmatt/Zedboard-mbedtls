@@ -225,11 +225,11 @@ static void ecdsa_restart_det_free( mbedtls_ecdsa_restart_det_ctx *ctx )
  * SEC1 4.1.3 step 5 aka SEC1 4.1.4 step 3
  */
 static int derive_mpi( const mbedtls_ecp_group *grp, mbedtls_mpi *x,
-                       const unsigned char *buf, mbedtls_size_t blen )
+                       const unsigned char *buf, xalSize_t blen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t n_size = ( grp->nbits + 7 ) / 8;
-    mbedtls_size_t use_size = blen > n_size ? n_size : blen;
+    xalSize_t n_size = ( grp->nbits + 7 ) / 8;
+    xalSize_t use_size = blen > n_size ? n_size : blen;
 
     MBEDTLS_MPI_CHK( mbedtls_mpi_read_binary( x, buf, use_size ) );
     if( use_size * 8 > grp->nbits )
@@ -251,9 +251,9 @@ cleanup:
  */
 static int ecdsa_sign_restartable( mbedtls_ecp_group *grp,
                 mbedtls_mpi *r, mbedtls_mpi *s,
-                const mbedtls_mpi *d, const unsigned char *buf, mbedtls_size_t blen,
-                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
-                int (*f_rng_blind)(void *, unsigned char *, mbedtls_size_t),
+                const mbedtls_mpi *d, const unsigned char *buf, xalSize_t blen,
+                int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng,
+                int (*f_rng_blind)(void *, unsigned char *, xalSize_t),
                 void *p_rng_blind,
                 mbedtls_ecdsa_restart_ctx *rs_ctx )
 {
@@ -401,8 +401,8 @@ int mbedtls_ecdsa_can_do( mbedtls_ecp_group_id gid )
  * Compute ECDSA signature of a hashed message
  */
 int mbedtls_ecdsa_sign( mbedtls_ecp_group *grp, mbedtls_mpi *r, mbedtls_mpi *s,
-                const mbedtls_mpi *d, const unsigned char *buf, mbedtls_size_t blen,
-                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
+                const mbedtls_mpi *d, const unsigned char *buf, xalSize_t blen,
+                int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng )
 {
     ECDSA_VALIDATE_RET( grp   != NULL );
     ECDSA_VALIDATE_RET( r     != NULL );
@@ -426,9 +426,9 @@ int mbedtls_ecdsa_sign( mbedtls_ecp_group *grp, mbedtls_mpi *r, mbedtls_mpi *s,
  */
 static int ecdsa_sign_det_restartable( mbedtls_ecp_group *grp,
                     mbedtls_mpi *r, mbedtls_mpi *s,
-                    const mbedtls_mpi *d, const unsigned char *buf, mbedtls_size_t blen,
+                    const mbedtls_mpi *d, const unsigned char *buf, xalSize_t blen,
                     mbedtls_md_type_t md_alg,
-                    int (*f_rng_blind)(void *, unsigned char *, mbedtls_size_t),
+                    int (*f_rng_blind)(void *, unsigned char *, xalSize_t),
                     void *p_rng_blind,
                     mbedtls_ecdsa_restart_ctx *rs_ctx )
 {
@@ -436,7 +436,7 @@ static int ecdsa_sign_det_restartable( mbedtls_ecp_group *grp,
     mbedtls_hmac_drbg_context rng_ctx;
     mbedtls_hmac_drbg_context *p_rng = &rng_ctx;
     unsigned char data[2 * MBEDTLS_ECP_MAX_BYTES];
-    mbedtls_size_t grp_len = ( grp->nbits + 7 ) / 8;
+    xalSize_t grp_len = ( grp->nbits + 7 ) / 8;
     const mbedtls_md_info_t *md_info;
     mbedtls_mpi h;
 
@@ -497,10 +497,10 @@ cleanup:
  */
 int mbedtls_ecdsa_sign_det_ext( mbedtls_ecp_group *grp, mbedtls_mpi *r,
                                 mbedtls_mpi *s, const mbedtls_mpi *d,
-                                const unsigned char *buf, mbedtls_size_t blen,
+                                const unsigned char *buf, xalSize_t blen,
                                 mbedtls_md_type_t md_alg,
                                 int (*f_rng_blind)(void *, unsigned char *,
-                                                   mbedtls_size_t),
+                                                   xalSize_t),
                                 void *p_rng_blind )
 {
     ECDSA_VALIDATE_RET( grp   != NULL );
@@ -521,7 +521,7 @@ int mbedtls_ecdsa_sign_det_ext( mbedtls_ecp_group *grp, mbedtls_mpi *r,
  * Obviously, compared to SEC1 4.1.3, we skip step 2 (hash message)
  */
 static int ecdsa_verify_restartable( mbedtls_ecp_group *grp,
-                                     const unsigned char *buf, mbedtls_size_t blen,
+                                     const unsigned char *buf, xalSize_t blen,
                                      const mbedtls_ecp_point *Q,
                                      const mbedtls_mpi *r, const mbedtls_mpi *s,
                                      mbedtls_ecdsa_restart_ctx *rs_ctx )
@@ -629,7 +629,7 @@ cleanup:
  * Verify ECDSA signature of hashed message
  */
 int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
-                          const unsigned char *buf, mbedtls_size_t blen,
+                          const unsigned char *buf, xalSize_t blen,
                           const mbedtls_ecp_point *Q,
                           const mbedtls_mpi *r,
                           const mbedtls_mpi *s)
@@ -648,13 +648,13 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
  * Convert a signature (given by context) to ASN.1
  */
 static int ecdsa_signature_to_asn1( const mbedtls_mpi *r, const mbedtls_mpi *s,
-                                    unsigned char *sig, mbedtls_size_t sig_size,
-                                    mbedtls_size_t *slen )
+                                    unsigned char *sig, xalSize_t sig_size,
+                                    xalSize_t *slen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char buf[MBEDTLS_ECDSA_MAX_LEN] = {0};
     unsigned char *p = buf + sizeof( buf );
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_mpi( &p, buf, s ) );
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_mpi( &p, buf, r ) );
@@ -677,9 +677,9 @@ static int ecdsa_signature_to_asn1( const mbedtls_mpi *r, const mbedtls_mpi *s,
  */
 int mbedtls_ecdsa_write_signature_restartable( mbedtls_ecdsa_context *ctx,
                            mbedtls_md_type_t md_alg,
-                           const unsigned char *hash, mbedtls_size_t hlen,
-                           unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *slen,
-                           int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                           const unsigned char *hash, xalSize_t hlen,
+                           unsigned char *sig, xalSize_t sig_size, xalSize_t *slen,
+                           int (*f_rng)(void *, unsigned char *, xalSize_t),
                            void *p_rng,
                            mbedtls_ecdsa_restart_ctx *rs_ctx )
 {
@@ -730,9 +730,9 @@ cleanup:
  */
 int mbedtls_ecdsa_write_signature( mbedtls_ecdsa_context *ctx,
                                  mbedtls_md_type_t md_alg,
-                                 const unsigned char *hash, mbedtls_size_t hlen,
-                                 unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *slen,
-                                 int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                                 const unsigned char *hash, xalSize_t hlen,
+                                 unsigned char *sig, xalSize_t sig_size, xalSize_t *slen,
+                                 int (*f_rng)(void *, unsigned char *, xalSize_t),
                                  void *p_rng )
 {
     ECDSA_VALIDATE_RET( ctx  != NULL );
@@ -748,8 +748,8 @@ int mbedtls_ecdsa_write_signature( mbedtls_ecdsa_context *ctx,
  * Read and check signature
  */
 int mbedtls_ecdsa_read_signature( mbedtls_ecdsa_context *ctx,
-                          const unsigned char *hash, mbedtls_size_t hlen,
-                          const unsigned char *sig, mbedtls_size_t slen )
+                          const unsigned char *hash, xalSize_t hlen,
+                          const unsigned char *sig, xalSize_t slen )
 {
     ECDSA_VALIDATE_RET( ctx  != NULL );
     ECDSA_VALIDATE_RET( hash != NULL );
@@ -762,14 +762,14 @@ int mbedtls_ecdsa_read_signature( mbedtls_ecdsa_context *ctx,
  * Restartable read and check signature
  */
 int mbedtls_ecdsa_read_signature_restartable( mbedtls_ecdsa_context *ctx,
-                          const unsigned char *hash, mbedtls_size_t hlen,
-                          const unsigned char *sig, mbedtls_size_t slen,
+                          const unsigned char *hash, xalSize_t hlen,
+                          const unsigned char *sig, xalSize_t slen,
                           mbedtls_ecdsa_restart_ctx *rs_ctx )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *p = (unsigned char *) sig;
     const unsigned char *end = sig + slen;
-    mbedtls_size_t len;
+    xalSize_t len;
     mbedtls_mpi r, s;
     ECDSA_VALIDATE_RET( ctx  != NULL );
     ECDSA_VALIDATE_RET( hash != NULL );
@@ -828,7 +828,7 @@ cleanup:
  * Generate key pair
  */
 int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
-                  int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
+                  int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng )
 {
     int ret = 0;
     ECDSA_VALIDATE_RET( ctx   != NULL );

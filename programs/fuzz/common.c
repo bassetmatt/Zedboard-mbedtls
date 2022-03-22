@@ -20,7 +20,7 @@ void dummy_init()
 #endif
 }
 
-int dummy_send( void *ctx, const unsigned char *buf, mbedtls_size_t len )
+int dummy_send( void *ctx, const unsigned char *buf, xalSize_t len )
 {
     //silence warning about unused parameter
     (void) ctx;
@@ -33,7 +33,7 @@ int dummy_send( void *ctx, const unsigned char *buf, mbedtls_size_t len )
     return( (int) len );
 }
 
-int fuzz_recv( void *ctx, unsigned char *buf, mbedtls_size_t len )
+int fuzz_recv( void *ctx, unsigned char *buf, xalSize_t len )
 {
     //reads from the buffer from fuzzer
     fuzzBufferOffset_t * biomemfuzz = (fuzzBufferOffset_t *) ctx;
@@ -54,10 +54,10 @@ int fuzz_recv( void *ctx, unsigned char *buf, mbedtls_size_t len )
     return( (int) len );
 }
 
-int dummy_random( void *p_rng, unsigned char *output, mbedtls_size_t output_len )
+int dummy_random( void *p_rng, unsigned char *output, xalSize_t output_len )
 {
     int ret;
-    mbedtls_size_t i;
+    xalSize_t i;
 
 #if defined(MBEDTLS_CTR_DRBG_C)
     //mbedtls_ctr_drbg_random requires a valid mbedtls_ctr_drbg_context in p_rng
@@ -79,9 +79,9 @@ int dummy_random( void *p_rng, unsigned char *output, mbedtls_size_t output_len 
     return( ret );
 }
 
-int dummy_entropy( void *data, unsigned char *output, mbedtls_size_t len )
+int dummy_entropy( void *data, unsigned char *output, xalSize_t len )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     (void) data;
 
     //use mbedtls_entropy_func to find bugs in it
@@ -94,7 +94,7 @@ int dummy_entropy( void *data, unsigned char *output, mbedtls_size_t len )
     return( 0 );
 }
 
-int fuzz_recv_timeout( void *ctx, unsigned char *buf, mbedtls_size_t len,
+int fuzz_recv_timeout( void *ctx, unsigned char *buf, xalSize_t len,
                       uint32_t timeout )
 {
     (void) timeout;

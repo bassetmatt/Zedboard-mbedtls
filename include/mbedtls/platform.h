@@ -130,9 +130,9 @@ extern "C" {
 #define mbedtls_free       MBEDTLS_PLATFORM_FREE_MACRO
 #define mbedtls_calloc     MBEDTLS_PLATFORM_CALLOC_MACRO
 #else
-/* For mbedtls_size_t */
+/* For xalSize_t */
 #include <stddef.h>
-extern void *mbedtls_calloc( mbedtls_size_t n, mbedtls_size_t size );
+extern void *mbedtls_calloc( xalSize_t n, xalSize_t size );
 extern void mbedtls_free( void *ptr );
 
 /**
@@ -144,7 +144,7 @@ extern void mbedtls_free( void *ptr );
  *
  * \return              \c 0.
  */
-int mbedtls_platform_set_calloc_free( void * (*calloc_func)( mbedtls_size_t, mbedtls_size_t ),
+int mbedtls_platform_set_calloc_free( void * (*calloc_func)( xalSize_t, xalSize_t ),
                               void (*free_func)( void * ) );
 #endif /* MBEDTLS_PLATFORM_FREE_MACRO && MBEDTLS_PLATFORM_CALLOC_MACRO */
 #else /* !MBEDTLS_PLATFORM_MEMORY */
@@ -204,11 +204,11 @@ int mbedtls_platform_set_printf( int (*printf_func)( const char *, ... ) );
 #endif /* MBEDTLS_PLATFORM_PRINTF_ALT */
 
 
-#if defined(MBEDTLS_PLATFORM_SIZET_MACRO)
-#define mbedtls_size_t     MBEDTLS_PLATFORM_SIZET_MACRO
+/*#if defined(MBEDTLS_PLATFORM_SIZET_MACRO)
+#define xalSize_t     MBEDTLS_PLATFORM_SIZET_MACRO
 #else
-#define mbedtls_size_t     size_t
-#endif /* MBEDTLS_PLATFORM_PRINTF_MACRO */
+#define xalSize_t     size_t
+#endif *//* MBEDTLS_PLATFORM_PRINTF_MACRO */
 
 
 /*
@@ -222,11 +222,11 @@ int mbedtls_platform_set_printf( int (*printf_func)( const char *, ... ) );
  */
 #if defined(MBEDTLS_PLATFORM_HAS_NON_CONFORMING_SNPRINTF)
 /* For Windows (inc. MSYS2), we provide our own fixed implementation */
-int mbedtls_platform_win32_snprintf( char *s, mbedtls_size_t n, const char *fmt, ... );
+int mbedtls_platform_win32_snprintf( char *s, xalSize_t n, const char *fmt, ... );
 #endif
 
 #if defined(MBEDTLS_PLATFORM_SNPRINTF_ALT)
-extern int (*mbedtls_snprintf)( char * s, mbedtls_size_t n, const char * format, ... );
+extern int (*mbedtls_snprintf)( char * s, xalSize_t n, const char * format, ... );
 
 /**
  * \brief                 This function allows configuring a custom
@@ -236,7 +236,7 @@ extern int (*mbedtls_snprintf)( char * s, mbedtls_size_t n, const char * format,
  *
  * \return                \c 0 on success.
  */
-int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, mbedtls_size_t n,
+int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, xalSize_t n,
                                                  const char * format, ... ) );
 #else /* MBEDTLS_PLATFORM_SNPRINTF_ALT */
 #if defined(MBEDTLS_PLATFORM_SNPRINTF_MACRO)
@@ -258,12 +258,12 @@ int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, mbedtls_size_
 #if defined(MBEDTLS_PLATFORM_HAS_NON_CONFORMING_VSNPRINTF)
 #include <stdarg.h>
 /* For Older Windows (inc. MSYS2), we provide our own fixed implementation */
-int mbedtls_platform_win32_vsnprintf( char *s, mbedtls_size_t n, const char *fmt, va_list arg );
+int mbedtls_platform_win32_vsnprintf( char *s, xalSize_t n, const char *fmt, va_list arg );
 #endif
 
 #if defined(MBEDTLS_PLATFORM_VSNPRINTF_ALT)
 #include <stdarg.h>
-extern int (*mbedtls_vsnprintf)( char * s, mbedtls_size_t n, const char * format, va_list arg );
+extern int (*mbedtls_vsnprintf)( char * s, xalSize_t n, const char * format, va_list arg );
 
 /**
  * \brief   Set your own snprintf function pointer
@@ -272,7 +272,7 @@ extern int (*mbedtls_vsnprintf)( char * s, mbedtls_size_t n, const char * format
  *
  * \return  \c 0
  */
-int mbedtls_platform_set_vsnprintf( int (*vsnprintf_func)( char * s, mbedtls_size_t n,
+int mbedtls_platform_set_vsnprintf( int (*vsnprintf_func)( char * s, xalSize_t n,
                                                  const char * format, va_list arg ) );
 #else /* MBEDTLS_PLATFORM_VSNPRINTF_ALT */
 #if defined(MBEDTLS_PLATFORM_VSNPRINTF_MACRO)
@@ -329,13 +329,13 @@ int mbedtls_platform_set_exit( void (*exit_func)( int status ) );
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
 #if !defined(MBEDTLS_PLATFORM_NO_STD_FUNCTIONS) && defined(MBEDTLS_FS_IO)
 /* Internal standard platform definitions */
-int mbedtls_platform_std_nv_seed_read( unsigned char *buf, mbedtls_size_t buf_len );
-int mbedtls_platform_std_nv_seed_write( unsigned char *buf, mbedtls_size_t buf_len );
+int mbedtls_platform_std_nv_seed_read( unsigned char *buf, xalSize_t buf_len );
+int mbedtls_platform_std_nv_seed_write( unsigned char *buf, xalSize_t buf_len );
 #endif
 
 #if defined(MBEDTLS_PLATFORM_NV_SEED_ALT)
-extern int (*mbedtls_nv_seed_read)( unsigned char *buf, mbedtls_size_t buf_len );
-extern int (*mbedtls_nv_seed_write)( unsigned char *buf, mbedtls_size_t buf_len );
+extern int (*mbedtls_nv_seed_read)( unsigned char *buf, xalSize_t buf_len );
+extern int (*mbedtls_nv_seed_write)( unsigned char *buf, xalSize_t buf_len );
 
 /**
  * \brief   This function allows configuring custom seed file writing and
@@ -347,8 +347,8 @@ extern int (*mbedtls_nv_seed_write)( unsigned char *buf, mbedtls_size_t buf_len 
  * \return  \c 0 on success.
  */
 int mbedtls_platform_set_nv_seed(
-            int (*nv_seed_read_func)( unsigned char *buf, mbedtls_size_t buf_len ),
-            int (*nv_seed_write_func)( unsigned char *buf, mbedtls_size_t buf_len )
+            int (*nv_seed_read_func)( unsigned char *buf, xalSize_t buf_len ),
+            int (*nv_seed_write_func)( unsigned char *buf, xalSize_t buf_len )
             );
 #else
 #if defined(MBEDTLS_PLATFORM_NV_SEED_READ_MACRO) && \

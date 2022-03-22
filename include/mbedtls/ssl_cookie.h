@@ -74,7 +74,7 @@ void mbedtls_ssl_cookie_init( mbedtls_ssl_cookie_ctx *ctx );
  * \brief          Setup cookie context (generate keys)
  */
 int mbedtls_ssl_cookie_setup( mbedtls_ssl_cookie_ctx *ctx,
-                      int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                      int (*f_rng)(void *, unsigned char *, xalSize_t),
                       void *p_rng );
 
 /**

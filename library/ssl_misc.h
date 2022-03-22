@@ -336,7 +336,7 @@
  *
  * \return         Current maximum fragment length for the output buffer.
  */
-mbedtls_size_t mbedtls_ssl_get_output_max_frag_len( const mbedtls_ssl_context *ssl );
+xalSize_t mbedtls_ssl_get_output_max_frag_len( const mbedtls_ssl_context *ssl );
 
 /**
  * \brief          Return the maximum fragment length (payload, in bytes) for
@@ -352,11 +352,11 @@ mbedtls_size_t mbedtls_ssl_get_output_max_frag_len( const mbedtls_ssl_context *s
  *
  * \return         Current maximum fragment length for the output buffer.
  */
-mbedtls_size_t mbedtls_ssl_get_input_max_frag_len( const mbedtls_ssl_context *ssl );
+xalSize_t mbedtls_ssl_get_input_max_frag_len( const mbedtls_ssl_context *ssl );
 #endif /* MBEDTLS_SSL_MAX_FRAGMENT_LENGTH */
 
 #if defined(MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH)
-static inline mbedtls_size_t mbedtls_ssl_get_output_buflen( const mbedtls_ssl_context *ctx )
+static inline xalSize_t mbedtls_ssl_get_output_buflen( const mbedtls_ssl_context *ctx )
 {
 #if defined (MBEDTLS_SSL_DTLS_CONNECTION_ID)
     return mbedtls_ssl_get_output_max_frag_len( ctx )
@@ -368,7 +368,7 @@ static inline mbedtls_size_t mbedtls_ssl_get_output_buflen( const mbedtls_ssl_co
 #endif
 }
 
-static inline mbedtls_size_t mbedtls_ssl_get_input_buflen( const mbedtls_ssl_context *ctx )
+static inline xalSize_t mbedtls_ssl_get_input_buflen( const mbedtls_ssl_context *ctx )
 {
 #if defined (MBEDTLS_SSL_DTLS_CONNECTION_ID)
     return mbedtls_ssl_get_input_max_frag_len( ctx )
@@ -401,9 +401,9 @@ static inline mbedtls_size_t mbedtls_ssl_get_input_buflen( const mbedtls_ssl_con
  *               otherwise.
  */
 static inline int mbedtls_ssl_chk_buf_ptr( const uint8_t *cur,
-                                           const uint8_t *end, mbedtls_size_t need )
+                                           const uint8_t *end, xalSize_t need )
 {
-    return( ( cur > end ) || ( need > (mbedtls_size_t)( end - cur ) ) );
+    return( ( cur > end ) || ( need > (xalSize_t)( end - cur ) ) );
 }
 
 /**
@@ -472,10 +472,10 @@ struct mbedtls_ssl_sig_hash_set_t
 #endif /* MBEDTLS_SSL_PROTO_TLS1_2 &&
           MBEDTLS_KEY_EXCHANGE_WITH_CERT_ENABLED */
 
-typedef int  mbedtls_ssl_tls_prf_cb( const unsigned char *secret, mbedtls_size_t slen,
+typedef int  mbedtls_ssl_tls_prf_cb( const unsigned char *secret, xalSize_t slen,
                                      const char *label,
-                                     const unsigned char *random, mbedtls_size_t rlen,
-                                     unsigned char *dstbuf, mbedtls_size_t dlen );
+                                     const unsigned char *random, xalSize_t rlen,
+                                     unsigned char *dstbuf, xalSize_t dlen );
 
 /* cipher.h exports the maximum IV, key and block length from
  * all ciphers enabled in the config, regardless of whether those
@@ -512,9 +512,9 @@ struct mbedtls_ssl_key_set
     /*! The IV  for server->client records. */
     unsigned char server_write_iv[ MBEDTLS_SSL_MAX_IV_LENGTH ];
 
-    mbedtls_size_t key_len; /*!< The length of client_write_key and
+    xalSize_t key_len; /*!< The length of client_write_key and
                      *   server_write_key, in Bytes. */
-    mbedtls_size_t iv_len;  /*!< The length of client_write_iv and
+    xalSize_t iv_len;  /*!< The length of client_write_iv and
                      *   server_write_iv, in Bytes. */
 };
 typedef struct mbedtls_ssl_key_set mbedtls_ssl_key_set;
@@ -579,15 +579,15 @@ struct mbedtls_ssl_handshake_params
         ssl_ecrs_crt_vrfy_sign,         /*!< CertificateVerify: pk_sign()   */
     } ecrs_state;                       /*!< current (or last) operation    */
     mbedtls_x509_crt *ecrs_peer_cert;   /*!< The peer's CRT chain.          */
-    mbedtls_size_t ecrs_n;                      /*!< place for saving a length      */
+    xalSize_t ecrs_n;                      /*!< place for saving a length      */
 #endif
 
-    mbedtls_size_t pmslen;                      /*!<  premaster length        */
+    xalSize_t pmslen;                      /*!<  premaster length        */
 
     mbedtls_ssl_ciphersuite_t const *ciphersuite_info;
 
-    void (*update_checksum)(mbedtls_ssl_context *, const unsigned char *, mbedtls_size_t);
-    void (*calc_verify)(const mbedtls_ssl_context *, unsigned char *, mbedtls_size_t *);
+    void (*update_checksum)(mbedtls_ssl_context *, const unsigned char *, xalSize_t);
+    void (*calc_verify)(const mbedtls_ssl_context *, unsigned char *, xalSize_t *);
     void (*calc_finished)(mbedtls_ssl_context *, unsigned char *, int);
     mbedtls_ssl_tls_prf_cb *tls_prf;
 
@@ -635,7 +635,7 @@ struct mbedtls_ssl_handshake_params
     uint16_t ecdh_bits;
     mbedtls_svc_key_id_t ecdh_psa_privkey;
     unsigned char ecdh_psa_peerkey[MBEDTLS_PSA_MAX_EC_PUBKEY_LENGTH];
-    mbedtls_size_t ecdh_psa_peerkey_len;
+    xalSize_t ecdh_psa_peerkey_len;
 #endif /* MBEDTLS_USE_PSA_CRYPTO || MBEDTLS_SSL_PROTO_TLS1_3 */
 #endif /* MBEDTLS_ECDH_C || MBEDTLS_ECDSA_C */
 
@@ -643,7 +643,7 @@ struct mbedtls_ssl_handshake_params
     mbedtls_ecjpake_context ecjpake_ctx;        /*!< EC J-PAKE key exchange */
 #if defined(MBEDTLS_SSL_CLI_C)
     unsigned char *ecjpake_cache;               /*!< Cache for ClientHello ext */
-    mbedtls_size_t ecjpake_cache_len;                   /*!< Length of cached data */
+    xalSize_t ecjpake_cache_len;                   /*!< Length of cached data */
 #endif
 #endif /* MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED */
 
@@ -657,7 +657,7 @@ struct mbedtls_ssl_handshake_params
     mbedtls_svc_key_id_t psk_opaque;            /*!< Opaque PSK from the callback   */
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
     unsigned char *psk;                 /*!<  PSK from the callback         */
-    mbedtls_size_t psk_len;                     /*!<  Length of PSK from callback   */
+    xalSize_t psk_len;                     /*!<  Length of PSK from callback   */
 #endif /* MBEDTLS_KEY_EXCHANGE_SOME_PSK_ENABLED */
 
 #if defined(MBEDTLS_SSL_ECP_RESTARTABLE_ENABLED)
@@ -680,7 +680,7 @@ struct mbedtls_ssl_handshake_params
 
     struct
     {
-        mbedtls_size_t total_bytes_buffered; /*!< Cumulative size of heap allocated
+        xalSize_t total_bytes_buffered; /*!< Cumulative size of heap allocated
                                       *   buffers used for message buffering. */
 
         uint8_t seen_ccs;               /*!< Indicates if a CCS message has
@@ -692,13 +692,13 @@ struct mbedtls_ssl_handshake_params
             unsigned is_fragmented : 1;
             unsigned is_complete   : 1;
             unsigned char *data;
-            mbedtls_size_t data_len;
+            xalSize_t data_len;
         } hs[MBEDTLS_SSL_MAX_BUFFERED_HS];
 
         struct
         {
             unsigned char *data;
-            mbedtls_size_t len;
+            xalSize_t len;
             unsigned epoch;
         } future_record;
 
@@ -798,7 +798,7 @@ struct mbedtls_ssl_handshake_params
             /* Buffer holding digest of the handshake up to
              * but excluding the outgoing finished message. */
             unsigned char digest[MBEDTLS_TLS1_3_MD_MAX_SIZE];
-            mbedtls_size_t digest_len;
+            xalSize_t digest_len;
         } finished_out;
 
         /* Incoming Finished message */
@@ -809,7 +809,7 @@ struct mbedtls_ssl_handshake_params
             /* Buffer holding digest of the handshake up to but
              * excluding the peer's incoming finished message. */
             unsigned char digest[MBEDTLS_TLS1_3_MD_MAX_SIZE];
-            mbedtls_size_t digest_len;
+            xalSize_t digest_len;
         } finished_in;
 
     } state_local;
@@ -853,7 +853,7 @@ struct mbedtls_ssl_handshake_params
 
 #if defined(MBEDTLS_SSL_SERVER_NAME_INDICATION)
     const unsigned char *sni_name;      /*!< raw SNI                        */
-    mbedtls_size_t sni_name_len;                /*!< raw SNI len                    */
+    xalSize_t sni_name_len;                /*!< raw SNI len                    */
 #endif /* MBEDTLS_SSL_SERVER_NAME_INDICATION */
 };
 
@@ -943,11 +943,11 @@ struct mbedtls_ssl_transform
     /*
      * Session specific crypto layer
      */
-    mbedtls_size_t minlen;                      /*!<  min. ciphertext length  */
-    mbedtls_size_t ivlen;                       /*!<  IV length               */
-    mbedtls_size_t fixed_ivlen;                 /*!<  Fixed part of IV (AEAD) */
-    mbedtls_size_t maclen;                      /*!<  MAC(CBC) len            */
-    mbedtls_size_t taglen;                      /*!<  TAG(AEAD) len           */
+    xalSize_t minlen;                      /*!<  min. ciphertext length  */
+    xalSize_t ivlen;                       /*!<  IV length               */
+    xalSize_t fixed_ivlen;                 /*!<  Fixed part of IV (AEAD) */
+    xalSize_t maclen;                      /*!<  MAC(CBC) len            */
+    xalSize_t taglen;                      /*!<  TAG(AEAD) len           */
 
     unsigned char iv_enc[16];           /*!<  IV (encryption)         */
     unsigned char iv_dec[16];           /*!<  IV (decryption)         */
@@ -1050,9 +1050,9 @@ typedef struct
                              * Keep wire-format for MAC computations.        */
 
     unsigned char *buf;     /* Memory buffer enclosing the record content    */
-    mbedtls_size_t buf_len;         /* Buffer length                                 */
-    mbedtls_size_t data_offset;     /* Offset of record content                      */
-    mbedtls_size_t data_len;        /* Length of record content                      */
+    xalSize_t buf_len;         /* Buffer length                                 */
+    xalSize_t data_offset;     /* Offset of record content                      */
+    xalSize_t data_len;        /* Length of record content                      */
 
 #if defined(MBEDTLS_SSL_DTLS_CONNECTION_ID)
     uint8_t cid_len;        /* Length of the CID (0 if not present)          */
@@ -1079,7 +1079,7 @@ struct mbedtls_ssl_key_cert
 struct mbedtls_ssl_flight_item
 {
     unsigned char *p;       /*!< message, including handshake headers   */
-    mbedtls_size_t len;             /*!< length of p                            */
+    xalSize_t len;             /*!< length of p                            */
     unsigned char type;     /*!< type of the message: handshake or CCS  */
     mbedtls_ssl_flight_item *next;  /*!< next handshake message(s)              */
 };
@@ -1136,7 +1136,7 @@ void mbedtls_ssl_set_outbound_transform( mbedtls_ssl_context *ssl,
 int mbedtls_ssl_write_hostname_ext( mbedtls_ssl_context *ssl,
                                     unsigned char *buf,
                                     const unsigned char *end,
-                                    mbedtls_size_t *olen );
+                                    xalSize_t *olen );
 #endif
 
 int mbedtls_ssl_handshake_client_step( mbedtls_ssl_context *ssl );
@@ -1233,7 +1233,7 @@ void mbedtls_ssl_update_handshake_status( mbedtls_ssl_context *ssl );
  */
 int mbedtls_ssl_read_record( mbedtls_ssl_context *ssl,
                              unsigned update_hs_digest );
-int mbedtls_ssl_fetch_input( mbedtls_ssl_context *ssl, mbedtls_size_t nb_want );
+int mbedtls_ssl_fetch_input( mbedtls_ssl_context *ssl, xalSize_t nb_want );
 
 int mbedtls_ssl_write_handshake_msg_ext( mbedtls_ssl_context *ssl,
                                          int update_checksum );
@@ -1267,7 +1267,7 @@ int mbedtls_ssl_psk_derive_premaster( mbedtls_ssl_context *ssl, mbedtls_key_exch
  * Return a code and update the pair (PSK, PSK length) passed to this function
  */
 static inline int mbedtls_ssl_get_psk( const mbedtls_ssl_context *ssl,
-    const unsigned char **psk, mbedtls_size_t *psk_len )
+    const unsigned char **psk, xalSize_t *psk_len )
 {
     if( ssl->handshake->psk != NULL && ssl->handshake->psk_len > 0 )
     {
@@ -1392,7 +1392,7 @@ void mbedtls_ssl_write_version( int major, int minor, int transport,
 void mbedtls_ssl_read_version( int *major, int *minor, int transport,
                        const unsigned char ver[2] );
 
-static inline mbedtls_size_t mbedtls_ssl_in_hdr_len( const mbedtls_ssl_context *ssl )
+static inline xalSize_t mbedtls_ssl_in_hdr_len( const mbedtls_ssl_context *ssl )
 {
 #if !defined(MBEDTLS_SSL_PROTO_DTLS)
     ((void) ssl);
@@ -1410,12 +1410,12 @@ static inline mbedtls_size_t mbedtls_ssl_in_hdr_len( const mbedtls_ssl_context *
     }
 }
 
-static inline mbedtls_size_t mbedtls_ssl_out_hdr_len( const mbedtls_ssl_context *ssl )
+static inline xalSize_t mbedtls_ssl_out_hdr_len( const mbedtls_ssl_context *ssl )
 {
-    return( (mbedtls_size_t) ( ssl->out_iv - ssl->out_hdr ) );
+    return( (xalSize_t) ( ssl->out_iv - ssl->out_hdr ) );
 }
 
-static inline mbedtls_size_t mbedtls_ssl_hs_hdr_len( const mbedtls_ssl_context *ssl )
+static inline xalSize_t mbedtls_ssl_hs_hdr_len( const mbedtls_ssl_context *ssl )
 {
 #if defined(MBEDTLS_SSL_PROTO_DTLS)
     if( ssl->conf->transport == MBEDTLS_SSL_TRANSPORT_DATAGRAM )
@@ -1445,8 +1445,8 @@ int mbedtls_ssl_session_copy( mbedtls_ssl_session *dst,
 #if defined(MBEDTLS_SSL_PROTO_TLS1_2)
 /* The hash buffer must have at least MBEDTLS_MD_MAX_SIZE bytes of length. */
 int mbedtls_ssl_get_key_exchange_md_tls1_2( mbedtls_ssl_context *ssl,
-                                            unsigned char *hash, mbedtls_size_t *hashlen,
-                                            unsigned char *data, mbedtls_size_t data_len,
+                                            unsigned char *hash, xalSize_t *hashlen,
+                                            unsigned char *data, xalSize_t data_len,
                                             mbedtls_md_type_t md_alg );
 #endif /* MBEDTLS_SSL_PROTO_TLS1_2 */
 
@@ -1458,14 +1458,14 @@ void mbedtls_ssl_transform_init( mbedtls_ssl_transform *transform );
 int mbedtls_ssl_encrypt_buf( mbedtls_ssl_context *ssl,
                              mbedtls_ssl_transform *transform,
                              mbedtls_record *rec,
-                             int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                             int (*f_rng)(void *, unsigned char *, xalSize_t),
                              void *p_rng );
 int mbedtls_ssl_decrypt_buf( mbedtls_ssl_context const *ssl,
                              mbedtls_ssl_transform *transform,
                              mbedtls_record *rec );
 
 /* Length of the "epoch" field in the record header */
-static inline mbedtls_size_t mbedtls_ssl_ep_len( const mbedtls_ssl_context *ssl )
+static inline xalSize_t mbedtls_ssl_ep_len( const mbedtls_ssl_context *ssl )
 {
 #if defined(MBEDTLS_SSL_PROTO_DTLS)
     if( ssl->conf->transport == MBEDTLS_SSL_TRANSPORT_DATAGRAM )
@@ -1519,7 +1519,7 @@ int mbedtls_ssl_start_renegotiation( mbedtls_ssl_context *ssl );
 #endif /* MBEDTLS_SSL_RENEGOTIATION */
 
 #if defined(MBEDTLS_SSL_PROTO_DTLS)
-mbedtls_size_t mbedtls_ssl_get_current_mtu( const mbedtls_ssl_context *ssl );
+xalSize_t mbedtls_ssl_get_current_mtu( const mbedtls_ssl_context *ssl );
 void mbedtls_ssl_buffering_free( mbedtls_ssl_context *ssl );
 void mbedtls_ssl_flight_free( mbedtls_ssl_flight_item *flight );
 #endif /* MBEDTLS_SSL_PROTO_DTLS */
@@ -1726,7 +1726,7 @@ static inline void mbedtls_ssl_handshake_set_state( mbedtls_ssl_context *ssl,
 int mbedtls_ssl_tls13_fetch_handshake_msg( mbedtls_ssl_context *ssl,
                                            unsigned hs_type,
                                            unsigned char **buf,
-                                           mbedtls_size_t *buf_len );
+                                           xalSize_t *buf_len );
 
 /*
  * Write TLS 1.3 handshake message header
@@ -1734,7 +1734,7 @@ int mbedtls_ssl_tls13_fetch_handshake_msg( mbedtls_ssl_context *ssl,
 int mbedtls_ssl_tls13_start_handshake_msg( mbedtls_ssl_context *ssl,
                                            unsigned hs_type,
                                            unsigned char **buf,
-                                           mbedtls_size_t *buf_len );
+                                           xalSize_t *buf_len );
 
 /*
  * Handler of TLS 1.3 server certificate message
@@ -1768,12 +1768,12 @@ int mbedtls_ssl_tls13_write_change_cipher_spec( mbedtls_ssl_context *ssl );
  * Write TLS 1.3 handshake message tail
  */
 int mbedtls_ssl_tls13_finish_handshake_msg( mbedtls_ssl_context *ssl,
-                                            mbedtls_size_t buf_len,
-                                            mbedtls_size_t msg_len );
+                                            xalSize_t buf_len,
+                                            xalSize_t msg_len );
 
 void mbedtls_ssl_tls13_add_hs_hdr_to_checksum( mbedtls_ssl_context *ssl,
                                                unsigned hs_type,
-                                               mbedtls_size_t total_hs_len );
+                                               xalSize_t total_hs_len );
 
 /*
  * Update checksum of handshake messages.
@@ -1781,7 +1781,7 @@ void mbedtls_ssl_tls13_add_hs_hdr_to_checksum( mbedtls_ssl_context *ssl,
 void mbedtls_ssl_tls13_add_hs_msg_to_checksum( mbedtls_ssl_context *ssl,
                                                unsigned hs_type,
                                                unsigned char const *msg,
-                                               mbedtls_size_t msg_len );
+                                               xalSize_t msg_len );
 
 int mbedtls_ssl_reset_transcript_for_hrr( mbedtls_ssl_context *ssl );
 
@@ -1792,7 +1792,7 @@ int mbedtls_ssl_reset_transcript_for_hrr( mbedtls_ssl_context *ssl );
  * Write Signature Algorithm extension
  */
 int mbedtls_ssl_write_sig_alg_ext( mbedtls_ssl_context *ssl, unsigned char *buf,
-                                   const unsigned char *end, mbedtls_size_t *out_len );
+                                   const unsigned char *end, xalSize_t *out_len );
 
 /*
  * Parse TLS 1.3 Signature Algorithm extension
@@ -1806,8 +1806,8 @@ int mbedtls_ssl_tls13_parse_sig_alg_ext( mbedtls_ssl_context *ssl,
 int mbedtls_ssl_get_handshake_transcript( mbedtls_ssl_context *ssl,
                                           const mbedtls_md_type_t md,
                                           unsigned char *dst,
-                                          mbedtls_size_t dst_len,
-                                          mbedtls_size_t *olen );
+                                          xalSize_t dst_len,
+                                          xalSize_t *olen );
 
 /*
  * Return supported groups.
@@ -1877,7 +1877,7 @@ static inline int mbedtls_ssl_tls13_named_group_is_dhe( uint16_t named_group )
 int mbedtls_ssl_write_supported_groups_ext( mbedtls_ssl_context *ssl,
                                             unsigned char *buf,
                                             const unsigned char *end,
-                                            mbedtls_size_t *out_len );
+                                            xalSize_t *out_len );
 
 #endif /* MBEDTLS_KEY_EXCHANGE_WITH_CERT_ENABLED ||
           MBEDTLS_ECDH_C || MBEDTLS_ECDSA_C ||
@@ -2111,10 +2111,10 @@ static inline int mbedtls_ssl_sig_alg_is_supported(
  *                             conversion is not supported.
  */
 psa_status_t mbedtls_ssl_cipher_to_psa( mbedtls_cipher_type_t mbedtls_cipher_type,
-                                    mbedtls_size_t taglen,
+                                    xalSize_t taglen,
                                     psa_algorithm_t *alg,
                                     psa_key_type_t *key_type,
-                                    mbedtls_size_t *key_size );
+                                    xalSize_t *key_size );
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO) || defined(MBEDTLS_SSL_PROTO_TLS1_3)

@@ -36,7 +36,7 @@
  */
 psa_status_t mbedtls_psa_rsa_load_representation( psa_key_type_t type,
                                                   const uint8_t *data,
-                                                  mbedtls_size_t data_length,
+                                                  xalSize_t data_length,
                                                   mbedtls_rsa_context **p_rsa );
 
 /** Import an RSA key in binary format.
@@ -67,9 +67,9 @@ psa_status_t mbedtls_psa_rsa_load_representation( psa_key_type_t type,
  */
 psa_status_t mbedtls_psa_rsa_import_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, mbedtls_size_t data_length,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits );
+    const uint8_t *data, xalSize_t data_length,
+    uint8_t *key_buffer, xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length, xalSize_t *bits );
 
 /** Export an RSA key to export representation
  *
@@ -82,8 +82,8 @@ psa_status_t mbedtls_psa_rsa_import_key(
 psa_status_t mbedtls_psa_rsa_export_key( psa_key_type_t type,
                                          mbedtls_rsa_context *rsa,
                                          uint8_t *data,
-                                         mbedtls_size_t data_size,
-                                         mbedtls_size_t *data_length );
+                                         xalSize_t data_size,
+                                         xalSize_t *data_length );
 
 /** Export a public RSA key or the public part of an RSA key pair in binary
  *  format.
@@ -111,8 +111,8 @@ psa_status_t mbedtls_psa_rsa_export_key( psa_key_type_t type,
  */
 psa_status_t mbedtls_psa_rsa_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length );
 
 /**
  * \brief Generate an RSA key.
@@ -135,7 +135,7 @@ psa_status_t mbedtls_psa_rsa_export_public_key(
  */
 psa_status_t mbedtls_psa_rsa_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length );
+    uint8_t *key_buffer, xalSize_t key_buffer_size, xalSize_t *key_buffer_length );
 
 /** Sign an already-calculated hash with an RSA private key.
  *
@@ -172,9 +172,9 @@ psa_status_t mbedtls_psa_rsa_generate_key(
  */
 psa_status_t mbedtls_psa_rsa_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    uint8_t *signature, xalSize_t signature_size, xalSize_t *signature_length );
 
 /**
  * \brief Verify the signature a hash or short message using a public RSA key.
@@ -208,9 +208,9 @@ psa_status_t mbedtls_psa_rsa_sign_hash(
  */
 psa_status_t mbedtls_psa_rsa_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    const uint8_t *signature, mbedtls_size_t signature_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    const uint8_t *signature, xalSize_t signature_length );
 
 /**
  * \brief Encrypt a short message with a public key.
@@ -258,15 +258,15 @@ psa_status_t mbedtls_psa_rsa_verify_hash(
  */
 psa_status_t mbedtls_psa_asymmetric_encrypt( const psa_key_attributes_t *attributes,
                                              const uint8_t *key_buffer,
-                                             mbedtls_size_t key_buffer_size,
+                                             xalSize_t key_buffer_size,
                                              psa_algorithm_t alg,
                                              const uint8_t *input,
-                                             mbedtls_size_t input_length,
+                                             xalSize_t input_length,
                                              const uint8_t *salt,
-                                             mbedtls_size_t salt_length,
+                                             xalSize_t salt_length,
                                              uint8_t *output,
-                                             mbedtls_size_t output_size,
-                                             mbedtls_size_t *output_length );
+                                             xalSize_t output_size,
+                                             xalSize_t *output_length );
 
 /**
  * \brief Decrypt a short message with a private key.
@@ -316,14 +316,14 @@ psa_status_t mbedtls_psa_asymmetric_encrypt( const psa_key_attributes_t *attribu
  */
 psa_status_t mbedtls_psa_asymmetric_decrypt( const psa_key_attributes_t *attributes,
                                              const uint8_t *key_buffer,
-                                             mbedtls_size_t key_buffer_size,
+                                             xalSize_t key_buffer_size,
                                              psa_algorithm_t alg,
                                              const uint8_t *input,
-                                             mbedtls_size_t input_length,
+                                             xalSize_t input_length,
                                              const uint8_t *salt,
-                                             mbedtls_size_t salt_length,
+                                             xalSize_t salt_length,
                                              uint8_t *output,
-                                             mbedtls_size_t output_size,
-                                             mbedtls_size_t *output_length );
+                                             xalSize_t output_size,
+                                             xalSize_t *output_length );
 
 #endif /* PSA_CRYPTO_RSA_H */

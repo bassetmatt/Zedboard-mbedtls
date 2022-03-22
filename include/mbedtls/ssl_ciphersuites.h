@@ -399,7 +399,7 @@ static inline const char *mbedtls_ssl_ciphersuite_get_name( const mbedtls_ssl_ci
     return info->MBEDTLS_PRIVATE(name);
 }
 
-mbedtls_size_t mbedtls_ssl_ciphersuite_get_cipher_key_bitlen( const mbedtls_ssl_ciphersuite_t *info );
+xalSize_t mbedtls_ssl_ciphersuite_get_cipher_key_bitlen( const mbedtls_ssl_ciphersuite_t *info );
 
 #if defined(MBEDTLS_KEY_EXCHANGE_SOME_PFS_ENABLED)
 static inline int mbedtls_ssl_ciphersuite_has_pfs( const mbedtls_ssl_ciphersuite_t *info )

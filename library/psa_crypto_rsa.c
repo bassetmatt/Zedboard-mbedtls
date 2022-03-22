@@ -72,12 +72,12 @@ static psa_status_t psa_check_rsa_key_byte_aligned(
 }
 
 psa_status_t mbedtls_psa_rsa_load_representation(
-    psa_key_type_t type, const uint8_t *data, mbedtls_size_t data_length,
+    psa_key_type_t type, const uint8_t *data, xalSize_t data_length,
     mbedtls_rsa_context **p_rsa )
 {
     psa_status_t status;
     mbedtls_pk_context ctx;
-    mbedtls_size_t bits;
+    xalSize_t bits;
     mbedtls_pk_init( &ctx );
 
     /* Parse the data. */
@@ -133,9 +133,9 @@ exit:
 
 psa_status_t mbedtls_psa_rsa_import_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, mbedtls_size_t data_length,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits )
+    const uint8_t *data, xalSize_t data_length,
+    uint8_t *key_buffer, xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length, xalSize_t *bits )
 {
     psa_status_t status;
     mbedtls_rsa_context *rsa = NULL;
@@ -170,8 +170,8 @@ exit:
 psa_status_t mbedtls_psa_rsa_export_key( psa_key_type_t type,
                                          mbedtls_rsa_context *rsa,
                                          uint8_t *data,
-                                         mbedtls_size_t data_size,
-                                         mbedtls_size_t *data_length )
+                                         xalSize_t data_size,
+                                         xalSize_t *data_length )
 {
 #if defined(MBEDTLS_PK_WRITE_C)
     int ret;
@@ -200,12 +200,12 @@ psa_status_t mbedtls_psa_rsa_export_key( psa_key_type_t type,
     /* The mbedtls_pk_xxx functions write to the end of the buffer.
      * Move the data to the beginning and erase remaining data
      * at the original location. */
-    if( 2 * (mbedtls_size_t) ret <= data_size )
+    if( 2 * (xalSize_t) ret <= data_size )
     {
         memcpy( data, data + data_size - ret, ret );
         memset( data + data_size - ret, 0, ret );
     }
-    else if( (mbedtls_size_t) ret < data_size )
+    else if( (xalSize_t) ret < data_size )
     {
         memmove( data, data + data_size - ret, ret );
         memset( data + ret, 0, data_size - ret );
@@ -225,8 +225,8 @@ psa_status_t mbedtls_psa_rsa_export_key( psa_key_type_t type,
 
 psa_status_t mbedtls_psa_rsa_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_rsa_context *rsa = NULL;
@@ -253,10 +253,10 @@ psa_status_t mbedtls_psa_rsa_export_public_key(
 #if defined(MBEDTLS_PSA_BUILTIN_KEY_TYPE_RSA_KEY_PAIR) && \
     defined(MBEDTLS_GENPRIME)
 static psa_status_t psa_rsa_read_exponent( const uint8_t *domain_parameters,
-                                           mbedtls_size_t domain_parameters_size,
+                                           xalSize_t domain_parameters_size,
                                            int *exponent )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     uint32_t acc = 0;
 
     if( domain_parameters_size == 0 )
@@ -280,7 +280,7 @@ static psa_status_t psa_rsa_read_exponent( const uint8_t *domain_parameters,
 
 psa_status_t mbedtls_psa_rsa_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length )
+    uint8_t *key_buffer, xalSize_t key_buffer_size, xalSize_t *key_buffer_length )
 {
     psa_status_t status;
     mbedtls_rsa_context rsa;
@@ -322,7 +322,7 @@ psa_status_t mbedtls_psa_rsa_generate_key(
 /* Decode the hash algorithm from alg and store the mbedtls encoding in
  * md_alg. Verify that the hash length is acceptable. */
 static psa_status_t psa_rsa_decode_md_type( psa_algorithm_t alg,
-                                            mbedtls_size_t hash_length,
+                                            xalSize_t hash_length,
                                             mbedtls_md_type_t *md_alg )
 {
     psa_algorithm_t hash_alg = PSA_ALG_SIGN_GET_HASH( alg );
@@ -351,9 +351,9 @@ static psa_status_t psa_rsa_decode_md_type( psa_algorithm_t alg,
 
 psa_status_t mbedtls_psa_rsa_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length )
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    uint8_t *signature, xalSize_t signature_size, xalSize_t *signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_rsa_context *rsa = NULL;
@@ -432,7 +432,7 @@ exit:
 #if defined(MBEDTLS_PSA_BUILTIN_ALG_RSA_PSS)
 static int rsa_pss_expected_salt_len( psa_algorithm_t alg,
                                       const mbedtls_rsa_context *rsa,
-                                      mbedtls_size_t hash_length )
+                                      xalSize_t hash_length )
 {
     if( PSA_ALG_IS_RSA_PSS_ANY_SALT( alg ) )
         return( MBEDTLS_RSA_SALT_LEN_ANY );
@@ -452,9 +452,9 @@ static int rsa_pss_expected_salt_len( psa_algorithm_t alg,
 
 psa_status_t mbedtls_psa_rsa_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    const uint8_t *signature, mbedtls_size_t signature_length )
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    const uint8_t *signature, xalSize_t signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_rsa_context *rsa = NULL;
@@ -552,15 +552,15 @@ static int psa_rsa_oaep_set_padding_mode( psa_algorithm_t alg,
 
 psa_status_t mbedtls_psa_asymmetric_encrypt( const psa_key_attributes_t *attributes,
                                              const uint8_t *key_buffer,
-                                             mbedtls_size_t key_buffer_size,
+                                             xalSize_t key_buffer_size,
                                              psa_algorithm_t alg,
                                              const uint8_t *input,
-                                             mbedtls_size_t input_length,
+                                             xalSize_t input_length,
                                              const uint8_t *salt,
-                                             mbedtls_size_t salt_length,
+                                             xalSize_t salt_length,
                                              uint8_t *output,
-                                             mbedtls_size_t output_size,
-                                             mbedtls_size_t *output_length )
+                                             xalSize_t output_size,
+                                             xalSize_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     (void) key_buffer;
@@ -652,15 +652,15 @@ rsa_exit:
 
 psa_status_t mbedtls_psa_asymmetric_decrypt( const psa_key_attributes_t *attributes,
                                              const uint8_t *key_buffer,
-                                             mbedtls_size_t key_buffer_size,
+                                             xalSize_t key_buffer_size,
                                              psa_algorithm_t alg,
                                              const uint8_t *input,
-                                             mbedtls_size_t input_length,
+                                             xalSize_t input_length,
                                              const uint8_t *salt,
-                                             mbedtls_size_t salt_length,
+                                             xalSize_t salt_length,
                                              uint8_t *output,
-                                             mbedtls_size_t output_size,
-                                             mbedtls_size_t *output_length )
+                                             xalSize_t output_size,
+                                             xalSize_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     (void) key_buffer;

@@ -68,7 +68,7 @@ typedef struct mbedtls_ssl_ticket_context
     uint32_t MBEDTLS_PRIVATE(ticket_lifetime);       /*!< lifetime of tickets in seconds     */
 
     /** Callback for getting (pseudo-)random numbers                        */
-    int  (*MBEDTLS_PRIVATE(f_rng))(void *, unsigned char *, mbedtls_size_t);
+    int  (*MBEDTLS_PRIVATE(f_rng))(void *, unsigned char *, xalSize_t);
     void *MBEDTLS_PRIVATE(p_rng);                    /*!< context for the RNG function       */
 
 #if defined(MBEDTLS_THREADING_C)
@@ -109,7 +109,7 @@ void mbedtls_ssl_ticket_init( mbedtls_ssl_ticket_context *ctx );
  *                  or a specific MBEDTLS_ERR_XXX error code
  */
 int mbedtls_ssl_ticket_setup( mbedtls_ssl_ticket_context *ctx,
-    int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
+    int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng,
     mbedtls_cipher_type_t cipher,
     uint32_t lifetime );
 
@@ -146,8 +146,8 @@ int mbedtls_ssl_ticket_setup( mbedtls_ssl_ticket_context *ctx,
  *                  or a specific MBEDTLS_ERR_XXX error code
  */
 int mbedtls_ssl_ticket_rotate( mbedtls_ssl_ticket_context *ctx,
-    const unsigned char *name, mbedtls_size_t nlength,
-    const unsigned char *k, mbedtls_size_t klength,
+    const unsigned char *name, xalSize_t nlength,
+    const unsigned char *k, xalSize_t klength,
     uint32_t lifetime );
 
 /**

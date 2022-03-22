@@ -169,7 +169,7 @@ int mbedtls_net_bind( mbedtls_net_context *ctx, const char *bind_ip, const char 
  */
 int mbedtls_net_accept( mbedtls_net_context *bind_ctx,
                         mbedtls_net_context *client_ctx,
-                        void *client_ip, mbedtls_size_t buf_size, mbedtls_size_t *ip_len );
+                        void *client_ip, xalSize_t buf_size, xalSize_t *ip_len );
 
 /**
  * \brief          Check and wait for the context to be ready for read/write
@@ -238,7 +238,7 @@ void mbedtls_net_usleep( unsigned long usec );
  *                 or a non-zero error code; with a non-blocking socket,
  *                 MBEDTLS_ERR_SSL_WANT_READ indicates read() would block.
  */
-int mbedtls_net_recv( void *ctx, unsigned char *buf, mbedtls_size_t len );
+int mbedtls_net_recv( void *ctx, unsigned char *buf, xalSize_t len );
 
 /**
  * \brief          Write at most 'len' characters. If no error occurs,
@@ -252,7 +252,7 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, mbedtls_size_t len );
  *                 or a non-zero error code; with a non-blocking socket,
  *                 MBEDTLS_ERR_SSL_WANT_WRITE indicates write() would block.
  */
-int mbedtls_net_send( void *ctx, const unsigned char *buf, mbedtls_size_t len );
+int mbedtls_net_send( void *ctx, const unsigned char *buf, xalSize_t len );
 
 /**
  * \brief          Read at most 'len' characters, blocking for at most
@@ -280,7 +280,7 @@ int mbedtls_net_send( void *ctx, const unsigned char *buf, mbedtls_size_t len );
  *                 non-blocking. Handling timeouts with non-blocking reads
  *                 requires a different strategy.
  */
-int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf, mbedtls_size_t len,
+int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf, xalSize_t len,
                       uint32_t timeout );
 
 /**

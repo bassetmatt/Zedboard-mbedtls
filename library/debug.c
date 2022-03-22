@@ -134,11 +134,11 @@ void mbedtls_debug_print_ret( const mbedtls_ssl_context *ssl, int level,
 
 void mbedtls_debug_print_buf( const mbedtls_ssl_context *ssl, int level,
                       const char *file, int line, const char *text,
-                      const unsigned char *buf, mbedtls_size_t len )
+                      const unsigned char *buf, xalSize_t len )
 {
     char str[DEBUG_BUF_SIZE];
     char txt[17];
-    mbedtls_size_t i, idx = 0;
+    xalSize_t i, idx = 0;
 
     if( NULL == ssl              ||
         NULL == ssl->conf        ||
@@ -220,8 +220,8 @@ void mbedtls_debug_print_mpi( const mbedtls_ssl_context *ssl, int level,
                       const char *text, const mbedtls_mpi *X )
 {
     char str[DEBUG_BUF_SIZE];
-    mbedtls_size_t bitlen;
-    mbedtls_size_t idx = 0;
+    xalSize_t bitlen;
+    xalSize_t idx = 0;
 
     if( NULL == ssl              ||
         NULL == ssl->conf        ||
@@ -248,8 +248,8 @@ void mbedtls_debug_print_mpi( const mbedtls_ssl_context *ssl, int level,
         int n;
         for( n = (int) ( ( bitlen - 1 ) / 8 ); n >= 0; n-- )
         {
-            mbedtls_size_t limb_offset = n / sizeof( mbedtls_mpi_uint );
-            mbedtls_size_t offset_in_limb = n % sizeof( mbedtls_mpi_uint );
+            xalSize_t limb_offset = n / sizeof( mbedtls_mpi_uint );
+            xalSize_t offset_in_limb = n % sizeof( mbedtls_mpi_uint );
             unsigned char octet =
                 ( X->p[limb_offset] >> ( offset_in_limb * 8 ) ) & 0xff;
             mbedtls_snprintf( str + idx, sizeof( str ) - idx, " %02x", octet );
@@ -277,7 +277,7 @@ static void debug_print_pk( const mbedtls_ssl_context *ssl, int level,
                             const char *file, int line,
                             const char *text, const mbedtls_pk_context *pk )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_pk_debug_item items[MBEDTLS_PK_DEBUG_MAX_ITEMS];
     char name[16];
 
@@ -322,7 +322,7 @@ static void debug_print_line_by_line( const mbedtls_ssl_context *ssl, int level,
     {
         if( *cur == '\n' )
         {
-            mbedtls_size_t len = cur - start + 1;
+            xalSize_t len = cur - start + 1;
             if( len > DEBUG_BUF_SIZE - 1 )
                 len = DEBUG_BUF_SIZE - 1;
 

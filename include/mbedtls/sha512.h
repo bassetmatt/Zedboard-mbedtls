@@ -123,7 +123,7 @@ int mbedtls_sha512_starts( mbedtls_sha512_context *ctx, int is384 );
  */
 int mbedtls_sha512_update( mbedtls_sha512_context *ctx,
                            const unsigned char *input,
-                           mbedtls_size_t ilen );
+                           xalSize_t ilen );
 
 /**
  * \brief          This function finishes the SHA-512 operation, and writes
@@ -183,7 +183,7 @@ int mbedtls_internal_sha512_process( mbedtls_sha512_context *ctx,
  * \return         A negative error code on failure.
  */
 int mbedtls_sha512( const unsigned char *input,
-                    mbedtls_size_t ilen,
+                    xalSize_t ilen,
                     unsigned char *output,
                     int is384 );
 

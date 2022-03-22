@@ -39,7 +39,7 @@ void psa_reset_key_attributes( psa_key_attributes_t *attributes )
 psa_status_t psa_set_key_domain_parameters( psa_key_attributes_t *attributes,
                                             psa_key_type_t type,
                                             const uint8_t *data,
-                                            mbedtls_size_t data_length )
+                                            xalSize_t data_length )
 {
     uint8_t *copy = NULL;
 
@@ -68,7 +68,7 @@ psa_status_t psa_set_key_domain_parameters( psa_key_attributes_t *attributes,
 
 psa_status_t psa_get_key_domain_parameters(
     const psa_key_attributes_t *attributes,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length )
 {
     if( attributes->domain_parameters_size > data_size )
         return( PSA_ERROR_BUFFER_TOO_SMALL );

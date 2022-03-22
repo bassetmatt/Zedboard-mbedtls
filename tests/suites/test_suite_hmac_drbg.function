@@ -5,10 +5,10 @@
 typedef struct
 {
     unsigned char *p;
-    mbedtls_size_t len;
+    xalSize_t len;
 } entropy_ctx;
 
-static int mbedtls_test_entropy_func( void *data, unsigned char *buf, mbedtls_size_t len )
+static int mbedtls_test_entropy_func( void *data, unsigned char *buf, xalSize_t len )
 {
     entropy_ctx *ctx = (entropy_ctx *) data;
 
@@ -37,9 +37,9 @@ void hmac_drbg_entropy_usage( int md_alg )
     const mbedtls_md_info_t *md_info;
     mbedtls_hmac_drbg_context ctx;
     entropy_ctx entropy;
-    mbedtls_size_t i, reps = 10;
-    mbedtls_size_t default_entropy_len;
-    mbedtls_size_t expected_consumed_entropy = 0;
+    xalSize_t i, reps = 10;
+    xalSize_t default_entropy_len;
+    xalSize_t expected_consumed_entropy = 0;
 
     mbedtls_hmac_drbg_init( &ctx );
     memset( buf, 0, sizeof( buf ) );
@@ -152,7 +152,7 @@ void hmac_drbg_buf( int md_alg )
     unsigned char buf[100];
     const mbedtls_md_info_t *md_info;
     mbedtls_hmac_drbg_context ctx;
-    mbedtls_size_t i;
+    xalSize_t i;
 
     mbedtls_hmac_drbg_init( &ctx );
     memset( buf, 0, sizeof( buf ) );

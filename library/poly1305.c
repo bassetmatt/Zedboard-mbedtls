@@ -92,7 +92,7 @@ static inline uint64_t mul64( uint32_t a, uint32_t b )
  *                          function.  Otherwise, set this parameter to 1.
  */
 static void poly1305_process( mbedtls_poly1305_context *ctx,
-                              mbedtls_size_t nblocks,
+                              xalSize_t nblocks,
                               const unsigned char *input,
                               uint32_t needs_padding )
 {
@@ -100,8 +100,8 @@ static void poly1305_process( mbedtls_poly1305_context *ctx,
     uint32_t acc0, acc1, acc2, acc3, acc4;
     uint32_t r0, r1, r2, r3;
     uint32_t rs1, rs2, rs3;
-    mbedtls_size_t offset  = 0U;
-    mbedtls_size_t i;
+    xalSize_t offset  = 0U;
+    xalSize_t i;
 
     r0 = ctx->r[0];
     r1 = ctx->r[1];
@@ -304,12 +304,12 @@ int mbedtls_poly1305_starts( mbedtls_poly1305_context *ctx,
 
 int mbedtls_poly1305_update( mbedtls_poly1305_context *ctx,
                              const unsigned char *input,
-                             mbedtls_size_t ilen )
+                             xalSize_t ilen )
 {
-    mbedtls_size_t offset    = 0U;
-    mbedtls_size_t remaining = ilen;
-    mbedtls_size_t queue_free_len;
-    mbedtls_size_t nblocks;
+    xalSize_t offset    = 0U;
+    xalSize_t remaining = ilen;
+    xalSize_t queue_free_len;
+    xalSize_t nblocks;
     POLY1305_VALIDATE_RET( ctx != NULL );
     POLY1305_VALIDATE_RET( ilen == 0 || input != NULL );
 
@@ -395,7 +395,7 @@ int mbedtls_poly1305_finish( mbedtls_poly1305_context *ctx,
 
 int mbedtls_poly1305_mac( const unsigned char key[32],
                           const unsigned char *input,
-                          mbedtls_size_t ilen,
+                          xalSize_t ilen,
                           unsigned char mac[16] )
 {
     mbedtls_poly1305_context ctx;
@@ -470,7 +470,7 @@ static const unsigned char test_data[2][127] =
     }
 };
 
-static const mbedtls_size_t test_data_len[2] =
+static const xalSize_t test_data_len[2] =
 {
     34U,
     127U

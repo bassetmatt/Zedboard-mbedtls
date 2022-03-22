@@ -221,7 +221,7 @@ int mbedtls_cipher_setup( mbedtls_cipher_context_t *ctx,
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
 int mbedtls_cipher_setup_psa( mbedtls_cipher_context_t *ctx,
                               const mbedtls_cipher_info_t *cipher_info,
-                              mbedtls_size_t taglen )
+                              xalSize_t taglen )
 {
     psa_algorithm_t alg;
     mbedtls_cipher_context_psa *cipher_psa;
@@ -268,7 +268,7 @@ int mbedtls_cipher_setkey( mbedtls_cipher_context_t *ctx,
         mbedtls_cipher_context_psa * const cipher_psa =
             (mbedtls_cipher_context_psa *) ctx->cipher_ctx;
 
-        mbedtls_size_t const key_bytelen = ( (mbedtls_size_t) key_bitlen + 7 ) / 8;
+        xalSize_t const key_bytelen = ( (xalSize_t) key_bitlen + 7 ) / 8;
 
         psa_status_t status;
         psa_key_type_t key_type;
@@ -350,9 +350,9 @@ int mbedtls_cipher_setkey( mbedtls_cipher_context_t *ctx,
 
 int mbedtls_cipher_set_iv( mbedtls_cipher_context_t *ctx,
                            const unsigned char *iv,
-                           mbedtls_size_t iv_len )
+                           xalSize_t iv_len )
 {
-    mbedtls_size_t actual_iv_size;
+    xalSize_t actual_iv_size;
 
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( iv_len == 0 || iv != NULL );
@@ -471,7 +471,7 @@ int mbedtls_cipher_reset( mbedtls_cipher_context_t *ctx )
 
 #if defined(MBEDTLS_GCM_C) || defined(MBEDTLS_CHACHAPOLY_C)
 int mbedtls_cipher_update_ad( mbedtls_cipher_context_t *ctx,
-                      const unsigned char *ad, mbedtls_size_t ad_len )
+                      const unsigned char *ad, xalSize_t ad_len )
 {
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( ad_len == 0 || ad != NULL );
@@ -522,10 +522,10 @@ int mbedtls_cipher_update_ad( mbedtls_cipher_context_t *ctx,
 #endif /* MBEDTLS_GCM_C || MBEDTLS_CHACHAPOLY_C */
 
 int mbedtls_cipher_update( mbedtls_cipher_context_t *ctx, const unsigned char *input,
-                   mbedtls_size_t ilen, unsigned char *output, mbedtls_size_t *olen )
+                   xalSize_t ilen, unsigned char *output, xalSize_t *olen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t block_size;
+    xalSize_t block_size;
 
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( ilen == 0 || input != NULL );
@@ -603,7 +603,7 @@ int mbedtls_cipher_update( mbedtls_cipher_context_t *ctx, const unsigned char *i
 #if defined(MBEDTLS_CIPHER_MODE_CBC)
     if( ctx->cipher_info->mode == MBEDTLS_MODE_CBC )
     {
-        mbedtls_size_t copy_len = 0;
+        xalSize_t copy_len = 0;
 
         /*
          * If there is not enough data for a full block, cache it.
@@ -780,20 +780,20 @@ int mbedtls_cipher_update( mbedtls_cipher_context_t *ctx, const unsigned char *i
 /*
  * PKCS7 (and PKCS5) padding: fill with ll bytes, with ll = padding_len
  */
-static void add_pkcs_padding( unsigned char *output, mbedtls_size_t output_len,
-        mbedtls_size_t data_len )
+static void add_pkcs_padding( unsigned char *output, xalSize_t output_len,
+        xalSize_t data_len )
 {
-    mbedtls_size_t padding_len = output_len - data_len;
+    xalSize_t padding_len = output_len - data_len;
     unsigned char i;
 
     for( i = 0; i < padding_len; i++ )
         output[data_len + i] = (unsigned char) padding_len;
 }
 
-static int get_pkcs_padding( unsigned char *input, mbedtls_size_t input_len,
-        mbedtls_size_t *data_len )
+static int get_pkcs_padding( unsigned char *input, xalSize_t input_len,
+        xalSize_t *data_len )
 {
-    mbedtls_size_t i, pad_idx;
+    xalSize_t i, pad_idx;
     unsigned char padding_len, bad = 0;
 
     if( NULL == input || NULL == data_len )
@@ -821,9 +821,9 @@ static int get_pkcs_padding( unsigned char *input, mbedtls_size_t input_len,
  * One and zeros padding: fill with 80 00 ... 00
  */
 static void add_one_and_zeros_padding( unsigned char *output,
-                                       mbedtls_size_t output_len, mbedtls_size_t data_len )
+                                       xalSize_t output_len, xalSize_t data_len )
 {
-    mbedtls_size_t padding_len = output_len - data_len;
+    xalSize_t padding_len = output_len - data_len;
     unsigned char i = 0;
 
     output[data_len] = 0x80;
@@ -831,10 +831,10 @@ static void add_one_and_zeros_padding( unsigned char *output,
         output[data_len + i] = 0x00;
 }
 
-static int get_one_and_zeros_padding( unsigned char *input, mbedtls_size_t input_len,
-                                      mbedtls_size_t *data_len )
+static int get_one_and_zeros_padding( unsigned char *input, xalSize_t input_len,
+                                      xalSize_t *data_len )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     unsigned char done = 0, prev_done, bad;
 
     if( NULL == input || NULL == data_len )
@@ -860,9 +860,9 @@ static int get_one_and_zeros_padding( unsigned char *input, mbedtls_size_t input
  * Zeros and len padding: fill with 00 ... 00 ll, where ll is padding length
  */
 static void add_zeros_and_len_padding( unsigned char *output,
-                                       mbedtls_size_t output_len, mbedtls_size_t data_len )
+                                       xalSize_t output_len, xalSize_t data_len )
 {
-    mbedtls_size_t padding_len = output_len - data_len;
+    xalSize_t padding_len = output_len - data_len;
     unsigned char i = 0;
 
     for( i = 1; i < padding_len; i++ )
@@ -870,10 +870,10 @@ static void add_zeros_and_len_padding( unsigned char *output,
     output[output_len - 1] = (unsigned char) padding_len;
 }
 
-static int get_zeros_and_len_padding( unsigned char *input, mbedtls_size_t input_len,
-                                      mbedtls_size_t *data_len )
+static int get_zeros_and_len_padding( unsigned char *input, xalSize_t input_len,
+                                      xalSize_t *data_len )
 {
-    mbedtls_size_t i, pad_idx;
+    xalSize_t i, pad_idx;
     unsigned char padding_len, bad = 0;
 
     if( NULL == input || NULL == data_len )
@@ -900,18 +900,18 @@ static int get_zeros_and_len_padding( unsigned char *input, mbedtls_size_t input
  * Zero padding: fill with 00 ... 00
  */
 static void add_zeros_padding( unsigned char *output,
-                               mbedtls_size_t output_len, mbedtls_size_t data_len )
+                               xalSize_t output_len, xalSize_t data_len )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
 
     for( i = data_len; i < output_len; i++ )
         output[i] = 0x00;
 }
 
-static int get_zeros_padding( unsigned char *input, mbedtls_size_t input_len,
-                              mbedtls_size_t *data_len )
+static int get_zeros_padding( unsigned char *input, xalSize_t input_len,
+                              xalSize_t *data_len )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     unsigned char done = 0, prev_done;
 
     if( NULL == input || NULL == data_len )
@@ -935,8 +935,8 @@ static int get_zeros_padding( unsigned char *input, mbedtls_size_t input_len,
  * There is no add_padding function (check for NULL in mbedtls_cipher_finish)
  * but a trivial get_padding function
  */
-static int get_no_padding( unsigned char *input, mbedtls_size_t input_len,
-                              mbedtls_size_t *data_len )
+static int get_no_padding( unsigned char *input, xalSize_t input_len,
+                              xalSize_t *data_len )
 {
     if( NULL == input || NULL == data_len )
         return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
@@ -948,7 +948,7 @@ static int get_no_padding( unsigned char *input, mbedtls_size_t input_len,
 #endif /* MBEDTLS_CIPHER_MODE_WITH_PADDING */
 
 int mbedtls_cipher_finish( mbedtls_cipher_context_t *ctx,
-                   unsigned char *output, mbedtls_size_t *olen )
+                   unsigned char *output, xalSize_t *olen )
 {
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( output != NULL );
@@ -1113,7 +1113,7 @@ int mbedtls_cipher_set_padding_mode( mbedtls_cipher_context_t *ctx,
 
 #if defined(MBEDTLS_GCM_C) || defined(MBEDTLS_CHACHAPOLY_C)
 int mbedtls_cipher_write_tag( mbedtls_cipher_context_t *ctx,
-                      unsigned char *tag, mbedtls_size_t tag_len )
+                      unsigned char *tag, xalSize_t tag_len )
 {
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( tag_len == 0 || tag != NULL );
@@ -1136,7 +1136,7 @@ int mbedtls_cipher_write_tag( mbedtls_cipher_context_t *ctx,
 #if defined(MBEDTLS_GCM_C)
     if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
     {
-        mbedtls_size_t output_length;
+        xalSize_t output_length;
         /* The code here doesn't yet support alternative implementations
          * that can delay up to a block of output. */
         return( mbedtls_gcm_finish( (mbedtls_gcm_context *) ctx->cipher_ctx,
@@ -1161,7 +1161,7 @@ int mbedtls_cipher_write_tag( mbedtls_cipher_context_t *ctx,
 }
 
 int mbedtls_cipher_check_tag( mbedtls_cipher_context_t *ctx,
-                      const unsigned char *tag, mbedtls_size_t tag_len )
+                      const unsigned char *tag, xalSize_t tag_len )
 {
     unsigned char check_tag[16];
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -1195,7 +1195,7 @@ int mbedtls_cipher_check_tag( mbedtls_cipher_context_t *ctx,
 #if defined(MBEDTLS_GCM_C)
     if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
     {
-        mbedtls_size_t output_length;
+        xalSize_t output_length;
         /* The code here doesn't yet support alternative implementations
          * that can delay up to a block of output. */
 
@@ -1252,12 +1252,12 @@ exit:
  * Packet-oriented wrapper for non-AEAD modes
  */
 int mbedtls_cipher_crypt( mbedtls_cipher_context_t *ctx,
-                  const unsigned char *iv, mbedtls_size_t iv_len,
-                  const unsigned char *input, mbedtls_size_t ilen,
-                  unsigned char *output, mbedtls_size_t *olen )
+                  const unsigned char *iv, xalSize_t iv_len,
+                  const unsigned char *input, xalSize_t ilen,
+                  unsigned char *output, xalSize_t *olen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t finish_olen;
+    xalSize_t finish_olen;
 
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( iv_len == 0 || iv != NULL );
@@ -1278,7 +1278,7 @@ int mbedtls_cipher_crypt( mbedtls_cipher_context_t *ctx,
 
         psa_status_t status;
         psa_cipher_operation_t cipher_op = PSA_CIPHER_OPERATION_INIT;
-        mbedtls_size_t part_len;
+        xalSize_t part_len;
 
         if( ctx->operation == MBEDTLS_DECRYPT )
         {
@@ -1351,11 +1351,11 @@ int mbedtls_cipher_crypt( mbedtls_cipher_context_t *ctx,
  * mbedtls_cipher_auth_encrypt_ext().
  */
 static int mbedtls_cipher_aead_encrypt( mbedtls_cipher_context_t *ctx,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
-                         const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t *olen,
-                         unsigned char *tag, mbedtls_size_t tag_len )
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
+                         const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t *olen,
+                         unsigned char *tag, xalSize_t tag_len )
 {
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
     if( ctx->psa_enabled == 1 )
@@ -1431,11 +1431,11 @@ static int mbedtls_cipher_aead_encrypt( mbedtls_cipher_context_t *ctx,
  * mbedtls_cipher_auth_encrypt_ext().
  */
 static int mbedtls_cipher_aead_decrypt( mbedtls_cipher_context_t *ctx,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
-                         const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t *olen,
-                         const unsigned char *tag, mbedtls_size_t tag_len )
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
+                         const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t *olen,
+                         const unsigned char *tag, xalSize_t tag_len )
 {
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
     if( ctx->psa_enabled == 1 )
@@ -1534,11 +1534,11 @@ static int mbedtls_cipher_aead_decrypt( mbedtls_cipher_context_t *ctx,
  * Packet-oriented encryption for AEAD/NIST_KW: public function.
  */
 int mbedtls_cipher_auth_encrypt_ext( mbedtls_cipher_context_t *ctx,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
-                         const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t output_len,
-                         mbedtls_size_t *olen, mbedtls_size_t tag_len )
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
+                         const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t output_len,
+                         xalSize_t *olen, xalSize_t tag_len )
 {
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( iv_len == 0 || iv != NULL );
@@ -1590,11 +1590,11 @@ int mbedtls_cipher_auth_encrypt_ext( mbedtls_cipher_context_t *ctx,
  * Packet-oriented decryption for AEAD/NIST_KW: public function.
  */
 int mbedtls_cipher_auth_decrypt_ext( mbedtls_cipher_context_t *ctx,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
-                         const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t output_len,
-                         mbedtls_size_t *olen, mbedtls_size_t tag_len )
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
+                         const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t output_len,
+                         xalSize_t *olen, xalSize_t tag_len )
 {
     CIPHER_VALIDATE_RET( ctx != NULL );
     CIPHER_VALIDATE_RET( iv_len == 0 || iv != NULL );

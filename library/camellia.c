@@ -318,7 +318,7 @@ int mbedtls_camellia_setkey_enc( mbedtls_camellia_context *ctx,
                                  unsigned int keybits )
 {
     int idx;
-    mbedtls_size_t i;
+    xalSize_t i;
     uint32_t *RK;
     unsigned char t[64];
     uint32_t SIGMA[6][2];
@@ -427,7 +427,7 @@ int mbedtls_camellia_setkey_dec( mbedtls_camellia_context *ctx,
                                  unsigned int keybits )
 {
     int idx, ret;
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_camellia_context cty;
     uint32_t *RK;
     uint32_t *SK;
@@ -543,7 +543,7 @@ int mbedtls_camellia_crypt_ecb( mbedtls_camellia_context *ctx,
  */
 int mbedtls_camellia_crypt_cbc( mbedtls_camellia_context *ctx,
                                 int mode,
-                                mbedtls_size_t length,
+                                xalSize_t length,
                                 unsigned char iv[16],
                                 const unsigned char *input,
                                 unsigned char *output )
@@ -603,14 +603,14 @@ int mbedtls_camellia_crypt_cbc( mbedtls_camellia_context *ctx,
  */
 int mbedtls_camellia_crypt_cfb128( mbedtls_camellia_context *ctx,
                        int mode,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *iv_off,
+                       xalSize_t length,
+                       xalSize_t *iv_off,
                        unsigned char iv[16],
                        const unsigned char *input,
                        unsigned char *output )
 {
     int c;
-    mbedtls_size_t n;
+    xalSize_t n;
     CAMELLIA_VALIDATE_RET( ctx != NULL );
     CAMELLIA_VALIDATE_RET( mode == MBEDTLS_CAMELLIA_ENCRYPT ||
                            mode == MBEDTLS_CAMELLIA_DECRYPT );
@@ -661,15 +661,15 @@ int mbedtls_camellia_crypt_cfb128( mbedtls_camellia_context *ctx,
  * Camellia-CTR buffer encryption/decryption
  */
 int mbedtls_camellia_crypt_ctr( mbedtls_camellia_context *ctx,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *nc_off,
+                       xalSize_t length,
+                       xalSize_t *nc_off,
                        unsigned char nonce_counter[16],
                        unsigned char stream_block[16],
                        const unsigned char *input,
                        unsigned char *output )
 {
     int c, i;
-    mbedtls_size_t n;
+    xalSize_t n;
     CAMELLIA_VALIDATE_RET( ctx != NULL );
     CAMELLIA_VALIDATE_RET( nonce_counter != NULL );
     CAMELLIA_VALIDATE_RET( stream_block  != NULL );
@@ -915,7 +915,7 @@ int mbedtls_camellia_self_test( int verbose )
     unsigned char iv[16];
 #endif
 #if defined(MBEDTLS_CIPHER_MODE_CTR)
-    mbedtls_size_t offset, len;
+    xalSize_t offset, len;
     unsigned char nonce_counter[16];
     unsigned char stream_block[16];
 #endif

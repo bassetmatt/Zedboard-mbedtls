@@ -163,12 +163,12 @@
  *           If mbedtls_mps_[opt_]stored_size_t is smaller than that, the
  *           maximum handshake message is restricted accordingly.
  *
- * For now, we use the default type of mbedtls_size_t throughout, and the use of
+ * For now, we use the default type of xalSize_t throughout, and the use of
  * smaller types or different types for ::mbedtls_mps_size_t and
  * ::mbedtls_mps_stored_size_t is not yet supported.
  *
  */
-typedef mbedtls_size_t mbedtls_mps_stored_size_t;
+typedef xalSize_t mbedtls_mps_stored_size_t;
 #define MBEDTLS_MPS_STORED_SIZE_MAX  ( (mbedtls_mps_stored_size_t) -1 )
 
 /** \brief The type of buffer sizes and offsets used in the MPS API
@@ -182,7 +182,7 @@ typedef mbedtls_size_t mbedtls_mps_stored_size_t;
  *         instead of uint16_t reduced the code size from 1060 Byte to 962 Byte,
  *         so almost 10%.
  */
-typedef mbedtls_size_t mbedtls_mps_size_t;
+typedef xalSize_t mbedtls_mps_size_t;
 #define MBEDTLS_MPS_SIZE_MAX  ( (mbedtls_mps_size_t) -1 )
 
 #if MBEDTLS_MPS_STORED_SIZE_MAX > MBEDTLS_MPS_SIZE_MAX

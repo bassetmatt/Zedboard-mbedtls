@@ -97,7 +97,7 @@ static int wsa_init_done = 0;
 
 #endif /* ( _WIN32 || _WIN32_WCE ) && !EFIX64 && !EFI32 */
 
-/* Some MS functions want int and MSVC warns if we pass mbedtls_size_t,
+/* Some MS functions want int and MSVC warns if we pass xalSize_t,
  * but the standard functions use socklen_t, so cast only for MSVC */
 #if defined(_MSC_VER)
 #define MSVC_INT_CAST   (int)
@@ -338,7 +338,7 @@ static int net_would_block( const mbedtls_net_context *ctx )
  */
 int mbedtls_net_accept( mbedtls_net_context *bind_ctx,
                         mbedtls_net_context *client_ctx,
-                        void *client_ip, mbedtls_size_t buf_size, mbedtls_size_t *ip_len )
+                        void *client_ip, xalSize_t buf_size, xalSize_t *ip_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     int type;
@@ -567,7 +567,7 @@ void mbedtls_net_usleep( unsigned long usec )
 /*
  * Read at most 'len' characters
  */
-int mbedtls_net_recv( void *ctx, unsigned char *buf, mbedtls_size_t len )
+int mbedtls_net_recv( void *ctx, unsigned char *buf, xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     int fd = ((mbedtls_net_context *) ctx)->fd;
@@ -605,7 +605,7 @@ int mbedtls_net_recv( void *ctx, unsigned char *buf, mbedtls_size_t len )
  * Read at most 'len' characters, blocking for at most 'timeout' ms
  */
 int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf,
-                              mbedtls_size_t len, uint32_t timeout )
+                              xalSize_t len, uint32_t timeout )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     struct timeval tv;
@@ -649,7 +649,7 @@ int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf,
 /*
  * Write at most 'len' characters
  */
-int mbedtls_net_send( void *ctx, const unsigned char *buf, mbedtls_size_t len )
+int mbedtls_net_send( void *ctx, const unsigned char *buf, xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     int fd = ((mbedtls_net_context *) ctx)->fd;

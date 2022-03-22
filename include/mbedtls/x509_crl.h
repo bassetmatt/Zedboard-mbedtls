@@ -117,7 +117,7 @@ mbedtls_x509_crl;
  * \return         0 if successful, or a specific X509 or PEM error code
  */
 int mbedtls_x509_crl_parse_der( mbedtls_x509_crl *chain,
-                        const unsigned char *buf, mbedtls_size_t buflen );
+                        const unsigned char *buf, xalSize_t buflen );
 /**
  * \brief          Parse one or more CRLs and append them to the chained list
  *
@@ -130,7 +130,7 @@ int mbedtls_x509_crl_parse_der( mbedtls_x509_crl *chain,
  *
  * \return         0 if successful, or a specific X509 or PEM error code
  */
-int mbedtls_x509_crl_parse( mbedtls_x509_crl *chain, const unsigned char *buf, mbedtls_size_t buflen );
+int mbedtls_x509_crl_parse( mbedtls_x509_crl *chain, const unsigned char *buf, xalSize_t buflen );
 
 #if defined(MBEDTLS_FS_IO)
 /**
@@ -158,7 +158,7 @@ int mbedtls_x509_crl_parse_file( mbedtls_x509_crl *chain, const char *path );
  * \return         The length of the string written (not including the
  *                 terminated nul byte), or a negative error code.
  */
-int mbedtls_x509_crl_info( char *buf, mbedtls_size_t size, const char *prefix,
+int mbedtls_x509_crl_info( char *buf, xalSize_t size, const char *prefix,
                    const mbedtls_x509_crl *crl );
 #endif /* !MBEDTLS_X509_REMOVE_INFO */
 

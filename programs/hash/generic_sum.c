@@ -78,7 +78,7 @@ static int generic_print( const mbedtls_md_info_t *md_info, char *filename )
 static int generic_check( const mbedtls_md_info_t *md_info, char *filename )
 {
     int i;
-    mbedtls_size_t n;
+    xalSize_t n;
     FILE *f;
     int nb_err1, nb_err2;
     int nb_tot1, nb_tot2;
@@ -108,7 +108,7 @@ static int generic_check( const mbedtls_md_info_t *md_info, char *filename )
     {
         n = strlen( line );
 
-        if( n < (mbedtls_size_t) 2 * mbedtls_md_get_size( md_info ) + 4 )
+        if( n < (xalSize_t) 2 * mbedtls_md_get_size( md_info ) + 4 )
         {
             mbedtls_printf("No '%s' hash found on line.\n", mbedtls_md_get_name( md_info ));
             continue;

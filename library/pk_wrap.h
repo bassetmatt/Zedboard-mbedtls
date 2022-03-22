@@ -36,53 +36,53 @@ struct mbedtls_pk_info_t
     const char *name;
 
     /** Get key size in bits */
-    mbedtls_size_t (*get_bitlen)( const void * );
+    xalSize_t (*get_bitlen)( const void * );
 
     /** Tell if the context implements this type (e.g. ECKEY can do ECDSA) */
     int (*can_do)( mbedtls_pk_type_t type );
 
     /** Verify signature */
     int (*verify_func)( void *ctx, mbedtls_md_type_t md_alg,
-                        const unsigned char *hash, mbedtls_size_t hash_len,
-                        const unsigned char *sig, mbedtls_size_t sig_len );
+                        const unsigned char *hash, xalSize_t hash_len,
+                        const unsigned char *sig, xalSize_t sig_len );
 
     /** Make signature */
     int (*sign_func)( void *ctx, mbedtls_md_type_t md_alg,
-                      const unsigned char *hash, mbedtls_size_t hash_len,
-                      unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
-                      int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                      const unsigned char *hash, xalSize_t hash_len,
+                      unsigned char *sig, xalSize_t sig_size, xalSize_t *sig_len,
+                      int (*f_rng)(void *, unsigned char *, xalSize_t),
                       void *p_rng );
 
 #if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
     /** Verify signature (restartable) */
     int (*verify_rs_func)( void *ctx, mbedtls_md_type_t md_alg,
-                           const unsigned char *hash, mbedtls_size_t hash_len,
-                           const unsigned char *sig, mbedtls_size_t sig_len,
+                           const unsigned char *hash, xalSize_t hash_len,
+                           const unsigned char *sig, xalSize_t sig_len,
                            void *rs_ctx );
 
     /** Make signature (restartable) */
     int (*sign_rs_func)( void *ctx, mbedtls_md_type_t md_alg,
-                         const unsigned char *hash, mbedtls_size_t hash_len,
-                         unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
-                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                         const unsigned char *hash, xalSize_t hash_len,
+                         unsigned char *sig, xalSize_t sig_size, xalSize_t *sig_len,
+                         int (*f_rng)(void *, unsigned char *, xalSize_t),
                          void *p_rng, void *rs_ctx );
 #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
 
     /** Decrypt message */
-    int (*decrypt_func)( void *ctx, const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
-                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+    int (*decrypt_func)( void *ctx, const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t *olen, xalSize_t osize,
+                         int (*f_rng)(void *, unsigned char *, xalSize_t),
                          void *p_rng );
 
     /** Encrypt message */
-    int (*encrypt_func)( void *ctx, const unsigned char *input, mbedtls_size_t ilen,
-                         unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
-                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+    int (*encrypt_func)( void *ctx, const unsigned char *input, xalSize_t ilen,
+                         unsigned char *output, xalSize_t *olen, xalSize_t osize,
+                         int (*f_rng)(void *, unsigned char *, xalSize_t),
                          void *p_rng );
 
     /** Check public-private key pair */
     int (*check_pair_func)( const void *pub, const void *prv,
-                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                            int (*f_rng)(void *, unsigned char *, xalSize_t),
                             void *p_rng );
 
     /** Allocate a new context */

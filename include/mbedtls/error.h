@@ -175,7 +175,7 @@ static inline int mbedtls_error_add( int high, int low,
  * \param buffer    buffer to place representation in
  * \param buflen    length of the buffer
  */
-void mbedtls_strerror( int errnum, char *buffer, mbedtls_size_t buflen );
+void mbedtls_strerror( int errnum, char *buffer, xalSize_t buflen );
 
 /**
  * \brief Translate the high-level part of an Mbed TLS error code into a string

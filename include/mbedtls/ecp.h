@@ -234,8 +234,8 @@ typedef struct mbedtls_ecp_group
                                      For Montgomery curves: unused. */
     mbedtls_ecp_point G;        /*!< The generator of the subgroup used. */
     mbedtls_mpi N;              /*!< The order of \p G. */
-    mbedtls_size_t pbits;               /*!< The number of bits in \p P.*/
-    mbedtls_size_t nbits;               /*!< For Short Weierstrass: The number of bits in \p P.
+    xalSize_t pbits;               /*!< The number of bits in \p P.*/
+    xalSize_t nbits;               /*!< For Short Weierstrass: The number of bits in \p P.
                                      For Montgomery curves: the number of bits in the
                                      private keys. */
     /* End of public fields */
@@ -247,7 +247,7 @@ typedef struct mbedtls_ecp_group
     int (*MBEDTLS_PRIVATE(t_post))(mbedtls_ecp_point *, void *); /*!< Unused. */
     void *MBEDTLS_PRIVATE(t_data);               /*!< Unused. */
     mbedtls_ecp_point *MBEDTLS_PRIVATE(T);       /*!< Pre-computed points for ecp_mul_comb(). */
-    mbedtls_size_t MBEDTLS_PRIVATE(T_size);              /*!< The number of dynamic allocated pre-computed points. */
+    xalSize_t MBEDTLS_PRIVATE(T_size);              /*!< The number of dynamic allocated pre-computed points. */
 }
 mbedtls_ecp_group;
 
@@ -749,8 +749,8 @@ int mbedtls_ecp_point_read_string( mbedtls_ecp_point *P, int radix,
  */
 int mbedtls_ecp_point_write_binary( const mbedtls_ecp_group *grp,
                                     const mbedtls_ecp_point *P,
-                                    int format, mbedtls_size_t *olen,
-                                    unsigned char *buf, mbedtls_size_t buflen );
+                                    int format, xalSize_t *olen,
+                                    unsigned char *buf, xalSize_t buflen );
 
 /**
  * \brief           This function imports a point from unsigned binary data.
@@ -776,7 +776,7 @@ int mbedtls_ecp_point_write_binary( const mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_point_read_binary( const mbedtls_ecp_group *grp,
                                    mbedtls_ecp_point *P,
-                                   const unsigned char *buf, mbedtls_size_t ilen );
+                                   const unsigned char *buf, xalSize_t ilen );
 
 /**
  * \brief           This function imports a point from a TLS ECPoint record.
@@ -798,7 +798,7 @@ int mbedtls_ecp_point_read_binary( const mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_tls_read_point( const mbedtls_ecp_group *grp,
                                 mbedtls_ecp_point *pt,
-                                const unsigned char **buf, mbedtls_size_t len );
+                                const unsigned char **buf, xalSize_t len );
 
 /**
  * \brief           This function exports a point as a TLS ECPoint record
@@ -824,8 +824,8 @@ int mbedtls_ecp_tls_read_point( const mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_tls_write_point( const mbedtls_ecp_group *grp,
                                  const mbedtls_ecp_point *pt,
-                                 int format, mbedtls_size_t *olen,
-                                 unsigned char *buf, mbedtls_size_t blen );
+                                 int format, xalSize_t *olen,
+                                 unsigned char *buf, xalSize_t blen );
 
 /**
  * \brief           This function sets up an ECP group context
@@ -864,7 +864,7 @@ int mbedtls_ecp_group_load( mbedtls_ecp_group *grp, mbedtls_ecp_group_id id );
  * \return          Another negative error code on other kinds of failure.
  */
 int mbedtls_ecp_tls_read_group( mbedtls_ecp_group *grp,
-                                const unsigned char **buf, mbedtls_size_t len );
+                                const unsigned char **buf, xalSize_t len );
 
 /**
  * \brief           This function extracts an elliptic curve group ID from a
@@ -886,7 +886,7 @@ int mbedtls_ecp_tls_read_group( mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_tls_read_group_id( mbedtls_ecp_group_id *grp,
                                    const unsigned char **buf,
-                                   mbedtls_size_t len );
+                                   xalSize_t len );
 /**
  * \brief           This function exports an elliptic curve as a TLS
  *                  ECParameters record as defined in RFC 4492, Section 5.4.
@@ -906,8 +906,8 @@ int mbedtls_ecp_tls_read_group_id( mbedtls_ecp_group_id *grp,
  * \return          Another negative error code on other kinds of failure.
  */
 int mbedtls_ecp_tls_write_group( const mbedtls_ecp_group *grp,
-                                 mbedtls_size_t *olen,
-                                 unsigned char *buf, mbedtls_size_t blen );
+                                 xalSize_t *olen,
+                                 unsigned char *buf, xalSize_t blen );
 
 /**
  * \brief           This function performs a scalar multiplication of a point
@@ -940,7 +940,7 @@ int mbedtls_ecp_tls_write_group( const mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_mul( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
              const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
+             int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng );
 
 /**
  * \brief           This function performs multiplication of a point by
@@ -974,7 +974,7 @@ int mbedtls_ecp_mul( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
  */
 int mbedtls_ecp_mul_restartable( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
              const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
+             int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng,
              mbedtls_ecp_restart_ctx *rs_ctx );
 
 #if defined(MBEDTLS_ECP_SHORT_WEIERSTRASS_ENABLED)
@@ -1133,7 +1133,7 @@ int mbedtls_ecp_check_privkey( const mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_gen_privkey( const mbedtls_ecp_group *grp,
                      mbedtls_mpi *d,
-                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                     int (*f_rng)(void *, unsigned char *, xalSize_t),
                      void *p_rng );
 
 /**
@@ -1166,7 +1166,7 @@ int mbedtls_ecp_gen_privkey( const mbedtls_ecp_group *grp,
 int mbedtls_ecp_gen_keypair_base( mbedtls_ecp_group *grp,
                                   const mbedtls_ecp_point *G,
                                   mbedtls_mpi *d, mbedtls_ecp_point *Q,
-                                  int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                                  int (*f_rng)(void *, unsigned char *, xalSize_t),
                                   void *p_rng );
 
 /**
@@ -1194,7 +1194,7 @@ int mbedtls_ecp_gen_keypair_base( mbedtls_ecp_group *grp,
  */
 int mbedtls_ecp_gen_keypair( mbedtls_ecp_group *grp, mbedtls_mpi *d,
                              mbedtls_ecp_point *Q,
-                             int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                             int (*f_rng)(void *, unsigned char *, xalSize_t),
                              void *p_rng );
 
 /**
@@ -1211,7 +1211,7 @@ int mbedtls_ecp_gen_keypair( mbedtls_ecp_group *grp, mbedtls_mpi *d,
  *                  on failure.
  */
 int mbedtls_ecp_gen_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
-                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                         int (*f_rng)(void *, unsigned char *, xalSize_t),
                          void *p_rng );
 
 /**
@@ -1233,7 +1233,7 @@ int mbedtls_ecp_gen_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
  * \return          Another negative error code on different kinds of failure.
  */
 int mbedtls_ecp_read_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
-                          const unsigned char *buf, mbedtls_size_t buflen );
+                          const unsigned char *buf, xalSize_t buflen );
 
 /**
  * \brief           This function exports an elliptic curve private key.
@@ -1252,7 +1252,7 @@ int mbedtls_ecp_read_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
  * \return          Another negative error code on different kinds of failure.
  */
 int mbedtls_ecp_write_key( mbedtls_ecp_keypair *key,
-                           unsigned char *buf, mbedtls_size_t buflen );
+                           unsigned char *buf, xalSize_t buflen );
 
 /**
  * \brief           This function checks that the keypair objects
@@ -1276,7 +1276,7 @@ int mbedtls_ecp_write_key( mbedtls_ecp_keypair *key,
  */
 int mbedtls_ecp_check_pub_priv(
         const mbedtls_ecp_keypair *pub, const mbedtls_ecp_keypair *prv,
-        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
+        int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng );
 
 #if defined(MBEDTLS_SELF_TEST)
 

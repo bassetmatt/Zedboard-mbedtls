@@ -96,7 +96,7 @@ void mbedtls_ssl_cookie_free( mbedtls_ssl_cookie_ctx *ctx )
 }
 
 int mbedtls_ssl_cookie_setup( mbedtls_ssl_cookie_ctx *ctx,
-                      int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                      int (*f_rng)(void *, unsigned char *, xalSize_t),
                       void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -124,7 +124,7 @@ int mbedtls_ssl_cookie_setup( mbedtls_ssl_cookie_ctx *ctx,
 static int ssl_cookie_hmac( mbedtls_md_context_t *hmac_ctx,
                             const unsigned char time[4],
                             unsigned char **p, unsigned char *end,
-                            const unsigned char *cli_id, mbedtls_size_t cli_id_len )
+                            const unsigned char *cli_id, xalSize_t cli_id_len )
 {
     unsigned char hmac_out[COOKIE_MD_OUTLEN];
 
@@ -149,7 +149,7 @@ static int ssl_cookie_hmac( mbedtls_md_context_t *hmac_ctx,
  */
 int mbedtls_ssl_cookie_write( void *p_ctx,
                       unsigned char **p, unsigned char *end,
-                      const unsigned char *cli_id, mbedtls_size_t cli_id_len )
+                      const unsigned char *cli_id, xalSize_t cli_id_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ssl_cookie_ctx *ctx = (mbedtls_ssl_cookie_ctx *) p_ctx;
@@ -190,8 +190,8 @@ int mbedtls_ssl_cookie_write( void *p_ctx,
  * Check a cookie
  */
 int mbedtls_ssl_cookie_check( void *p_ctx,
-                      const unsigned char *cookie, mbedtls_size_t cookie_len,
-                      const unsigned char *cli_id, mbedtls_size_t cli_id_len )
+                      const unsigned char *cookie, xalSize_t cookie_len,
+                      const unsigned char *cli_id, xalSize_t cli_id_len )
 {
     unsigned char ref_hmac[COOKIE_HMAC_LEN];
     int ret = 0;

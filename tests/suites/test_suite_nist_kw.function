@@ -22,7 +22,7 @@ void mbedtls_nist_kw_mix_contexts( )
     unsigned char plaintext[32];
     unsigned char ciphertext1[40];
     unsigned char ciphertext2[40];
-    mbedtls_size_t output_len, i;
+    xalSize_t output_len, i;
 
     memset( plaintext, 0, sizeof( plaintext ) );
     memset( ciphertext1, 0, sizeof( ciphertext1 ) );
@@ -152,7 +152,7 @@ void nist_kw_plaintext_lengths( int in_len, int out_len, int mode, int res )
     unsigned char key[16];
     unsigned char *plaintext = NULL;
     unsigned char *ciphertext = NULL;
-    mbedtls_size_t output_len = out_len;
+    xalSize_t output_len = out_len;
 
     mbedtls_nist_kw_init( &ctx );
 
@@ -179,10 +179,10 @@ void nist_kw_plaintext_lengths( int in_len, int out_len, int mode, int res )
     if( res == 0 )
     {
         if( mode == MBEDTLS_KW_MODE_KWP )
-            TEST_ASSERT( output_len == (mbedtls_size_t) in_len + 8 -
+            TEST_ASSERT( output_len == (xalSize_t) in_len + 8 -
                          ( in_len % 8 ) + 8 );
         else
-            TEST_ASSERT( output_len == (mbedtls_size_t) in_len + 8 );
+            TEST_ASSERT( output_len == (xalSize_t) in_len + 8 );
     }
     else
     {
@@ -204,7 +204,7 @@ void nist_kw_ciphertext_lengths( int in_len, int out_len, int mode, int res )
     unsigned char *plaintext = NULL;
     unsigned char *ciphertext = NULL;
     int unwrap_ret;
-    mbedtls_size_t output_len = out_len;
+    xalSize_t output_len = out_len;
 
     mbedtls_nist_kw_init( &ctx );
 
@@ -247,7 +247,7 @@ void mbedtls_nist_kw_wrap( int cipher_id, int mode, data_t *key, data_t *msg,
 {
     unsigned char result[528];
     mbedtls_nist_kw_context ctx;
-    mbedtls_size_t result_len, i, padlen;
+    xalSize_t result_len, i, padlen;
 
     mbedtls_nist_kw_init( &ctx );
 
@@ -282,7 +282,7 @@ void mbedtls_nist_kw_unwrap( int cipher_id, int mode, data_t *key, data_t *msg,
 {
     unsigned char result[528];
     mbedtls_nist_kw_context ctx;
-    mbedtls_size_t result_len, i;
+    xalSize_t result_len, i;
 
     mbedtls_nist_kw_init( &ctx );
 

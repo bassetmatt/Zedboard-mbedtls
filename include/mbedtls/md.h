@@ -287,7 +287,7 @@ int mbedtls_md_starts( mbedtls_md_context_t *ctx );
  *                  failure.
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
-int mbedtls_md_update( mbedtls_md_context_t *ctx, const unsigned char *input, mbedtls_size_t ilen );
+int mbedtls_md_update( mbedtls_md_context_t *ctx, const unsigned char *input, xalSize_t ilen );
 
 /**
  * \brief           This function finishes the digest operation,
@@ -329,7 +329,7 @@ int mbedtls_md_finish( mbedtls_md_context_t *ctx, unsigned char *output );
  *                 failure.
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
-int mbedtls_md( const mbedtls_md_info_t *md_info, const unsigned char *input, mbedtls_size_t ilen,
+int mbedtls_md( const mbedtls_md_info_t *md_info, const unsigned char *input, xalSize_t ilen,
         unsigned char *output );
 
 #if defined(MBEDTLS_FS_IO)
@@ -375,7 +375,7 @@ int mbedtls_md_file( const mbedtls_md_info_t *md_info, const char *path,
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_md_hmac_starts( mbedtls_md_context_t *ctx, const unsigned char *key,
-                    mbedtls_size_t keylen );
+                    xalSize_t keylen );
 
 /**
  * \brief           This function feeds an input buffer into an ongoing HMAC
@@ -398,7 +398,7 @@ int mbedtls_md_hmac_starts( mbedtls_md_context_t *ctx, const unsigned char *key,
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_md_hmac_update( mbedtls_md_context_t *ctx, const unsigned char *input,
-                    mbedtls_size_t ilen );
+                    xalSize_t ilen );
 
 /**
  * \brief           This function finishes the HMAC operation, and writes
@@ -462,8 +462,8 @@ int mbedtls_md_hmac_reset( mbedtls_md_context_t *ctx );
  *                 failure.
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
-int mbedtls_md_hmac( const mbedtls_md_info_t *md_info, const unsigned char *key, mbedtls_size_t keylen,
-                const unsigned char *input, mbedtls_size_t ilen,
+int mbedtls_md_hmac( const mbedtls_md_info_t *md_info, const unsigned char *key, xalSize_t keylen,
+                const unsigned char *input, xalSize_t ilen,
                 unsigned char *output );
 
 /* Internal use */

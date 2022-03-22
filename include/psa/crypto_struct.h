@@ -162,8 +162,8 @@ struct psa_aead_operation_s
     psa_algorithm_t MBEDTLS_PRIVATE(alg);
     psa_key_type_t MBEDTLS_PRIVATE(key_type);
 
-    mbedtls_size_t MBEDTLS_PRIVATE(ad_remaining);
-    mbedtls_size_t MBEDTLS_PRIVATE(body_remaining);
+    xalSize_t MBEDTLS_PRIVATE(ad_remaining);
+    xalSize_t MBEDTLS_PRIVATE(body_remaining);
 
     unsigned int MBEDTLS_PRIVATE(nonce_set) : 1;
     unsigned int MBEDTLS_PRIVATE(lengths_set) : 1;
@@ -185,7 +185,7 @@ static inline struct psa_aead_operation_s psa_aead_operation_init( void )
 typedef struct
 {
     uint8_t *MBEDTLS_PRIVATE(info);
-    mbedtls_size_t MBEDTLS_PRIVATE(info_length);
+    xalSize_t MBEDTLS_PRIVATE(info_length);
 #if PSA_HASH_MAX_SIZE > 0xff
 #error "PSA_HASH_MAX_SIZE does not fit in uint8_t"
 #endif
@@ -226,11 +226,11 @@ typedef struct psa_tls12_prf_key_derivation_s
     psa_tls12_prf_key_derivation_state_t MBEDTLS_PRIVATE(state);
 
     uint8_t *MBEDTLS_PRIVATE(secret);
-    mbedtls_size_t MBEDTLS_PRIVATE(secret_length);
+    xalSize_t MBEDTLS_PRIVATE(secret_length);
     uint8_t *MBEDTLS_PRIVATE(seed);
-    mbedtls_size_t MBEDTLS_PRIVATE(seed_length);
+    xalSize_t MBEDTLS_PRIVATE(seed_length);
     uint8_t *MBEDTLS_PRIVATE(label);
-    mbedtls_size_t MBEDTLS_PRIVATE(label_length);
+    xalSize_t MBEDTLS_PRIVATE(label_length);
 
     uint8_t MBEDTLS_PRIVATE(Ai)[PSA_HASH_MAX_SIZE];
 
@@ -244,7 +244,7 @@ struct psa_key_derivation_s
 {
     psa_algorithm_t MBEDTLS_PRIVATE(alg);
     unsigned int MBEDTLS_PRIVATE(can_output_key) : 1;
-    mbedtls_size_t MBEDTLS_PRIVATE(capacity);
+    xalSize_t MBEDTLS_PRIVATE(capacity);
     union
     {
         /* Make the union non-empty even with no supported algorithms. */
@@ -284,7 +284,7 @@ static inline struct psa_key_policy_s psa_key_policy_init( void )
 }
 
 /* The type used internally for key sizes.
- * Public interfaces use mbedtls_size_t, but internally we use a smaller type. */
+ * Public interfaces use xalSize_t, but internally we use a smaller type. */
 typedef uint16_t psa_key_bits_t;
 /* The maximum value of the type used to represent bit-sizes.
  * This is used to mark an invalid key size. */
@@ -341,7 +341,7 @@ struct psa_key_attributes_s
     psa_key_slot_number_t MBEDTLS_PRIVATE(slot_number);
 #endif /* MBEDTLS_PSA_CRYPTO_SE_C */
     void *MBEDTLS_PRIVATE(domain_parameters);
-    mbedtls_size_t MBEDTLS_PRIVATE(domain_parameters_size);
+    xalSize_t MBEDTLS_PRIVATE(domain_parameters_size);
 };
 
 #if defined(MBEDTLS_PSA_CRYPTO_SE_C)
@@ -445,7 +445,7 @@ static inline psa_algorithm_t psa_get_key_algorithm(
 psa_status_t psa_set_key_domain_parameters( psa_key_attributes_t *attributes,
                                            psa_key_type_t type,
                                            const uint8_t *data,
-                                           mbedtls_size_t data_length );
+                                           xalSize_t data_length );
 
 static inline void psa_set_key_type( psa_key_attributes_t *attributes,
                                     psa_key_type_t type )
@@ -472,7 +472,7 @@ static inline psa_key_type_t psa_get_key_type(
 }
 
 static inline void psa_set_key_bits( psa_key_attributes_t *attributes,
-                                    mbedtls_size_t bits )
+                                    xalSize_t bits )
 {
     if( bits > PSA_MAX_KEY_BITS )
         attributes->MBEDTLS_PRIVATE(core).MBEDTLS_PRIVATE(bits) = PSA_KEY_BITS_TOO_LARGE;
@@ -480,7 +480,7 @@ static inline void psa_set_key_bits( psa_key_attributes_t *attributes,
         attributes->MBEDTLS_PRIVATE(core).MBEDTLS_PRIVATE(bits) = (psa_key_bits_t) bits;
 }
 
-static inline mbedtls_size_t psa_get_key_bits(
+static inline xalSize_t psa_get_key_bits(
     const psa_key_attributes_t *attributes )
 {
     return( attributes->MBEDTLS_PRIVATE(core).MBEDTLS_PRIVATE(bits) );

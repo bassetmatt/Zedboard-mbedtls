@@ -128,7 +128,7 @@ int mbedtls_md5_starts( mbedtls_md5_context *ctx );
  */
 int mbedtls_md5_update( mbedtls_md5_context *ctx,
                         const unsigned char *input,
-                        mbedtls_size_t ilen );
+                        xalSize_t ilen );
 
 /**
  * \brief          MD5 final digest
@@ -177,7 +177,7 @@ int mbedtls_internal_md5_process( mbedtls_md5_context *ctx,
  *
  */
 int mbedtls_md5( const unsigned char *input,
-                 mbedtls_size_t ilen,
+                 xalSize_t ilen,
                  unsigned char output[16] );
 
 #if defined(MBEDTLS_SELF_TEST)

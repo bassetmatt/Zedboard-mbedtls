@@ -254,9 +254,9 @@ void parse_arguments( int argc, char *argv[] )
 /*
  * This function prints base64 code to the stdout
  */
-void print_b64( const uint8_t *b, mbedtls_size_t len )
+void print_b64( const uint8_t *b, xalSize_t len )
 {
-    mbedtls_size_t i = 0;
+    xalSize_t i = 0;
     const uint8_t *end = b + len;
     printf("\t");
     while( b < end )
@@ -280,10 +280,10 @@ void print_b64( const uint8_t *b, mbedtls_size_t len )
  * /p in_line   number of bytes in one line
  * /p prefix    prefix for the new lines
  */
-void print_hex( const uint8_t *b, mbedtls_size_t len,
-                const mbedtls_size_t in_line, const char *prefix )
+void print_hex( const uint8_t *b, xalSize_t len,
+                const xalSize_t in_line, const char *prefix )
 {
-    mbedtls_size_t i = 0;
+    xalSize_t i = 0;
     const uint8_t *end = b + len;
 
     if( prefix == NULL )
@@ -379,10 +379,10 @@ const char * get_mfl_str( int mfl_code )
  * \retval      number of bytes written in to the b64 buffer or 0 in case no more
  *              data was found
  */
-mbedtls_size_t read_next_b64_code( uint8_t **b64, mbedtls_size_t *max_len )
+xalSize_t read_next_b64_code( uint8_t **b64, xalSize_t *max_len )
 {
     int valid_balance = 0;  /* balance between valid and invalid characters */
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
     char pad = 0;
     int c = 0;
 
@@ -436,7 +436,7 @@ mbedtls_size_t read_next_b64_code( uint8_t **b64, mbedtls_size_t *max_len )
             {
                 /* Current buffer is too small, but can be resized. */
                 void *ptr;
-                mbedtls_size_t new_size = ( MAX_BASE64_LEN - 4096 > *max_len ) ?
+                xalSize_t new_size = ( MAX_BASE64_LEN - 4096 > *max_len ) ?
                                   *max_len + 4096 : MAX_BASE64_LEN;
 
                 ptr = realloc( *b64, new_size );
@@ -836,7 +836,7 @@ void print_deserialized_ssl_session( const uint8_t *ssl, uint32_t len,
  * /p ssl   pointer to serialized session
  * /p len   number of bytes in the buffer
  */
-void print_deserialized_ssl_context( const uint8_t *ssl, mbedtls_size_t len )
+void print_deserialized_ssl_context( const uint8_t *ssl, xalSize_t len )
 {
     const uint8_t *end = ssl + len;
     uint32_t session_len;
@@ -1023,9 +1023,9 @@ int main( int argc, char *argv[] )
     uint32_t b64_counter = 0;
     uint8_t *b64_buf = NULL;
     uint8_t *ssl_buf = NULL;
-    mbedtls_size_t b64_max_len = SSL_INIT_LEN;
-    mbedtls_size_t ssl_max_len = SSL_INIT_LEN;
-    mbedtls_size_t ssl_len = 0;
+    xalSize_t b64_max_len = SSL_INIT_LEN;
+    xalSize_t ssl_max_len = SSL_INIT_LEN;
+    xalSize_t ssl_len = 0;
 
      /* The 'b64_file' is opened when parsing arguments to check that the
       * file name is correct */
@@ -1046,11 +1046,11 @@ int main( int argc, char *argv[] )
 
     while( NULL != b64_file )
     {
-        mbedtls_size_t b64_len = read_next_b64_code( &b64_buf, &b64_max_len );
+        xalSize_t b64_len = read_next_b64_code( &b64_buf, &b64_max_len );
         if( b64_len > 0)
         {
             int ret;
-            mbedtls_size_t ssl_required_len = b64_len * 3 / 4 + 1;
+            xalSize_t ssl_required_len = b64_len * 3 / 4 + 1;
 
             /* Allocate more memory if necessary. */
             if( ssl_required_len > ssl_max_len )

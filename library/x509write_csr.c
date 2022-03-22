@@ -82,9 +82,9 @@ int mbedtls_x509write_csr_set_subject_name( mbedtls_x509write_csr *ctx,
 }
 
 int mbedtls_x509write_csr_set_extension( mbedtls_x509write_csr *ctx,
-                                 const char *oid, mbedtls_size_t oid_len,
+                                 const char *oid, xalSize_t oid_len,
                                  int critical,
-                                 const unsigned char *val, mbedtls_size_t val_len )
+                                 const unsigned char *val, xalSize_t val_len )
 {
     return mbedtls_x509_set_extension( &ctx->extensions, oid, oid_len,
                                critical, val, val_len );
@@ -104,7 +104,7 @@ int mbedtls_x509write_csr_set_key_usage( mbedtls_x509write_csr *ctx, unsigned ch
 
     ret = mbedtls_x509write_csr_set_extension( ctx, MBEDTLS_OID_KEY_USAGE,
                                        MBEDTLS_OID_SIZE( MBEDTLS_OID_KEY_USAGE ),
-                                       0, c, (mbedtls_size_t)ret );
+                                       0, c, (xalSize_t)ret );
     if( ret != 0 )
         return( ret );
 
@@ -126,7 +126,7 @@ int mbedtls_x509write_csr_set_ns_cert_type( mbedtls_x509write_csr *ctx,
 
     ret = mbedtls_x509write_csr_set_extension( ctx, MBEDTLS_OID_NS_CERT_TYPE,
                                        MBEDTLS_OID_SIZE( MBEDTLS_OID_NS_CERT_TYPE ),
-                                       0, c, (mbedtls_size_t)ret );
+                                       0, c, (xalSize_t)ret );
     if( ret != 0 )
         return( ret );
 
@@ -135,21 +135,21 @@ int mbedtls_x509write_csr_set_ns_cert_type( mbedtls_x509write_csr *ctx,
 
 static int x509write_csr_der_internal( mbedtls_x509write_csr *ctx,
                                  unsigned char *buf,
-                                 mbedtls_size_t size,
-                                 unsigned char *sig, mbedtls_size_t sig_size,
-                                 int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                                 xalSize_t size,
+                                 unsigned char *sig, xalSize_t sig_size,
+                                 int (*f_rng)(void *, unsigned char *, xalSize_t),
                                  void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const char *sig_oid;
-    mbedtls_size_t sig_oid_len = 0;
+    xalSize_t sig_oid_len = 0;
     unsigned char *c, *c2;
     unsigned char hash[64];
-    mbedtls_size_t pub_len = 0, sig_and_oid_len = 0, sig_len;
-    mbedtls_size_t len = 0;
+    xalSize_t pub_len = 0, sig_and_oid_len = 0, sig_len;
+    xalSize_t len = 0;
     mbedtls_pk_type_t pk_alg;
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
-    mbedtls_size_t hash_len;
+    xalSize_t hash_len;
     psa_algorithm_t hash_alg = mbedtls_psa_translate_md( ctx->md_alg );
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
@@ -290,8 +290,8 @@ static int x509write_csr_der_internal( mbedtls_x509write_csr *ctx,
 }
 
 int mbedtls_x509write_csr_der( mbedtls_x509write_csr *ctx, unsigned char *buf,
-                               mbedtls_size_t size,
-                               int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                               xalSize_t size,
+                               int (*f_rng)(void *, unsigned char *, xalSize_t),
                                void *p_rng )
 {
     int ret;
@@ -315,12 +315,12 @@ int mbedtls_x509write_csr_der( mbedtls_x509write_csr *ctx, unsigned char *buf,
 #define PEM_END_CSR             "-----END CERTIFICATE REQUEST-----\n"
 
 #if defined(MBEDTLS_PEM_WRITE_C)
-int mbedtls_x509write_csr_pem( mbedtls_x509write_csr *ctx, unsigned char *buf, mbedtls_size_t size,
-                       int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+int mbedtls_x509write_csr_pem( mbedtls_x509write_csr *ctx, unsigned char *buf, xalSize_t size,
+                       int (*f_rng)(void *, unsigned char *, xalSize_t),
                        void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t olen = 0;
+    xalSize_t olen = 0;
 
     if( ( ret = mbedtls_x509write_csr_der( ctx, buf, size,
                                    f_rng, p_rng ) ) < 0 )

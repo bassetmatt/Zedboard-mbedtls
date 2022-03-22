@@ -41,13 +41,13 @@ static psa_status_t psa_hmac_abort_internal(
 static psa_status_t psa_hmac_setup_internal(
     mbedtls_psa_hmac_operation_t *hmac,
     const uint8_t *key,
-    mbedtls_size_t key_length,
+    xalSize_t key_length,
     psa_algorithm_t hash_alg )
 {
     uint8_t ipad[PSA_HMAC_MAX_HASH_BLOCK_SIZE];
-    mbedtls_size_t i;
-    mbedtls_size_t hash_size = PSA_HASH_LENGTH( hash_alg );
-    mbedtls_size_t block_size = PSA_HASH_BLOCK_LENGTH( hash_alg );
+    xalSize_t i;
+    xalSize_t hash_size = PSA_HASH_LENGTH( hash_alg );
+    xalSize_t block_size = PSA_HASH_BLOCK_LENGTH( hash_alg );
     psa_status_t status;
 
     hmac->alg = hash_alg;
@@ -106,7 +106,7 @@ cleanup:
 static psa_status_t psa_hmac_update_internal(
     mbedtls_psa_hmac_operation_t *hmac,
     const uint8_t *data,
-    mbedtls_size_t data_length )
+    xalSize_t data_length )
 {
     return( psa_hash_update( &hmac->hash_ctx, data, data_length ) );
 }
@@ -114,12 +114,12 @@ static psa_status_t psa_hmac_update_internal(
 static psa_status_t psa_hmac_finish_internal(
     mbedtls_psa_hmac_operation_t *hmac,
     uint8_t *mac,
-    mbedtls_size_t mac_size )
+    xalSize_t mac_size )
 {
     uint8_t tmp[PSA_HASH_MAX_SIZE];
     psa_algorithm_t hash_alg = hmac->alg;
-    mbedtls_size_t hash_size = 0;
-    mbedtls_size_t block_size = PSA_HASH_BLOCK_LENGTH( hash_alg );
+    xalSize_t hash_size = 0;
+    xalSize_t block_size = PSA_HASH_BLOCK_LENGTH( hash_alg );
     psa_status_t status;
 
     status = psa_hash_finish( &hmac->hash_ctx, tmp, sizeof( tmp ), &hash_size );
@@ -275,7 +275,7 @@ bad_state:
 static psa_status_t psa_mac_setup( mbedtls_psa_mac_operation_t *operation,
                                    const psa_key_attributes_t *attributes,
                                    const uint8_t *key_buffer,
-                                   mbedtls_size_t key_buffer_size,
+                                   xalSize_t key_buffer_size,
                                    psa_algorithm_t alg )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -325,7 +325,7 @@ psa_status_t mbedtls_psa_mac_sign_setup(
     mbedtls_psa_mac_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     return( psa_mac_setup( operation, attributes,
@@ -336,7 +336,7 @@ psa_status_t mbedtls_psa_mac_verify_setup(
     mbedtls_psa_mac_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     return( psa_mac_setup( operation, attributes,
@@ -346,7 +346,7 @@ psa_status_t mbedtls_psa_mac_verify_setup(
 psa_status_t mbedtls_psa_mac_update(
     mbedtls_psa_mac_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length )
+    xalSize_t input_length )
 {
     if( operation->alg == 0 )
         return( PSA_ERROR_BAD_STATE );
@@ -379,7 +379,7 @@ psa_status_t mbedtls_psa_mac_update(
 
 static psa_status_t psa_mac_finish_internal(
     mbedtls_psa_mac_operation_t *operation,
-    uint8_t *mac, mbedtls_size_t mac_size )
+    uint8_t *mac, xalSize_t mac_size )
 {
 #if defined(MBEDTLS_PSA_BUILTIN_ALG_CMAC)
     if( PSA_ALG_FULL_LENGTH_MAC( operation->alg ) == PSA_ALG_CMAC )
@@ -414,8 +414,8 @@ static psa_status_t psa_mac_finish_internal(
 psa_status_t mbedtls_psa_mac_sign_finish(
     mbedtls_psa_mac_operation_t *operation,
     uint8_t *mac,
-    mbedtls_size_t mac_size,
-    mbedtls_size_t *mac_length )
+    xalSize_t mac_size,
+    xalSize_t *mac_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -432,7 +432,7 @@ psa_status_t mbedtls_psa_mac_sign_finish(
 psa_status_t mbedtls_psa_mac_verify_finish(
     mbedtls_psa_mac_operation_t *operation,
     const uint8_t *mac,
-    mbedtls_size_t mac_length )
+    xalSize_t mac_length )
 {
     uint8_t actual_mac[PSA_MAC_MAX_SIZE];
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -460,13 +460,13 @@ cleanup:
 psa_status_t mbedtls_psa_mac_compute(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    mbedtls_size_t input_length,
+    xalSize_t input_length,
     uint8_t *mac,
-    mbedtls_size_t mac_size,
-    mbedtls_size_t *mac_length )
+    xalSize_t mac_size,
+    xalSize_t *mac_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_psa_mac_operation_t operation = MBEDTLS_PSA_MAC_OPERATION_INIT;

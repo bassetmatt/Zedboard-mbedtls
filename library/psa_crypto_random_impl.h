@@ -43,7 +43,7 @@ typedef mbedtls_psa_external_random_context_t mbedtls_psa_random_context_t;
 /* Trivial wrapper around psa_generate_random(). */
 int mbedtls_psa_get_random( void *p_rng,
                             unsigned char *output,
-                            mbedtls_size_t output_size );
+                            xalSize_t output_size );
 
 /* The PSA RNG API doesn't need any externally maintained state. */
 #define MBEDTLS_PSA_RANDOM_STATE NULL
@@ -182,7 +182,7 @@ extern mbedtls_psa_drbg_context_t *const mbedtls_psa_random_state;
  */
 static inline int mbedtls_psa_drbg_seed(
     mbedtls_entropy_context *entropy,
-    const unsigned char *custom, mbedtls_size_t len )
+    const unsigned char *custom, xalSize_t len )
 {
 #if defined(MBEDTLS_CTR_DRBG_C)
     return( mbedtls_ctr_drbg_seed( MBEDTLS_PSA_RANDOM_STATE,

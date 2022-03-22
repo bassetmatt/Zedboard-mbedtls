@@ -7,13 +7,13 @@
  * stdio functions. */
 #include "mbedtls/build_info.h"
 
-int LLVMFuzzerTestOneInput(const uint8_t *Data, mbedtls_size_t Size);
+int LLVMFuzzerTestOneInput(const uint8_t *Data, xalSize_t Size);
 
 int main(int argc, char** argv)
 {
     FILE * fp;
     uint8_t *Data;
-    mbedtls_size_t Size;
+    xalSize_t Size;
 
     if (argc != 2) {
         return 1;
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
         return 2;
     }
     Size = ftell(fp);
-    if (Size == (mbedtls_size_t) -1) {
+    if (Size == (xalSize_t) -1) {
         fclose(fp);
         return 2;
     }

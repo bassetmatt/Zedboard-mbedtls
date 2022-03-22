@@ -44,7 +44,7 @@
  * Behavior:
  * Set N to c * 2^bits + old_value_of_N.
  */
-void mbedtls_ecp_fix_negative( mbedtls_mpi *N, signed char c, mbedtls_size_t bits );
+void mbedtls_ecp_fix_negative( mbedtls_mpi *N, signed char c, xalSize_t bits );
 #endif
 
 #if defined(MBEDTLS_ECP_MONTGOMERY_ENABLED)
@@ -69,9 +69,9 @@ void mbedtls_ecp_fix_negative( mbedtls_mpi *N, signed char c, mbedtls_size_t bit
  * \return          \c 0 on success.
  * \return          \c MBEDTLS_ERR_ECP_xxx or MBEDTLS_ERR_MPI_xxx on failure.
  */
-int mbedtls_ecp_gen_privkey_mx( mbedtls_size_t n_bits,
+int mbedtls_ecp_gen_privkey_mx( xalSize_t n_bits,
                                 mbedtls_mpi *d,
-                                int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                                int (*f_rng)(void *, unsigned char *, xalSize_t),
                                 void *p_rng );
 
 #endif /* MBEDTLS_ECP_MONTGOMERY_ENABLED */

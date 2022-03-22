@@ -26,7 +26,7 @@
 /* This block is present to support Visual Studio builds prior to 2015 */
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #include <stdarg.h>
-int snprintf( char *s, mbedtls_size_t n, const char *fmt, ... )
+int snprintf( char *s, xalSize_t n, const char *fmt, ... )
 {
     int ret;
     va_list argp;
@@ -40,7 +40,7 @@ int snprintf( char *s, mbedtls_size_t n, const char *fmt, ... )
     ret = _vsnprintf_s( s, n, _TRUNCATE, fmt, argp );
 #else
     ret = _vsnprintf( s, n, fmt, argp );
-    if( ret < 0 || (mbedtls_size_t) ret == n )
+    if( ret < 0 || (xalSize_t) ret == n )
     {
         s[n-1] = '\0';
         ret = -1;
@@ -52,9 +52,9 @@ int snprintf( char *s, mbedtls_size_t n, const char *fmt, ... )
 }
 #endif
 
-static void append(char **buffer, mbedtls_size_t buffer_size,
-                   mbedtls_size_t *required_size,
-                   const char *string, mbedtls_size_t length)
+static void append(char **buffer, xalSize_t buffer_size,
+                   xalSize_t *required_size,
+                   const char *string, xalSize_t length)
 {
     *required_size += length;
     if (*required_size < buffer_size) {
@@ -63,12 +63,12 @@ static void append(char **buffer, mbedtls_size_t buffer_size,
     }
 }
 
-static void append_integer(char **buffer, mbedtls_size_t buffer_size,
-                           mbedtls_size_t *required_size,
+static void append_integer(char **buffer, xalSize_t buffer_size,
+                           xalSize_t *required_size,
                            const char *format /*printf format for value*/,
                            unsigned long value)
 {
-    mbedtls_size_t n = snprintf(*buffer, buffer_size - *required_size, format, value);
+    xalSize_t n = snprintf(*buffer, buffer_size - *required_size, format, value);
     if (n < buffer_size - *required_size) *buffer += n;
     *required_size += n;
 }
@@ -78,9 +78,9 @@ static const char *psa_ecc_family_name(psa_ecc_family_t curve);
 static const char *psa_dh_family_name(psa_dh_family_t group);
 static const char *psa_hash_algorithm_name(psa_algorithm_t hash_alg);
 
-static void append_with_curve(char **buffer, mbedtls_size_t buffer_size,
-                              mbedtls_size_t *required_size,
-                              const char *string, mbedtls_size_t length,
+static void append_with_curve(char **buffer, xalSize_t buffer_size,
+                              xalSize_t *required_size,
+                              const char *string, xalSize_t length,
                               psa_ecc_family_t curve)
 {
     const char *family_name = psa_ecc_family_name(curve);
@@ -96,9 +96,9 @@ static void append_with_curve(char **buffer, mbedtls_size_t buffer_size,
     append(buffer, buffer_size, required_size, ")", 1);
 }
 
-static void append_with_group(char **buffer, mbedtls_size_t buffer_size,
-                              mbedtls_size_t *required_size,
-                              const char *string, mbedtls_size_t length,
+static void append_with_group(char **buffer, xalSize_t buffer_size,
+                              xalSize_t *required_size,
+                              const char *string, xalSize_t length,
                               psa_dh_family_t group)
 {
     const char *group_name = psa_dh_family_name(group);
@@ -116,8 +116,8 @@ static void append_with_group(char **buffer, mbedtls_size_t buffer_size,
 
 typedef const char *(*psa_get_algorithm_name_func_ptr)(psa_algorithm_t alg);
 
-static void append_with_alg(char **buffer, mbedtls_size_t buffer_size,
-                            mbedtls_size_t *required_size,
+static void append_with_alg(char **buffer, xalSize_t buffer_size,
+                            xalSize_t *required_size,
                             psa_get_algorithm_name_func_ptr get_name,
                             psa_algorithm_t alg)
 {
@@ -133,14 +133,14 @@ static void append_with_alg(char **buffer, mbedtls_size_t buffer_size,
 
 #include "psa_constant_names_generated.c"
 
-static int psa_snprint_status(char *buffer, mbedtls_size_t buffer_size,
+static int psa_snprint_status(char *buffer, xalSize_t buffer_size,
                               psa_status_t status)
 {
     const char *name = psa_strerror(status);
     if (name == NULL) {
         return snprintf(buffer, buffer_size, "%ld", (long) status);
     } else {
-        mbedtls_size_t length = strlen(name);
+        xalSize_t length = strlen(name);
         if (length < buffer_size) {
             memcpy(buffer, name, length + 1);
             return (int) length;
@@ -150,14 +150,14 @@ static int psa_snprint_status(char *buffer, mbedtls_size_t buffer_size,
     }
 }
 
-static int psa_snprint_ecc_curve(char *buffer, mbedtls_size_t buffer_size,
+static int psa_snprint_ecc_curve(char *buffer, xalSize_t buffer_size,
                                  psa_ecc_family_t curve)
 {
     const char *name = psa_ecc_family_name(curve);
     if (name == NULL) {
         return snprintf(buffer, buffer_size, "0x%02x", (unsigned) curve);
     } else {
-        mbedtls_size_t length = strlen(name);
+        xalSize_t length = strlen(name);
         if (length < buffer_size) {
             memcpy(buffer, name, length + 1);
             return (int) length;
@@ -167,14 +167,14 @@ static int psa_snprint_ecc_curve(char *buffer, mbedtls_size_t buffer_size,
     }
 }
 
-static int psa_snprint_dh_group(char *buffer, mbedtls_size_t buffer_size,
+static int psa_snprint_dh_group(char *buffer, xalSize_t buffer_size,
                                 psa_dh_family_t group)
 {
     const char *name = psa_dh_family_name(group);
     if (name == NULL) {
         return snprintf(buffer, buffer_size, "0x%02x", (unsigned) group);
     } else {
-        mbedtls_size_t length = strlen(name);
+        xalSize_t length = strlen(name);
         if (length < buffer_size) {
             memcpy(buffer, name, length + 1);
             return (int) length;

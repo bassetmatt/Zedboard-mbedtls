@@ -35,7 +35,7 @@ int verify_string( char **str )
  */
 int verify_int( char *str, int32_t *value )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     int minus = 0;
     int digits = 1;
     int hex = 0;
@@ -107,7 +107,7 @@ int verify_int( char *str, int32_t *value )
  *
  * \return      0 if success else -1
  */
-int get_line( FILE *f, char *buf, mbedtls_size_t len )
+int get_line( FILE *f, char *buf, xalSize_t len )
 {
     char *ret;
     int i = 0, str_len = 0, has_string = 0;
@@ -157,10 +157,10 @@ int get_line( FILE *f, char *buf, mbedtls_size_t len )
  *
  * \return      Count of strings found.
  */
-static int parse_arguments( char *buf, mbedtls_size_t len, char **params,
-                            mbedtls_size_t params_len )
+static int parse_arguments( char *buf, xalSize_t len, char **params,
+                            xalSize_t params_len )
 {
-    mbedtls_size_t cnt = 0, i;
+    xalSize_t cnt = 0, i;
     char *cur = buf;
     char *p = buf, *q;
 
@@ -238,7 +238,7 @@ static int parse_arguments( char *buf, mbedtls_size_t len, char **params,
  *
  * \return      0 for success else 1
  */
-static int convert_params( mbedtls_size_t cnt , char ** params , int32_t * int_params_store )
+static int convert_params( xalSize_t cnt , char ** params , int32_t * int_params_store )
 {
     char ** cur = params;
     char ** out = params;
@@ -277,7 +277,7 @@ static int convert_params( mbedtls_size_t cnt , char ** params , int32_t * int_p
         {
             if ( verify_string( &val ) == 0 )
             {
-                mbedtls_size_t len;
+                xalSize_t len;
 
                 TEST_HELPER_ASSERT(
                   mbedtls_test_unhexify( (unsigned char *) val, strlen( val ),
@@ -335,7 +335,7 @@ static int convert_params( mbedtls_size_t cnt , char ** params , int32_t * int_p
 #if defined(__GNUC__)
 __attribute__((__noinline__))
 #endif
-static int test_snprintf( mbedtls_size_t n, const char *ref_buf, int ref_ret )
+static int test_snprintf( xalSize_t n, const char *ref_buf, int ref_ret )
 {
     int ret;
     char buf[10] = "xxxxxxxxx";
@@ -344,7 +344,7 @@ static int test_snprintf( mbedtls_size_t n, const char *ref_buf, int ref_ret )
     if( n >= sizeof( buf ) )
         return( -1 );
     ret = mbedtls_snprintf( buf, n, "%s", "123" );
-    if( ret < 0 || (mbedtls_size_t) ret >= n )
+    if( ret < 0 || (xalSize_t) ret >= n )
         ret = -1;
 
     if( strncmp( ref_buf, buf, sizeof( buf ) ) != 0 ||
@@ -430,7 +430,7 @@ static void write_outcome_entry( FILE *outcome_file,
  * \param info                       A pointer to the test info structure.
  */
 static void write_outcome_result( FILE *outcome_file,
-                                  mbedtls_size_t unmet_dep_count,
+                                  xalSize_t unmet_dep_count,
                                   int unmet_dependencies[],
                                   int missing_unmet_dependencies,
                                   int ret,
@@ -446,7 +446,7 @@ static void write_outcome_result( FILE *outcome_file,
         case DISPATCH_TEST_SUCCESS:
             if( unmet_dep_count > 0 )
             {
-                mbedtls_size_t i;
+                xalSize_t i;
                 mbedtls_fprintf( outcome_file, "SKIP" );
                 for( i = 0; i < unmet_dep_count; i++ )
                 {
@@ -506,14 +506,14 @@ int execute_tests( int argc , const char ** argv )
     const char *default_filename = "DATA_FILE";
     const char *test_filename = NULL;
     const char **test_files = NULL;
-    mbedtls_size_t testfile_count = 0;
+    xalSize_t testfile_count = 0;
     int option_verbose = 0;
-    mbedtls_size_t function_id = 0;
+    xalSize_t function_id = 0;
 
     /* Other Local variables */
     int arg_index = 1;
     const char *next_arg;
-    mbedtls_size_t testfile_index, i, cnt;
+    xalSize_t testfile_index, i, cnt;
     int ret;
     unsigned total_errors = 0, total_tests = 0, total_skipped = 0;
     FILE *file;
@@ -610,7 +610,7 @@ int execute_tests( int argc , const char ** argv )
           testfile_index < testfile_count;
           testfile_index++ )
     {
-        mbedtls_size_t unmet_dep_count = 0;
+        xalSize_t unmet_dep_count = 0;
         int unmet_dependencies[20];
         int missing_unmet_dependencies = 0;
 

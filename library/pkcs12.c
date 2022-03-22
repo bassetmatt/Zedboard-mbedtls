@@ -78,13 +78,13 @@ static int pkcs12_parse_pbe_params( mbedtls_asn1_buf *params,
 #define PKCS12_MAX_PWDLEN 128
 
 static int pkcs12_pbe_derive_key_iv( mbedtls_asn1_buf *pbe_params, mbedtls_md_type_t md_type,
-                                     const unsigned char *pwd,  mbedtls_size_t pwdlen,
-                                     unsigned char *key, mbedtls_size_t keylen,
-                                     unsigned char *iv,  mbedtls_size_t ivlen )
+                                     const unsigned char *pwd,  xalSize_t pwdlen,
+                                     unsigned char *key, xalSize_t keylen,
+                                     unsigned char *iv,  xalSize_t ivlen )
 {
     int ret, iterations = 0;
     mbedtls_asn1_buf salt;
-    mbedtls_size_t i;
+    xalSize_t i;
     unsigned char unipwd[PKCS12_MAX_PWDLEN * 2 + 2];
 
     if( pwdlen > PKCS12_MAX_PWDLEN )
@@ -123,8 +123,8 @@ static int pkcs12_pbe_derive_key_iv( mbedtls_asn1_buf *pbe_params, mbedtls_md_ty
 
 int mbedtls_pkcs12_pbe( mbedtls_asn1_buf *pbe_params, int mode,
                 mbedtls_cipher_type_t cipher_type, mbedtls_md_type_t md_type,
-                const unsigned char *pwd,  mbedtls_size_t pwdlen,
-                const unsigned char *data, mbedtls_size_t len,
+                const unsigned char *pwd,  xalSize_t pwdlen,
+                const unsigned char *data, xalSize_t len,
                 unsigned char *output )
 {
     int ret, keylen = 0;
@@ -132,7 +132,7 @@ int mbedtls_pkcs12_pbe( mbedtls_asn1_buf *pbe_params, int mode,
     unsigned char iv[16];
     const mbedtls_cipher_info_t *cipher_info;
     mbedtls_cipher_context_t cipher_ctx;
-    mbedtls_size_t olen = 0;
+    xalSize_t olen = 0;
 
     if( pwd == NULL && pwdlen != 0 )
         return( MBEDTLS_ERR_PKCS12_BAD_INPUT_DATA );
@@ -183,11 +183,11 @@ exit:
 
 #endif /* MBEDTLS_ASN1_PARSE_C */
 
-static void pkcs12_fill_buffer( unsigned char *data, mbedtls_size_t data_len,
-                                const unsigned char *filler, mbedtls_size_t fill_len )
+static void pkcs12_fill_buffer( unsigned char *data, xalSize_t data_len,
+                                const unsigned char *filler, xalSize_t fill_len )
 {
     unsigned char *p = data;
-    mbedtls_size_t use_len;
+    xalSize_t use_len;
 
     if( filler != NULL && fill_len != 0 )
     {
@@ -209,9 +209,9 @@ static void pkcs12_fill_buffer( unsigned char *data, mbedtls_size_t data_len,
     }
 }
 
-int mbedtls_pkcs12_derivation( unsigned char *data, mbedtls_size_t datalen,
-                       const unsigned char *pwd, mbedtls_size_t pwdlen,
-                       const unsigned char *salt, mbedtls_size_t saltlen,
+int mbedtls_pkcs12_derivation( unsigned char *data, xalSize_t datalen,
+                       const unsigned char *pwd, xalSize_t pwdlen,
+                       const unsigned char *salt, xalSize_t saltlen,
                        mbedtls_md_type_t md_type, int id, int iterations )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -225,7 +225,7 @@ int mbedtls_pkcs12_derivation( unsigned char *data, mbedtls_size_t datalen,
     int           use_password = 0;
     int           use_salt = 0;
 
-    mbedtls_size_t hlen, use_len, v, i;
+    xalSize_t hlen, use_len, v, i;
 
     const mbedtls_md_info_t *md_info;
     mbedtls_md_context_t md_ctx;
@@ -296,7 +296,7 @@ int mbedtls_pkcs12_derivation( unsigned char *data, mbedtls_size_t datalen,
             goto exit;
 
         // Perform remaining ( iterations - 1 ) recursive hash calculations
-        for( i = 1; i < (mbedtls_size_t) iterations; i++ )
+        for( i = 1; i < (xalSize_t) iterations; i++ )
         {
             if( ( ret = mbedtls_md( md_info, hash_output, hlen, hash_output ) ) != 0 )
                 goto exit;

@@ -23,7 +23,7 @@ void aria_invalid_param( )
     unsigned char input[MBEDTLS_ARIA_BLOCKSIZE] = { 0 };
     unsigned char output[MBEDTLS_ARIA_BLOCKSIZE] = { 0 };
     unsigned char iv[MBEDTLS_ARIA_BLOCKSIZE] = { 0 };
-    mbedtls_size_t iv_off = 0;
+    xalSize_t iv_off = 0;
 
     ((void) iv_off);
     ((void) iv);
@@ -64,7 +64,7 @@ void aria_encrypt_ecb( data_t *key_str, data_t *src_str,
 {
     unsigned char output[ARIA_MAX_DATASIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t i;
+    xalSize_t i;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );
@@ -94,7 +94,7 @@ void aria_decrypt_ecb( data_t *key_str, data_t *src_str,
 {
     unsigned char output[ARIA_MAX_DATASIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t i;
+    xalSize_t i;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );
@@ -177,7 +177,7 @@ void aria_encrypt_cfb128( data_t *key_str, data_t *iv_str,
 {
     unsigned char output[ARIA_MAX_DATASIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );
@@ -203,7 +203,7 @@ void aria_decrypt_cfb128( data_t *key_str, data_t *iv_str,
 {
     unsigned char output[ARIA_MAX_DATASIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );
@@ -230,7 +230,7 @@ void aria_encrypt_ctr( data_t *key_str, data_t *iv_str,
     unsigned char output[ARIA_MAX_DATASIZE];
     unsigned char blk[MBEDTLS_ARIA_BLOCKSIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );
@@ -256,7 +256,7 @@ void aria_decrypt_ctr( data_t *key_str, data_t *iv_str,
     unsigned char output[ARIA_MAX_DATASIZE];
     unsigned char blk[MBEDTLS_ARIA_BLOCKSIZE];
     mbedtls_aria_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset( output, 0x00, sizeof( output ) );
     mbedtls_aria_init( &ctx );

@@ -79,10 +79,10 @@ typedef struct mbedtls_ccm_context
     unsigned char MBEDTLS_PRIVATE(y)[16];    /*!< The Y working buffer */
     unsigned char MBEDTLS_PRIVATE(ctr)[16];  /*!< The counter buffer */
     mbedtls_cipher_context_t MBEDTLS_PRIVATE(cipher_ctx);    /*!< The cipher context used. */
-    mbedtls_size_t MBEDTLS_PRIVATE(plaintext_len);   /*!< Total plaintext length */
-    mbedtls_size_t MBEDTLS_PRIVATE(add_len);         /*!< Total authentication data length */
-    mbedtls_size_t MBEDTLS_PRIVATE(tag_len);         /*!< Total tag length */
-    mbedtls_size_t MBEDTLS_PRIVATE(processed);       /*!< Track how many bytes of input data
+    xalSize_t MBEDTLS_PRIVATE(plaintext_len);   /*!< Total plaintext length */
+    xalSize_t MBEDTLS_PRIVATE(add_len);         /*!< Total authentication data length */
+    xalSize_t MBEDTLS_PRIVATE(tag_len);         /*!< Total tag length */
+    xalSize_t MBEDTLS_PRIVATE(processed);       /*!< Track how many bytes of input data
                                                   were processed (chunked input).
                                                   Used independently for both auth data
                                                   and plaintext/ciphertext.
@@ -176,11 +176,11 @@ void mbedtls_ccm_free( mbedtls_ccm_context *ctx );
  * \return          \c 0 on success.
  * \return          A CCM or cipher-specific error code on failure.
  */
-int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t length,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
+int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, xalSize_t length,
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
                          const unsigned char *input, unsigned char *output,
-                         unsigned char *tag, mbedtls_size_t tag_len );
+                         unsigned char *tag, xalSize_t tag_len );
 
 /**
  * \brief           This function encrypts a buffer using CCM*.
@@ -225,11 +225,11 @@ int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t length
  * \return          \c 0 on success.
  * \return          A CCM or cipher-specific error code on failure.
  */
-int mbedtls_ccm_star_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t length,
-                         const unsigned char *iv, mbedtls_size_t iv_len,
-                         const unsigned char *ad, mbedtls_size_t ad_len,
+int mbedtls_ccm_star_encrypt_and_tag( mbedtls_ccm_context *ctx, xalSize_t length,
+                         const unsigned char *iv, xalSize_t iv_len,
+                         const unsigned char *ad, xalSize_t ad_len,
                          const unsigned char *input, unsigned char *output,
-                         unsigned char *tag, mbedtls_size_t tag_len );
+                         unsigned char *tag, xalSize_t tag_len );
 
 /**
  * \brief           This function performs a CCM authenticated decryption of a
@@ -262,11 +262,11 @@ int mbedtls_ccm_star_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t l
  * \return          #MBEDTLS_ERR_CCM_AUTH_FAILED if the tag does not match.
  * \return          A cipher-specific error code on calculation failure.
  */
-int mbedtls_ccm_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t length,
-                      const unsigned char *iv, mbedtls_size_t iv_len,
-                      const unsigned char *ad, mbedtls_size_t ad_len,
+int mbedtls_ccm_auth_decrypt( mbedtls_ccm_context *ctx, xalSize_t length,
+                      const unsigned char *iv, xalSize_t iv_len,
+                      const unsigned char *ad, xalSize_t ad_len,
                       const unsigned char *input, unsigned char *output,
-                      const unsigned char *tag, mbedtls_size_t tag_len );
+                      const unsigned char *tag, xalSize_t tag_len );
 
 /**
  * \brief           This function performs a CCM* authenticated decryption of a
@@ -308,11 +308,11 @@ int mbedtls_ccm_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t length,
  * \return          #MBEDTLS_ERR_CCM_AUTH_FAILED if the tag does not match.
  * \return          A cipher-specific error code on calculation failure.
  */
-int mbedtls_ccm_star_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t length,
-                      const unsigned char *iv, mbedtls_size_t iv_len,
-                      const unsigned char *ad, mbedtls_size_t ad_len,
+int mbedtls_ccm_star_auth_decrypt( mbedtls_ccm_context *ctx, xalSize_t length,
+                      const unsigned char *iv, xalSize_t iv_len,
+                      const unsigned char *ad, xalSize_t ad_len,
                       const unsigned char *input, unsigned char *output,
-                      const unsigned char *tag, mbedtls_size_t tag_len );
+                      const unsigned char *tag, xalSize_t tag_len );
 
 /**
  * \brief           This function starts a CCM encryption or decryption
@@ -345,7 +345,7 @@ int mbedtls_ccm_star_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t leng
 int mbedtls_ccm_starts( mbedtls_ccm_context *ctx,
                         int mode,
                         const unsigned char *iv,
-                        mbedtls_size_t iv_len );
+                        xalSize_t iv_len );
 
 /**
  * \brief           This function declares the lengths of the message
@@ -375,9 +375,9 @@ int mbedtls_ccm_starts( mbedtls_ccm_context *ctx,
  *                  \p total_ad_len is greater than \c 0xFF00.
  */
 int mbedtls_ccm_set_lengths( mbedtls_ccm_context *ctx,
-                             mbedtls_size_t total_ad_len,
-                             mbedtls_size_t plaintext_len,
-                             mbedtls_size_t tag_len );
+                             xalSize_t total_ad_len,
+                             xalSize_t plaintext_len,
+                             xalSize_t tag_len );
 
 /**
  * \brief           This function feeds an input buffer as associated data
@@ -411,7 +411,7 @@ int mbedtls_ccm_set_lengths( mbedtls_ccm_context *ctx,
  */
 int mbedtls_ccm_update_ad( mbedtls_ccm_context *ctx,
                            const unsigned char *ad,
-                           mbedtls_size_t ad_len );
+                           xalSize_t ad_len );
 
 /**
  * \brief           This function feeds an input buffer into an ongoing CCM
@@ -477,9 +477,9 @@ int mbedtls_ccm_update_ad( mbedtls_ccm_context *ctx,
  *                 or \p output_size too small.
  */
 int mbedtls_ccm_update( mbedtls_ccm_context *ctx,
-                        const unsigned char *input, mbedtls_size_t input_len,
-                        unsigned char *output, mbedtls_size_t output_size,
-                        mbedtls_size_t *output_len );
+                        const unsigned char *input, xalSize_t input_len,
+                        unsigned char *output, xalSize_t output_size,
+                        xalSize_t *output_len );
 
 /**
  * \brief           This function finishes the CCM operation and generates
@@ -513,7 +513,7 @@ int mbedtls_ccm_update( mbedtls_ccm_context *ctx,
  *                  \c plaintext_len passed to mbedtls_ccm_set_lengths().
  */
 int mbedtls_ccm_finish( mbedtls_ccm_context *ctx,
-                        unsigned char *tag, mbedtls_size_t tag_len );
+                        unsigned char *tag, xalSize_t tag_len );
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)
 /**

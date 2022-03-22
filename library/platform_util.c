@@ -62,9 +62,9 @@
  * mbedtls_platform_zeroize() to use a suitable implementation for their
  * platform and needs.
  */
-static void * (* const volatile memset_func)( void *, int, mbedtls_size_t ) = memset;
+static void * (* const volatile memset_func)( void *, int, xalSize_t ) = memset;
 
-void mbedtls_platform_zeroize( void *buf, mbedtls_size_t len )
+void mbedtls_platform_zeroize( void *buf, xalSize_t len )
 {
     MBEDTLS_INTERNAL_VALIDATE( len == 0 || buf != NULL );
 

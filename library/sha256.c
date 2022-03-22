@@ -253,13 +253,13 @@ static const uint32_t K[] =
 #  define mbedtls_internal_sha256_process_a64_crypto      mbedtls_internal_sha256_process
 #endif
 
-static mbedtls_size_t mbedtls_internal_sha256_process_many_a64_crypto(
-                  mbedtls_sha256_context *ctx, const uint8_t *msg, mbedtls_size_t len )
+static xalSize_t mbedtls_internal_sha256_process_many_a64_crypto(
+                  mbedtls_sha256_context *ctx, const uint8_t *msg, xalSize_t len )
 {
     uint32x4_t abcd = vld1q_u32( &ctx->state[0] );
     uint32x4_t efgh = vld1q_u32( &ctx->state[4] );
 
-    mbedtls_size_t processed = 0;
+    xalSize_t processed = 0;
 
     for( ;
          len >= SHA256_BLOCK_SIZE;
@@ -488,10 +488,10 @@ int mbedtls_internal_sha256_process_c( mbedtls_sha256_context *ctx,
 
 #if !defined(MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY)
 
-static mbedtls_size_t mbedtls_internal_sha256_process_many_c(
-                  mbedtls_sha256_context *ctx, const uint8_t *data, mbedtls_size_t len )
+static xalSize_t mbedtls_internal_sha256_process_many_c(
+                  mbedtls_sha256_context *ctx, const uint8_t *data, xalSize_t len )
 {
-    mbedtls_size_t processed = 0;
+    xalSize_t processed = 0;
 
     while( len >= SHA256_BLOCK_SIZE )
     {
@@ -526,8 +526,8 @@ static int mbedtls_a64_crypto_sha256_has_support( void )
     return( supported );
 }
 
-static mbedtls_size_t mbedtls_internal_sha256_process_many( mbedtls_sha256_context *ctx,
-                  const uint8_t *msg, mbedtls_size_t len )
+static xalSize_t mbedtls_internal_sha256_process_many( mbedtls_sha256_context *ctx,
+                  const uint8_t *msg, xalSize_t len )
 {
     if( mbedtls_a64_crypto_sha256_has_support() )
         return( mbedtls_internal_sha256_process_many_a64_crypto( ctx, msg, len ) );
@@ -552,10 +552,10 @@ int mbedtls_internal_sha256_process( mbedtls_sha256_context *ctx,
  */
 int mbedtls_sha256_update( mbedtls_sha256_context *ctx,
                                const unsigned char *input,
-                               mbedtls_size_t ilen )
+                               xalSize_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t fill;
+    xalSize_t fill;
     uint32_t left;
 
     SHA256_VALIDATE_RET( ctx != NULL );
@@ -587,7 +587,7 @@ int mbedtls_sha256_update( mbedtls_sha256_context *ctx,
 
     while( ilen >= SHA256_BLOCK_SIZE )
     {
-        mbedtls_size_t processed =
+        xalSize_t processed =
                     mbedtls_internal_sha256_process_many( ctx, input, ilen );
         if( processed < SHA256_BLOCK_SIZE )
             return( MBEDTLS_ERR_ERROR_GENERIC_ERROR );
@@ -676,7 +676,7 @@ int mbedtls_sha256_finish( mbedtls_sha256_context *ctx,
  * output = SHA-256( input buffer )
  */
 int mbedtls_sha256( const unsigned char *input,
-                        mbedtls_size_t ilen,
+                        xalSize_t ilen,
                         unsigned char *output,
                         int is224 )
 {
@@ -720,7 +720,7 @@ static const unsigned char sha256_test_buf[3][57] =
     { "" }
 };
 
-static const mbedtls_size_t sha256_test_buflen[3] =
+static const xalSize_t sha256_test_buflen[3] =
 {
     3, 56, 1000
 };

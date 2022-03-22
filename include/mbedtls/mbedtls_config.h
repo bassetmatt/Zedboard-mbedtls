@@ -1206,7 +1206,7 @@
  * ```
  * psa_status_t mbedtls_psa_external_get_random(
  *     mbedtls_psa_external_random_context_t *context,
- *     uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length);
+ *     uint8_t *output, xalSize_t output_size, xalSize_t *output_length);
  * );
  * ```
  * The \c context value is initialized to 0 before the first call.
@@ -3374,4 +3374,4 @@
 /** \} name SECTION: Customisation configuration options */
 
 // Redefine size_t parameter used in mbedtls
-#define MBEDTLS_PLATFORM_SIZET_MACRO xalSize_t
+//#define MBEDTLS_PLATFORM_SIZET_MACRO xalSize_t

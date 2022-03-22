@@ -48,9 +48,9 @@
 
 int mbedtls_ct_memcmp( const void *a,
                        const void *b,
-                       mbedtls_size_t n )
+                       xalSize_t n )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     volatile const unsigned char *A = (volatile const unsigned char *) a;
     volatile const unsigned char *B = (volatile const unsigned char *) b;
     volatile unsigned char diff = 0;
@@ -83,7 +83,7 @@ unsigned mbedtls_ct_uint_mask( unsigned value )
 
 #if defined(MBEDTLS_SSL_SOME_SUITES_USE_TLS_CBC)
 
-mbedtls_size_t mbedtls_ct_size_mask( mbedtls_size_t value )
+xalSize_t mbedtls_ct_size_mask( xalSize_t value )
 {
     /* MSVC has a warning about unary minus on unsigned integer types,
      * but this is well-defined and precisely what we want to do here. */
@@ -120,7 +120,7 @@ mbedtls_mpi_uint mbedtls_ct_mpi_uint_mask( mbedtls_mpi_uint value )
 #if defined(MBEDTLS_SSL_SOME_SUITES_USE_TLS_CBC)
 
 /** Constant-flow mask generation for "less than" comparison:
- * - if \p x < \p y, return all-bits 1, that is (mbedtls_size_t) -1
+ * - if \p x < \p y, return all-bits 1, that is (xalSize_t) -1
  * - otherwise, return all bits 0, that is 0
  *
  * This function can be used to write constant-time code by replacing branches
@@ -131,23 +131,23 @@ mbedtls_mpi_uint mbedtls_ct_mpi_uint_mask( mbedtls_mpi_uint value )
  *
  * \return      All-bits-one if \p x is less than \p y, otherwise zero.
  */
-static mbedtls_size_t mbedtls_ct_size_mask_lt( mbedtls_size_t x,
-                                       mbedtls_size_t y )
+static xalSize_t mbedtls_ct_size_mask_lt( xalSize_t x,
+                                       xalSize_t y )
 {
     /* This has the most significant bit set if and only if x < y */
-    const mbedtls_size_t sub = x - y;
+    const xalSize_t sub = x - y;
 
     /* sub1 = (x < y) ? 1 : 0 */
-    const mbedtls_size_t sub1 = sub >> ( sizeof( sub ) * 8 - 1 );
+    const xalSize_t sub1 = sub >> ( sizeof( sub ) * 8 - 1 );
 
     /* mask = (x < y) ? 0xff... : 0x00... */
-    const mbedtls_size_t mask = mbedtls_ct_size_mask( sub1 );
+    const xalSize_t mask = mbedtls_ct_size_mask( sub1 );
 
     return( mask );
 }
 
-mbedtls_size_t mbedtls_ct_size_mask_ge( mbedtls_size_t x,
-                                mbedtls_size_t y )
+xalSize_t mbedtls_ct_size_mask_ge( xalSize_t x,
+                                xalSize_t y )
 {
     return( ~mbedtls_ct_size_mask_lt( x, y ) );
 }
@@ -174,11 +174,11 @@ unsigned char mbedtls_ct_uchar_mask_of_range( unsigned char low,
 
 #endif /* MBEDTLS_BASE64_C */
 
-unsigned mbedtls_ct_size_bool_eq( mbedtls_size_t x,
-                                  mbedtls_size_t y )
+unsigned mbedtls_ct_size_bool_eq( xalSize_t x,
+                                  xalSize_t y )
 {
     /* diff = 0 if x == y, non-zero otherwise */
-    const mbedtls_size_t diff = x ^ y;
+    const xalSize_t diff = x ^ y;
 
     /* MSVC has a warning about unary minus on unsigned integer types,
      * but this is well-defined and precisely what we want to do here. */
@@ -188,7 +188,7 @@ unsigned mbedtls_ct_size_bool_eq( mbedtls_size_t x,
 #endif
 
     /* diff_msb's most significant bit is equal to x != y */
-    const mbedtls_size_t diff_msb = ( diff | (mbedtls_size_t) -diff );
+    const xalSize_t diff_msb = ( diff | (xalSize_t) -diff );
 
 #if defined(_MSC_VER)
 #pragma warning( pop )
@@ -213,11 +213,11 @@ unsigned mbedtls_ct_size_bool_eq( mbedtls_size_t x,
  *
  * \return      1 if \p x greater than \p y, otherwise 0.
  */
-static unsigned mbedtls_ct_size_gt( mbedtls_size_t x,
-                                    mbedtls_size_t y )
+static unsigned mbedtls_ct_size_gt( xalSize_t x,
+                                    xalSize_t y )
 {
     /* Return the sign bit (1 for negative) of (y - x). */
-    return( ( y - x ) >> ( sizeof( mbedtls_size_t ) * 8 - 1 ) );
+    return( ( y - x ) >> ( sizeof( xalSize_t ) * 8 - 1 ) );
 }
 
 #endif /* MBEDTLS_PKCS1_V15 && MBEDTLS_RSA_C && ! MBEDTLS_RSA_ALT */
@@ -298,12 +298,12 @@ static int mbedtls_ct_cond_select_sign( unsigned char condition,
     return( (int) ur - 1 );
 }
 
-void mbedtls_ct_mpi_uint_cond_assign( mbedtls_size_t n,
+void mbedtls_ct_mpi_uint_cond_assign( xalSize_t n,
                                       mbedtls_mpi_uint *dest,
                                       const mbedtls_mpi_uint *src,
                                       unsigned char condition )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
 
     /* MSVC has a warning about unary minus on unsigned integer types,
      * but this is well-defined and precisely what we want to do here. */
@@ -379,11 +379,11 @@ signed char mbedtls_ct_base64_dec_value( unsigned char c )
  * \param offset    Offset from which to copy \p total - \p offset bytes.
  */
 static void mbedtls_ct_mem_move_to_left( void *start,
-                                         mbedtls_size_t total,
-                                         mbedtls_size_t offset )
+                                         xalSize_t total,
+                                         xalSize_t offset )
 {
     volatile unsigned char *buf = start;
-    mbedtls_size_t i, n;
+    xalSize_t i, n;
     if( total == 0 )
         return;
     for( i = 0; i < total; i++ )
@@ -408,27 +408,27 @@ static void mbedtls_ct_mem_move_to_left( void *start,
 
 void mbedtls_ct_memcpy_if_eq( unsigned char *dest,
                               const unsigned char *src,
-                              mbedtls_size_t len,
-                              mbedtls_size_t c1,
-                              mbedtls_size_t c2 )
+                              xalSize_t len,
+                              xalSize_t c1,
+                              xalSize_t c2 )
 {
     /* mask = c1 == c2 ? 0xff : 0x00 */
-    const mbedtls_size_t equal = mbedtls_ct_size_bool_eq( c1, c2 );
+    const xalSize_t equal = mbedtls_ct_size_bool_eq( c1, c2 );
     const unsigned char mask = (unsigned char) mbedtls_ct_size_mask( equal );
 
     /* dest[i] = c1 == c2 ? src[i] : dest[i] */
-    for( mbedtls_size_t i = 0; i < len; i++ )
+    for( xalSize_t i = 0; i < len; i++ )
         dest[i] = ( src[i] & mask ) | ( dest[i] & ~mask );
 }
 
 void mbedtls_ct_memcpy_offset( unsigned char *dest,
                                const unsigned char *src,
-                               mbedtls_size_t offset,
-                               mbedtls_size_t offset_min,
-                               mbedtls_size_t offset_max,
-                               mbedtls_size_t len )
+                               xalSize_t offset,
+                               xalSize_t offset_min,
+                               xalSize_t offset_max,
+                               xalSize_t len )
 {
-    mbedtls_size_t offsetval;
+    xalSize_t offsetval;
 
     for( offsetval = offset_min; offsetval <= offset_max; offsetval++ )
     {
@@ -439,11 +439,11 @@ void mbedtls_ct_memcpy_offset( unsigned char *dest,
 
 int mbedtls_ct_hmac( mbedtls_md_context_t *ctx,
                      const unsigned char *add_data,
-                     mbedtls_size_t add_data_len,
+                     xalSize_t add_data_len,
                      const unsigned char *data,
-                     mbedtls_size_t data_len_secret,
-                     mbedtls_size_t min_data_len,
-                     mbedtls_size_t max_data_len,
+                     xalSize_t data_len_secret,
+                     xalSize_t min_data_len,
+                     xalSize_t max_data_len,
                      unsigned char *output )
 {
     /*
@@ -463,14 +463,14 @@ int mbedtls_ct_hmac( mbedtls_md_context_t *ctx,
     const mbedtls_md_type_t md_alg = mbedtls_md_get_type( ctx->md_info );
     /* TLS 1.2 only supports SHA-384, SHA-256, SHA-1, MD-5,
      * all of which have the same block size except SHA-384. */
-    const mbedtls_size_t block_size = md_alg == MBEDTLS_MD_SHA384 ? 128 : 64;
+    const xalSize_t block_size = md_alg == MBEDTLS_MD_SHA384 ? 128 : 64;
     const unsigned char * const ikey = ctx->hmac_ctx;
     const unsigned char * const okey = ikey + block_size;
-    const mbedtls_size_t hash_size = mbedtls_md_get_size( ctx->md_info );
+    const xalSize_t hash_size = mbedtls_md_get_size( ctx->md_info );
 
     unsigned char aux_out[MBEDTLS_MD_MAX_SIZE];
     mbedtls_md_context_t aux;
-    mbedtls_size_t offset;
+    xalSize_t offset;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     mbedtls_md_init( &aux );
@@ -545,7 +545,7 @@ int mbedtls_mpi_safe_cond_assign( mbedtls_mpi *X,
                                   unsigned char assign )
 {
     int ret = 0;
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_mpi_uint limb_mask;
     MPI_VALIDATE_RET( X != NULL );
     MPI_VALIDATE_RET( Y != NULL );
@@ -577,7 +577,7 @@ int mbedtls_mpi_safe_cond_swap( mbedtls_mpi *X,
                                 unsigned char swap )
 {
     int ret, s;
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_mpi_uint limb_mask;
     mbedtls_mpi_uint tmp;
     MPI_VALIDATE_RET( X != NULL );
@@ -615,7 +615,7 @@ int mbedtls_mpi_lt_mpi_ct( const mbedtls_mpi *X,
                            const mbedtls_mpi *Y,
                            unsigned *ret )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     /* The value of any of these variables is either 0 or 1 at all times. */
     unsigned cond, done, X_is_negative, Y_is_negative;
 
@@ -680,13 +680,13 @@ int mbedtls_mpi_lt_mpi_ct( const mbedtls_mpi *X,
 #if defined(MBEDTLS_PKCS1_V15) && defined(MBEDTLS_RSA_C) && !defined(MBEDTLS_RSA_ALT)
 
 int mbedtls_ct_rsaes_pkcs1_v15_unpadding( unsigned char *input,
-                                          mbedtls_size_t ilen,
+                                          xalSize_t ilen,
                                           unsigned char *output,
-                                          mbedtls_size_t output_max_len,
-                                          mbedtls_size_t *olen )
+                                          xalSize_t output_max_len,
+                                          xalSize_t *olen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t i, plaintext_max_size;
+    xalSize_t i, plaintext_max_size;
 
     /* The following variables take sensitive values: their value must
      * not leak into the observable behavior of the function other than
@@ -698,10 +698,10 @@ int mbedtls_ct_rsaes_pkcs1_v15_unpadding( unsigned char *input,
      * to a shared memory cache), and branches (especially visible to
      * an adversary who has access to a shared code cache or to a shared
      * branch predictor). */
-    mbedtls_size_t pad_count = 0;
+    xalSize_t pad_count = 0;
     unsigned bad = 0;
     unsigned char pad_done = 0;
-    mbedtls_size_t plaintext_size = 0;
+    xalSize_t plaintext_size = 0;
     unsigned output_too_large;
 
     plaintext_max_size = ( output_max_len > ilen - 11 ) ? ilen - 11
@@ -737,7 +737,7 @@ int mbedtls_ct_rsaes_pkcs1_v15_unpadding( unsigned char *input,
      * output: use the maximum message size that fits in the output
      * buffer. Do it without branches to avoid leaking the padding
      * validity through timing. RSA keys are small enough that all the
-     * mbedtls_size_t values involved fit in unsigned int. */
+     * xalSize_t values involved fit in unsigned int. */
     plaintext_size = mbedtls_ct_uint_if(
                         bad, (unsigned) plaintext_max_size,
                         (unsigned) ( ilen - pad_count - 3 ) );

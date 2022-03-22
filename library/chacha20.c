@@ -77,10 +77,10 @@
  * \param d         The index of 'd' in the state.
  */
 static inline void chacha20_quarter_round( uint32_t state[16],
-                                           mbedtls_size_t a,
-                                           mbedtls_size_t b,
-                                           mbedtls_size_t c,
-                                           mbedtls_size_t d )
+                                           xalSize_t a,
+                                           xalSize_t b,
+                                           xalSize_t c,
+                                           xalSize_t d )
 {
     /* a += b; d ^= a; d <<<= 16; */
     state[a] += state[b];
@@ -134,7 +134,7 @@ static void chacha20_block( const uint32_t initial_state[16],
                             unsigned char keystream[64] )
 {
     uint32_t working_state[16];
-    mbedtls_size_t i;
+    xalSize_t i;
 
     memcpy( working_state,
             initial_state,
@@ -162,7 +162,7 @@ static void chacha20_block( const uint32_t initial_state[16],
 
     for( i = 0U; i < 16; i++ )
     {
-        mbedtls_size_t offset = i * 4U;
+        xalSize_t offset = i * 4U;
 
         MBEDTLS_PUT_UINT32_LE(working_state[i], keystream, offset);
     }
@@ -238,12 +238,12 @@ int mbedtls_chacha20_starts( mbedtls_chacha20_context* ctx,
 }
 
 int mbedtls_chacha20_update( mbedtls_chacha20_context *ctx,
-                              mbedtls_size_t size,
+                              xalSize_t size,
                               const unsigned char *input,
                               unsigned char *output )
 {
-    mbedtls_size_t offset = 0U;
-    mbedtls_size_t i;
+    xalSize_t offset = 0U;
+    xalSize_t i;
 
     CHACHA20_VALIDATE_RET( ctx != NULL );
     CHACHA20_VALIDATE_RET( size == 0 || input  != NULL );
@@ -305,7 +305,7 @@ int mbedtls_chacha20_update( mbedtls_chacha20_context *ctx,
 int mbedtls_chacha20_crypt( const unsigned char key[32],
                             const unsigned char nonce[12],
                             uint32_t counter,
-                            mbedtls_size_t data_len,
+                            xalSize_t data_len,
                             const unsigned char* input,
                             unsigned char* output )
 {
@@ -498,7 +498,7 @@ static const unsigned char test_output[2][375] =
     }
 };
 
-static const mbedtls_size_t test_lengths[2] =
+static const xalSize_t test_lengths[2] =
 {
     64U,
     375U

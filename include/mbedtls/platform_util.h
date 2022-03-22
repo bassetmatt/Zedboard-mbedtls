@@ -167,7 +167,7 @@ MBEDTLS_DEPRECATED typedef int mbedtls_deprecated_numeric_constant_t;
  * \param len   Length of the buffer in bytes
  *
  */
-void mbedtls_platform_zeroize( void *buf, mbedtls_size_t len );
+void mbedtls_platform_zeroize( void *buf, xalSize_t len );
 
 #if defined(MBEDTLS_HAVE_TIME_DATE)
 /**

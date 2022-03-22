@@ -26,9 +26,9 @@
 #include "mbedtls/error.h"
 
 int mbedtls_hkdf( const mbedtls_md_info_t *md, const unsigned char *salt,
-                  mbedtls_size_t salt_len, const unsigned char *ikm, mbedtls_size_t ikm_len,
-                  const unsigned char *info, mbedtls_size_t info_len,
-                  unsigned char *okm, mbedtls_size_t okm_len )
+                  xalSize_t salt_len, const unsigned char *ikm, xalSize_t ikm_len,
+                  const unsigned char *info, xalSize_t info_len,
+                  unsigned char *okm, xalSize_t okm_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char prk[MBEDTLS_MD_MAX_SIZE];
@@ -47,15 +47,15 @@ int mbedtls_hkdf( const mbedtls_md_info_t *md, const unsigned char *salt,
 }
 
 int mbedtls_hkdf_extract( const mbedtls_md_info_t *md,
-                          const unsigned char *salt, mbedtls_size_t salt_len,
-                          const unsigned char *ikm, mbedtls_size_t ikm_len,
+                          const unsigned char *salt, xalSize_t salt_len,
+                          const unsigned char *ikm, xalSize_t ikm_len,
                           unsigned char *prk )
 {
     unsigned char null_salt[MBEDTLS_MD_MAX_SIZE] = { '\0' };
 
     if( salt == NULL )
     {
-        mbedtls_size_t hash_len;
+        xalSize_t hash_len;
 
         if( salt_len != 0 )
         {
@@ -77,14 +77,14 @@ int mbedtls_hkdf_extract( const mbedtls_md_info_t *md,
 }
 
 int mbedtls_hkdf_expand( const mbedtls_md_info_t *md, const unsigned char *prk,
-                         mbedtls_size_t prk_len, const unsigned char *info,
-                         mbedtls_size_t info_len, unsigned char *okm, mbedtls_size_t okm_len )
+                         xalSize_t prk_len, const unsigned char *info,
+                         xalSize_t info_len, unsigned char *okm, xalSize_t okm_len )
 {
-    mbedtls_size_t hash_len;
-    mbedtls_size_t where = 0;
-    mbedtls_size_t n;
-    mbedtls_size_t t_len = 0;
-    mbedtls_size_t i;
+    xalSize_t hash_len;
+    xalSize_t where = 0;
+    xalSize_t n;
+    xalSize_t t_len = 0;
+    xalSize_t i;
     int ret = 0;
     mbedtls_md_context_t ctx;
     unsigned char t[MBEDTLS_MD_MAX_SIZE];
@@ -138,7 +138,7 @@ int mbedtls_hkdf_expand( const mbedtls_md_info_t *md, const unsigned char *prk,
      */
     for( i = 1; i <= n; i++ )
     {
-        mbedtls_size_t num_to_copy;
+        xalSize_t num_to_copy;
         unsigned char c = i & 0xff;
 
         ret = mbedtls_md_hmac_starts( &ctx, prk, prk_len );

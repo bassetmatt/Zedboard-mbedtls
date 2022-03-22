@@ -78,11 +78,11 @@ void external_rng_failure_sign( int key_type, data_t *key_data, int alg,
     psa_set_key_usage_flags( &attributes, PSA_KEY_USAGE_SIGN_HASH );
     psa_set_key_algorithm( &attributes, alg );
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
-    mbedtls_size_t input_size = input_size_arg;
+    xalSize_t input_size = input_size_arg;
     uint8_t *input = NULL;
     uint8_t *signature = NULL;
-    mbedtls_size_t signature_size = PSA_SIGNATURE_MAX_SIZE;
-    mbedtls_size_t signature_length;
+    xalSize_t signature_size = PSA_SIGNATURE_MAX_SIZE;
+    xalSize_t signature_length;
 
     ASSERT_ALLOC( input, input_size );
     ASSERT_ALLOC( signature, signature_size );
@@ -164,7 +164,7 @@ exit:
 void run_entropy_inject_with_crypto_init( )
 {
     psa_status_t status;
-    mbedtls_size_t i;
+    xalSize_t i;
     uint8_t seed[MBEDTLS_PSA_INJECT_ENTROPY_MIN_SIZE] = { 0 };
     /* fill seed with some data */
     for( i = 0; i < sizeof( seed ); ++i )

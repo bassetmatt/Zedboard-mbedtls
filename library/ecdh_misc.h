@@ -38,9 +38,9 @@ int mbedtls_ecdh_setup_no_everest( mbedtls_ecdh_context *ctx,
 /*
  * TLS 1.3 version of mbedtls_ecdh_make_params
  */
-int mbedtls_ecdh_tls13_make_params( mbedtls_ecdh_context *ctx, mbedtls_size_t *olen,
-                                    unsigned char *buf, mbedtls_size_t buf_len,
-                                    int ( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
+int mbedtls_ecdh_tls13_make_params( mbedtls_ecdh_context *ctx, xalSize_t *olen,
+                                    unsigned char *buf, xalSize_t buf_len,
+                                    int ( *f_rng )( void *, unsigned char *, xalSize_t ),
                                     void *p_rng );
 
 /*
@@ -48,7 +48,7 @@ int mbedtls_ecdh_tls13_make_params( mbedtls_ecdh_context *ctx, mbedtls_size_t *o
  */
 int mbedtls_ecdh_tls13_read_public( mbedtls_ecdh_context *ctx,
                                     const unsigned char *buf,
-                                    mbedtls_size_t buf_len );
+                                    xalSize_t buf_len );
 
 #endif /* MBEDTLS_SSL_PROTO_TLS1_3 */
 

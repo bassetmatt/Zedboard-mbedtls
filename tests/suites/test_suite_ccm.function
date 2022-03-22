@@ -11,14 +11,14 @@ static int check_multipart( mbedtls_ccm_context *ctx,
                             const data_t *input,
                             const data_t *expected_output,
                             const data_t *tag,
-                            mbedtls_size_t n1,
-                            mbedtls_size_t n1_add)
+                            xalSize_t n1,
+                            xalSize_t n1_add)
 {
     int ok = 0;
     uint8_t *output = NULL;
-    mbedtls_size_t n2 = input->len - n1;
-    mbedtls_size_t n2_add = add->len - n1_add;
-    mbedtls_size_t olen;
+    xalSize_t n2 = input->len - n1;
+    xalSize_t n2_add = add->len - n1_add;
+    xalSize_t olen;
 
     /* Sanity checks on the test data */
     TEST_ASSERT( n1 <= input->len );
@@ -181,10 +181,10 @@ void mbedtls_ccm_encrypt_and_tag( int cipher_id, data_t * key,
                                   data_t * add, data_t * result )
 {
     mbedtls_ccm_context ctx;
-    mbedtls_size_t n1, n1_add;
+    xalSize_t n1, n1_add;
     uint8_t* io_msg_buf = NULL;
     uint8_t* tag_buf = NULL;
-    const mbedtls_size_t expected_tag_len = result->len - msg->len;
+    const xalSize_t expected_tag_len = result->len - msg->len;
     const uint8_t* expected_tag = result->x + msg->len;
 
     /* Prepare input/output message buffer */
@@ -237,7 +237,7 @@ void mbedtls_ccm_star_no_tag( int cipher_id, int mode, data_t * key,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     mbedtls_ccm_init( &ctx );
     TEST_EQUAL( mbedtls_ccm_setkey( &ctx, cipher_id, key->x, key->len * 8 ), 0 );
@@ -263,9 +263,9 @@ void mbedtls_ccm_auth_decrypt( int cipher_id, data_t * key,
                                data_t * expected_msg )
 {
     mbedtls_ccm_context ctx;
-    mbedtls_size_t n1, n1_add;
+    xalSize_t n1, n1_add;
 
-    const mbedtls_size_t expected_msg_len = msg->len - expected_tag_len;
+    const xalSize_t expected_msg_len = msg->len - expected_tag_len;
     const uint8_t* expected_tag = msg->x + expected_msg_len;
 
     /* Prepare input/output message buffer */
@@ -307,7 +307,7 @@ void mbedtls_ccm_auth_decrypt( int cipher_id, data_t * key,
     }
     else
     {
-        mbedtls_size_t i;
+        xalSize_t i;
 
         for( i = 0; i < expected_msg_len; i++ )
             TEST_EQUAL( io_msg_buf[i], 0 );
@@ -328,8 +328,8 @@ void mbedtls_ccm_star_encrypt_and_tag( int cipher_id,
 {
     unsigned char iv[13];
     mbedtls_ccm_context ctx;
-    mbedtls_size_t iv_len, expected_tag_len;
-    mbedtls_size_t n1, n1_add;
+    xalSize_t iv_len, expected_tag_len;
+    xalSize_t n1, n1_add;
     uint8_t* io_msg_buf = NULL;
     uint8_t* tag_buf = NULL;
 
@@ -412,8 +412,8 @@ void mbedtls_ccm_star_auth_decrypt( int cipher_id,
 {
     unsigned char iv[13];
     mbedtls_ccm_context ctx;
-    mbedtls_size_t iv_len, expected_tag_len;
-    mbedtls_size_t n1, n1_add;
+    xalSize_t iv_len, expected_tag_len;
+    xalSize_t n1, n1_add;
 
     /* Calculate tag length */
     if( sec_level % 4 == 0)
@@ -421,7 +421,7 @@ void mbedtls_ccm_star_auth_decrypt( int cipher_id,
     else
         expected_tag_len = 1 << ( sec_level % 4 + 1);
 
-    const mbedtls_size_t expected_msg_len = msg->len - expected_tag_len;
+    const xalSize_t expected_msg_len = msg->len - expected_tag_len;
     const uint8_t* expected_tag = msg->x + expected_msg_len;
 
     /* Prepare input/output message buffer */
@@ -488,7 +488,7 @@ void mbedtls_ccm_skip_ad( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     /* Sanity checks on the test data */
     TEST_EQUAL( msg->len, result->len );
@@ -595,7 +595,7 @@ void mbedtls_ccm_unexpected_text( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     mbedtls_ccm_init( &ctx );
     TEST_EQUAL( mbedtls_ccm_setkey( &ctx, cipher_id, key->x, key->len * 8 ), 0 );
@@ -699,7 +699,7 @@ void mbedtls_ccm_overflow_update( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     mbedtls_ccm_init( &ctx );
     TEST_EQUAL( mbedtls_ccm_setkey( &ctx, cipher_id, key->x, key->len * 8 ), 0 );
@@ -727,7 +727,7 @@ void mbedtls_ccm_incomplete_update( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     mbedtls_ccm_init( &ctx );
     TEST_EQUAL( mbedtls_ccm_setkey( &ctx, cipher_id, key->x, key->len * 8 ), 0 );
@@ -761,7 +761,7 @@ void mbedtls_ccm_full_update_and_overflow( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
 
     mbedtls_ccm_init( &ctx );
     TEST_EQUAL( mbedtls_ccm_setkey( &ctx, cipher_id, key->x, key->len * 8 ), 0 );
@@ -792,7 +792,7 @@ void mbedtls_ccm_incomplete_update_overflow( int cipher_id, int mode,
 {
     mbedtls_ccm_context ctx;
     uint8_t *output = NULL;
-    mbedtls_size_t olen;
+    xalSize_t olen;
     uint8_t msg_second_buffer[2];
 
     msg_second_buffer[0] = msg->x[ msg->len - 1 ];

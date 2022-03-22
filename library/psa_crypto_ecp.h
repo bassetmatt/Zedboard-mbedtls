@@ -43,9 +43,9 @@
  *                          when done.
  */
 psa_status_t mbedtls_psa_ecp_load_representation( psa_key_type_t type,
-                                                  mbedtls_size_t curve_bits,
+                                                  xalSize_t curve_bits,
                                                   const uint8_t *data,
-                                                  mbedtls_size_t data_length,
+                                                  xalSize_t data_length,
                                                   mbedtls_ecp_keypair **p_ecp );
 
 /** Import an ECP key in binary format.
@@ -76,9 +76,9 @@ psa_status_t mbedtls_psa_ecp_load_representation( psa_key_type_t type,
  */
 psa_status_t mbedtls_psa_ecp_import_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, mbedtls_size_t data_length,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits );
+    const uint8_t *data, xalSize_t data_length,
+    uint8_t *key_buffer, xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length, xalSize_t *bits );
 
 /** Export an ECP key to export representation
  *
@@ -91,8 +91,8 @@ psa_status_t mbedtls_psa_ecp_import_key(
 psa_status_t mbedtls_psa_ecp_export_key( psa_key_type_t type,
                                          mbedtls_ecp_keypair *ecp,
                                          uint8_t *data,
-                                         mbedtls_size_t data_size,
-                                         mbedtls_size_t *data_length );
+                                         xalSize_t data_size,
+                                         xalSize_t *data_length );
 
 /** Export an ECP public key or the public part of an ECP key pair in binary
  *  format.
@@ -120,8 +120,8 @@ psa_status_t mbedtls_psa_ecp_export_key( psa_key_type_t type,
  */
 psa_status_t mbedtls_psa_ecp_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length );
 
 /**
  * \brief Generate an ECP key.
@@ -144,7 +144,7 @@ psa_status_t mbedtls_psa_ecp_export_public_key(
  */
 psa_status_t mbedtls_psa_ecp_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length );
+    uint8_t *key_buffer, xalSize_t key_buffer_size, xalSize_t *key_buffer_length );
 
 /** Sign an already-calculated hash with ECDSA.
  *
@@ -180,9 +180,9 @@ psa_status_t mbedtls_psa_ecp_generate_key(
  */
 psa_status_t mbedtls_psa_ecdsa_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    uint8_t *signature, xalSize_t signature_size, xalSize_t *signature_length );
 
 /**
  * \brief Verify an ECDSA hash or short message signature.
@@ -215,7 +215,7 @@ psa_status_t mbedtls_psa_ecdsa_sign_hash(
  */
 psa_status_t mbedtls_psa_ecdsa_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
-    const uint8_t *signature, mbedtls_size_t signature_length );
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, xalSize_t hash_length,
+    const uint8_t *signature, xalSize_t signature_length );
 #endif /* PSA_CRYPTO_ECP_H */

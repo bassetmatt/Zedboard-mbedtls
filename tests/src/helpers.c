@@ -123,9 +123,9 @@ int mbedtls_test_equal( const char *test, int line_no, const char* filename,
 }
 
 int mbedtls_test_unhexify( unsigned char *obuf,
-                           mbedtls_size_t obufmax,
+                           xalSize_t obufmax,
                            const char *ibuf,
-                           mbedtls_size_t *len )
+                           xalSize_t *len )
 {
     unsigned char uc, uc2;
 
@@ -179,10 +179,10 @@ void mbedtls_test_hexify( unsigned char *obuf,
     }
 }
 
-unsigned char *mbedtls_test_zero_alloc( mbedtls_size_t len )
+unsigned char *mbedtls_test_zero_alloc( xalSize_t len )
 {
     void *p;
-    mbedtls_size_t actual_len = ( len != 0 ) ? len : 1;
+    xalSize_t actual_len = ( len != 0 ) ? len : 1;
 
     p = mbedtls_calloc( 1, actual_len );
     TEST_HELPER_ASSERT( p != NULL );
@@ -192,10 +192,10 @@ unsigned char *mbedtls_test_zero_alloc( mbedtls_size_t len )
     return( p );
 }
 
-unsigned char *mbedtls_test_unhexify_alloc( const char *ibuf, mbedtls_size_t *olen )
+unsigned char *mbedtls_test_unhexify_alloc( const char *ibuf, xalSize_t *olen )
 {
     unsigned char *obuf;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     *olen = strlen( ibuf ) / 2;
 

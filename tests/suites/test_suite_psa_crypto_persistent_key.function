@@ -45,7 +45,7 @@ void format_storage_data_check( data_t *key_data,
                                 int key_usage, int key_alg, int key_alg2 )
 {
     uint8_t *file_data = NULL;
-    mbedtls_size_t file_data_length =
+    xalSize_t file_data_length =
         key_data->len + sizeof( psa_persistent_key_storage_format );
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -81,7 +81,7 @@ void parse_storage_data_check( data_t *file_data,
                                int expected_status )
 {
     uint8_t *key_data = NULL;
-    mbedtls_size_t key_data_length = 0;
+    xalSize_t key_data_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status;
 
@@ -118,7 +118,7 @@ void save_large_persistent_key( int data_length_arg, int expected_status )
 {
     mbedtls_svc_key_id_t key_id = mbedtls_svc_key_id_make( 1, 42 );
     uint8_t *data = NULL;
-    mbedtls_size_t data_length = data_length_arg;
+    xalSize_t data_length = data_length_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     ASSERT_ALLOC( data, data_length );
@@ -259,8 +259,8 @@ void import_export_persistent_key( data_t *data, int type_arg,
     psa_key_type_t type = (psa_key_type_t) type_arg;
     mbedtls_svc_key_id_t returned_key_id = MBEDTLS_SVC_KEY_ID_INIT;
     unsigned char *exported = NULL;
-    mbedtls_size_t export_size = data->len;
-    mbedtls_size_t exported_length;
+    xalSize_t export_size = data->len;
+    xalSize_t exported_length;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     ASSERT_ALLOC( exported, export_size );
@@ -291,7 +291,7 @@ void import_export_persistent_key( data_t *data, int type_arg,
     TEST_EQUAL( psa_get_key_lifetime( &attributes ),
                 PSA_KEY_LIFETIME_PERSISTENT );
     TEST_EQUAL( psa_get_key_type( &attributes ), type );
-    TEST_EQUAL( psa_get_key_bits( &attributes ), (mbedtls_size_t) expected_bits );
+    TEST_EQUAL( psa_get_key_bits( &attributes ), (xalSize_t) expected_bits );
     TEST_EQUAL( psa_get_key_usage_flags( &attributes ), PSA_KEY_USAGE_EXPORT );
     TEST_EQUAL( psa_get_key_algorithm( &attributes ), 0 );
 

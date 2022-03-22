@@ -83,7 +83,7 @@ int main( int argc, char *argv[] )
     unsigned n;
     int exit_code = MBEDTLS_EXIT_FAILURE;
     int mode;
-    mbedtls_size_t keylen, ilen, olen;
+    xalSize_t keylen, ilen, olen;
     FILE *fkey, *fin = NULL, *fout = NULL;
 
     char *p;

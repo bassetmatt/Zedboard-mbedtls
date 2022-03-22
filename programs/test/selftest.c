@@ -151,14 +151,14 @@ static int calloc_self_test( int verbose )
 }
 #endif /* MBEDTLS_SELF_TEST */
 
-static int test_snprintf( mbedtls_size_t n, const char *ref_buf, int ref_ret )
+static int test_snprintf( xalSize_t n, const char *ref_buf, int ref_ret )
 {
     int ret;
     char buf[10] = "xxxxxxxxx";
     const char ref[10] = "xxxxxxxxx";
 
     ret = mbedtls_snprintf( buf, n, "%s", "123" );
-    if( ret < 0 || (mbedtls_size_t) ret >= n )
+    if( ret < 0 || (xalSize_t) ret >= n )
         ret = -1;
 
     if( strncmp( ref_buf, buf, sizeof( buf ) ) != 0 ||
@@ -191,7 +191,7 @@ static int run_test_snprintf( void )
 static void create_entropy_seed_file( void )
 {
     int result;
-    mbedtls_size_t output_len = 0;
+    xalSize_t output_len = 0;
     unsigned char seed_value[MBEDTLS_ENTROPY_BLOCK_SIZE];
 
     /* Attempt to read the entropy seed file. If this fails - attempt to write

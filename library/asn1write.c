@@ -34,7 +34,7 @@
 #define mbedtls_free       free
 #endif
 
-int mbedtls_asn1_write_len( unsigned char **p, const unsigned char *start, mbedtls_size_t len )
+int mbedtls_asn1_write_len( unsigned char **p, const unsigned char *start, xalSize_t len )
 {
     if( len < 0x80 )
     {
@@ -109,11 +109,11 @@ int mbedtls_asn1_write_tag( unsigned char **p, const unsigned char *start, unsig
 }
 
 int mbedtls_asn1_write_raw_buffer( unsigned char **p, const unsigned char *start,
-                           const unsigned char *buf, mbedtls_size_t size )
+                           const unsigned char *buf, xalSize_t size )
 {
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
-    if( *p < start || (mbedtls_size_t)( *p - start ) < size )
+    if( *p < start || (xalSize_t)( *p - start ) < size )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
 
     len = size;
@@ -127,13 +127,13 @@ int mbedtls_asn1_write_raw_buffer( unsigned char **p, const unsigned char *start
 int mbedtls_asn1_write_mpi( unsigned char **p, const unsigned char *start, const mbedtls_mpi *X )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     // Write the MPI
     //
     len = mbedtls_mpi_size( X );
 
-    if( *p < start || (mbedtls_size_t)( *p - start ) < len )
+    if( *p < start || (xalSize_t)( *p - start ) < len )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
 
     (*p) -= len;
@@ -164,7 +164,7 @@ cleanup:
 int mbedtls_asn1_write_null( unsigned char **p, const unsigned char *start )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     // Write NULL
     //
@@ -175,10 +175,10 @@ int mbedtls_asn1_write_null( unsigned char **p, const unsigned char *start )
 }
 
 int mbedtls_asn1_write_oid( unsigned char **p, const unsigned char *start,
-                    const char *oid, mbedtls_size_t oid_len )
+                    const char *oid, xalSize_t oid_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_raw_buffer( p, start,
                                   (const unsigned char *) oid, oid_len ) );
@@ -189,11 +189,11 @@ int mbedtls_asn1_write_oid( unsigned char **p, const unsigned char *start,
 }
 
 int mbedtls_asn1_write_algorithm_identifier( unsigned char **p, const unsigned char *start,
-                                     const char *oid, mbedtls_size_t oid_len,
-                                     mbedtls_size_t par_len )
+                                     const char *oid, xalSize_t oid_len,
+                                     xalSize_t par_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     if( par_len == 0 )
         MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_null( p, start ) );
@@ -212,7 +212,7 @@ int mbedtls_asn1_write_algorithm_identifier( unsigned char **p, const unsigned c
 int mbedtls_asn1_write_bool( unsigned char **p, const unsigned char *start, int boolean )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     if( *p - start < 1 )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
@@ -229,7 +229,7 @@ int mbedtls_asn1_write_bool( unsigned char **p, const unsigned char *start, int 
 static int asn1_write_tagged_int( unsigned char **p, const unsigned char *start, int val, int tag )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     do
     {
@@ -266,10 +266,10 @@ int mbedtls_asn1_write_enum( unsigned char **p, const unsigned char *start, int 
 }
 
 int mbedtls_asn1_write_tagged_string( unsigned char **p, const unsigned char *start, int tag,
-    const char *text, mbedtls_size_t text_len )
+    const char *text, xalSize_t text_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_raw_buffer( p, start,
         (const unsigned char *) text, text_len ) );
@@ -281,19 +281,19 @@ int mbedtls_asn1_write_tagged_string( unsigned char **p, const unsigned char *st
 }
 
 int mbedtls_asn1_write_utf8_string( unsigned char **p, const unsigned char *start,
-    const char *text, mbedtls_size_t text_len )
+    const char *text, xalSize_t text_len )
 {
     return( mbedtls_asn1_write_tagged_string(p, start, MBEDTLS_ASN1_UTF8_STRING, text, text_len) );
 }
 
 int mbedtls_asn1_write_printable_string( unsigned char **p, const unsigned char *start,
-                                 const char *text, mbedtls_size_t text_len )
+                                 const char *text, xalSize_t text_len )
 {
     return( mbedtls_asn1_write_tagged_string(p, start, MBEDTLS_ASN1_PRINTABLE_STRING, text, text_len) );
 }
 
 int mbedtls_asn1_write_ia5_string( unsigned char **p, const unsigned char *start,
-                           const char *text, mbedtls_size_t text_len )
+                           const char *text, xalSize_t text_len )
 {
     return( mbedtls_asn1_write_tagged_string(p, start, MBEDTLS_ASN1_IA5_STRING, text, text_len) );
 }
@@ -301,9 +301,9 @@ int mbedtls_asn1_write_ia5_string( unsigned char **p, const unsigned char *start
 int mbedtls_asn1_write_named_bitstring( unsigned char **p,
                                         const unsigned char *start,
                                         const unsigned char *buf,
-                                        mbedtls_size_t bits )
+                                        xalSize_t bits )
 {
-    mbedtls_size_t unused_bits, byte_len;
+    xalSize_t unused_bits, byte_len;
     const unsigned char *cur_byte;
     unsigned char cur_byte_shifted;
     unsigned char bit;
@@ -342,16 +342,16 @@ int mbedtls_asn1_write_named_bitstring( unsigned char **p,
 }
 
 int mbedtls_asn1_write_bitstring( unsigned char **p, const unsigned char *start,
-                          const unsigned char *buf, mbedtls_size_t bits )
+                          const unsigned char *buf, xalSize_t bits )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
-    mbedtls_size_t unused_bits, byte_len;
+    xalSize_t len = 0;
+    xalSize_t unused_bits, byte_len;
 
     byte_len = ( bits + 7 ) / 8;
     unused_bits = ( byte_len * 8 ) - bits;
 
-    if( *p < start || (mbedtls_size_t)( *p - start ) < byte_len + 1 )
+    if( *p < start || (xalSize_t)( *p - start ) < byte_len + 1 )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
 
     len = byte_len + 1;
@@ -375,10 +375,10 @@ int mbedtls_asn1_write_bitstring( unsigned char **p, const unsigned char *start,
 }
 
 int mbedtls_asn1_write_octet_string( unsigned char **p, const unsigned char *start,
-                             const unsigned char *buf, mbedtls_size_t size )
+                             const unsigned char *buf, xalSize_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_raw_buffer( p, start, buf, size ) );
 
@@ -393,7 +393,7 @@ int mbedtls_asn1_write_octet_string( unsigned char **p, const unsigned char *sta
  * which is replicated to avoid a dependency ASN1_WRITE_C on ASN1_PARSE_C. */
 static mbedtls_asn1_named_data *asn1_find_named_data(
                                                mbedtls_asn1_named_data *list,
-                                               const char *oid, mbedtls_size_t len )
+                                               const char *oid, xalSize_t len )
 {
     while( list != NULL )
     {
@@ -411,9 +411,9 @@ static mbedtls_asn1_named_data *asn1_find_named_data(
 
 mbedtls_asn1_named_data *mbedtls_asn1_store_named_data(
                                         mbedtls_asn1_named_data **head,
-                                        const char *oid, mbedtls_size_t oid_len,
+                                        const char *oid, xalSize_t oid_len,
                                         const unsigned char *val,
-                                        mbedtls_size_t val_len )
+                                        xalSize_t val_len )
 {
     mbedtls_asn1_named_data *cur;
 

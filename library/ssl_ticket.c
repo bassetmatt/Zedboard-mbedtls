@@ -125,15 +125,15 @@ static int ssl_ticket_update_keys( mbedtls_ssl_ticket_context *ctx )
  * Rotate active session ticket encryption key
  */
 int mbedtls_ssl_ticket_rotate( mbedtls_ssl_ticket_context *ctx,
-    const unsigned char *name, mbedtls_size_t nlength,
-    const unsigned char *k, mbedtls_size_t klength,
+    const unsigned char *name, xalSize_t nlength,
+    const unsigned char *k, xalSize_t klength,
     uint32_t lifetime )
 {
     const unsigned char idx = 1 - ctx->active;
     mbedtls_ssl_ticket_key * const key = ctx->keys + idx;
     const int bitlen = mbedtls_cipher_get_key_bitlen( &key->ctx );
     int ret;
-    if( nlength < TICKET_KEY_NAME_BYTES || klength * 8 < (mbedtls_size_t)bitlen )
+    if( nlength < TICKET_KEY_NAME_BYTES || klength * 8 < (xalSize_t)bitlen )
         return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
 
     /* With GCM and CCM, same context can encrypt & decrypt */
@@ -154,7 +154,7 @@ int mbedtls_ssl_ticket_rotate( mbedtls_ssl_ticket_context *ctx,
  * Setup context for actual use
  */
 int mbedtls_ssl_ticket_setup( mbedtls_ssl_ticket_context *ctx,
-    int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
+    int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng,
     mbedtls_cipher_type_t cipher,
     uint32_t lifetime )
 {
@@ -226,7 +226,7 @@ int mbedtls_ssl_ticket_write( void *p_ticket,
                               const mbedtls_ssl_session *session,
                               unsigned char *start,
                               const unsigned char *end,
-                              mbedtls_size_t *tlen,
+                              xalSize_t *tlen,
                               uint32_t *ticket_lifetime )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -236,7 +236,7 @@ int mbedtls_ssl_ticket_write( void *p_ticket,
     unsigned char *iv = start + TICKET_KEY_NAME_BYTES;
     unsigned char *state_len_bytes = iv + TICKET_IV_BYTES;
     unsigned char *state = state_len_bytes + TICKET_CRYPT_LEN_BYTES;
-    mbedtls_size_t clear_len, ciph_len;
+    xalSize_t clear_len, ciph_len;
 
     *tlen = 0;
 
@@ -324,7 +324,7 @@ static mbedtls_ssl_ticket_key *ssl_ticket_select_key(
 int mbedtls_ssl_ticket_parse( void *p_ticket,
                               mbedtls_ssl_session *session,
                               unsigned char *buf,
-                              mbedtls_size_t len )
+                              xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ssl_ticket_context *ctx = p_ticket;
@@ -333,7 +333,7 @@ int mbedtls_ssl_ticket_parse( void *p_ticket,
     unsigned char *iv = buf + TICKET_KEY_NAME_BYTES;
     unsigned char *enc_len_p = iv + TICKET_IV_BYTES;
     unsigned char *ticket = enc_len_p + TICKET_CRYPT_LEN_BYTES;
-    mbedtls_size_t enc_len, clear_len;
+    xalSize_t enc_len, clear_len;
 
     if( ctx == NULL || ctx->f_rng == NULL )
         return( MBEDTLS_ERR_SSL_BAD_INPUT_DATA );

@@ -20,8 +20,8 @@ static int nested_parse( unsigned char **const p,
                          const unsigned char *const end )
 {
     int ret;
-    mbedtls_size_t len = 0;
-    mbedtls_size_t len2 = 0;
+    xalSize_t len = 0;
+    xalSize_t len2 = 0;
     unsigned char *const start = *p;
     unsigned char *content_start;
     unsigned char tag;
@@ -121,13 +121,13 @@ exit:
     return( ERR_PARSE_INCONSISTENCY );
 }
 
-int get_len_step( const data_t *input, mbedtls_size_t buffer_size,
-                  mbedtls_size_t actual_length )
+int get_len_step( const data_t *input, xalSize_t buffer_size,
+                  xalSize_t actual_length )
 {
     unsigned char *buf = NULL;
     unsigned char *p = NULL;
     unsigned char *end;
-    mbedtls_size_t parsed_length;
+    xalSize_t parsed_length;
     int ret;
 
     mbedtls_test_set_step( buffer_size );
@@ -189,10 +189,10 @@ typedef struct
 
 
 static int traverse_callback( void *ctx, int tag,
-                              unsigned char *content, mbedtls_size_t len )
+                              unsigned char *content, xalSize_t len )
 {
     traverse_state_t *state = ctx;
-    mbedtls_size_t offset;
+    xalSize_t offset;
     const char *rest = state->description;
     unsigned long n;
 
@@ -242,7 +242,7 @@ void parse_prefixes( const data_t *input,
 
     unsigned char *buf = NULL;
     unsigned char *p = NULL;
-    mbedtls_size_t buffer_size;
+    xalSize_t buffer_size;
     int ret;
 
     /* Test every prefix of the input, except the empty string.
@@ -290,8 +290,8 @@ exit:
 /* BEGIN_CASE */
 void get_len( const data_t *input, int actual_length_arg )
 {
-    mbedtls_size_t actual_length = actual_length_arg;
-    mbedtls_size_t buffer_size;
+    xalSize_t actual_length = actual_length_arg;
+    xalSize_t buffer_size;
 
     /* Test prefixes of a buffer containing the given length string
      * followed by `actual_length` bytes of payload. To save a bit of
@@ -447,7 +447,7 @@ void get_integer( const data_t *input,
              * decide to fix the library to change the behavior on
              * negative INTEGERs, we'll fix this test code. */
             unsigned char *q = input->x + 1;
-            mbedtls_size_t len;
+            xalSize_t len;
             TEST_ASSERT( mbedtls_asn1_get_len( &q, input->x + input->len,
                                                &len ) == 0 );
             TEST_ASSERT( mbedtls_mpi_lset( &complement, 1 ) == 0 );
@@ -520,9 +520,9 @@ void get_mpi_too_large( )
     unsigned char *buf = NULL;
     unsigned char *p;
     mbedtls_mpi actual_mpi;
-    mbedtls_size_t too_many_octets =
+    xalSize_t too_many_octets =
         MBEDTLS_MPI_MAX_LIMBS * sizeof(mbedtls_mpi_uint) + 1;
-    mbedtls_size_t size = too_many_octets + 6;
+    xalSize_t size = too_many_octets + 6;
 
     mbedtls_mpi_init( &actual_mpi );
 
@@ -557,7 +557,7 @@ void get_bitstring( const data_t *input,
                 expected_result );
     if( expected_result == 0 )
     {
-        TEST_EQUAL( bs.len, (mbedtls_size_t) expected_length );
+        TEST_EQUAL( bs.len, (xalSize_t) expected_length );
         TEST_EQUAL( bs.unused_bits, expected_unused_bits );
         TEST_ASSERT( bs.p != NULL );
         TEST_EQUAL( bs.p - input->x + bs.len, input->len );
@@ -570,7 +570,7 @@ void get_bitstring( const data_t *input,
                 expected_result_null );
     if( expected_result_null == 0 )
     {
-        TEST_EQUAL( bs.len, (mbedtls_size_t) expected_length );
+        TEST_EQUAL( bs.len, (xalSize_t) expected_length );
         if( expected_result == 0 )
             TEST_ASSERT( p == input->x + input->len - bs.len );
     }
@@ -619,7 +619,7 @@ void get_sequence_of( const data_t *input, int tag,
                 TEST_ASSERT( cur != NULL );
                 TEST_EQUAL( cur->buf.tag, tag );
                 n = strtoul( rest, (char **) &rest, 0 );
-                TEST_EQUAL( n, (mbedtls_size_t)( cur->buf.p - input->x ) );
+                TEST_EQUAL( n, (xalSize_t)( cur->buf.p - input->x ) );
                 ++rest;
                 n = strtoul( rest, (char **) &rest, 0 );
                 TEST_EQUAL( n, cur->buf.len );
@@ -685,13 +685,13 @@ void get_alg( const data_t *input,
     {
         TEST_EQUAL( oid.tag, MBEDTLS_ASN1_OID );
         TEST_EQUAL( oid.p - input->x, oid_offset );
-        TEST_EQUAL( oid.len, (mbedtls_size_t) oid_length );
+        TEST_EQUAL( oid.len, (xalSize_t) oid_length );
         TEST_EQUAL( params.tag, params_tag );
         if( params_offset != 0 )
             TEST_EQUAL( params.p - input->x, params_offset );
         else
             TEST_ASSERT( params.p == NULL );
-        TEST_EQUAL( params.len, (mbedtls_size_t) params_length );
+        TEST_EQUAL( params.len, (xalSize_t) params_length );
         TEST_EQUAL( p - input->x, total_length );
     }
 
@@ -700,7 +700,7 @@ void get_alg( const data_t *input,
     {
         TEST_EQUAL( oid.tag, MBEDTLS_ASN1_OID );
         TEST_EQUAL( oid.p - input->x, oid_offset );
-        TEST_EQUAL( oid.len, (mbedtls_size_t) oid_length );
+        TEST_EQUAL( oid.len, (xalSize_t) oid_length );
         TEST_EQUAL( p - input->x, total_length );
     }
     else
@@ -719,7 +719,7 @@ void find_named_data( data_t *oid0, data_t *oid1, data_t *oid2, data_t *oid3,
         { {0x06, oid3->len, oid3->x}, {0, 0, NULL}, NULL, 0 },
     };
     mbedtls_asn1_named_data *pointers[ARRAY_LENGTH( nd ) + 1];
-    mbedtls_size_t i;
+    xalSize_t i;
     const mbedtls_asn1_named_data *found;
 
     for( i = 0; i < ARRAY_LENGTH( nd ); i++ )

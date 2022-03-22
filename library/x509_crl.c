@@ -120,7 +120,7 @@ static int x509_get_crl_ext( unsigned char **p,
          */
         int is_critical = 0;
         const unsigned char *end_ext_data;
-        mbedtls_size_t len;
+        xalSize_t len;
 
         /* Get enclosing sequence tag */
         if( ( ret = mbedtls_asn1_get_tag( p, end, &len,
@@ -177,7 +177,7 @@ static int x509_get_crl_entry_ext( unsigned char **p,
                              mbedtls_x509_buf *ext )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     /* OPTIONAL */
     if( end <= *p )
@@ -231,7 +231,7 @@ static int x509_get_entries( unsigned char **p,
                              mbedtls_x509_crl_entry *entry )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t entry_len;
+    xalSize_t entry_len;
     mbedtls_x509_crl_entry *cur_entry = entry;
 
     if( *p == end )
@@ -250,7 +250,7 @@ static int x509_get_entries( unsigned char **p,
 
     while( *p < end )
     {
-        mbedtls_size_t len2;
+        xalSize_t len2;
         const unsigned char *end2;
 
         cur_entry->raw.tag = **p;
@@ -293,10 +293,10 @@ static int x509_get_entries( unsigned char **p,
  * Parse one  CRLs in DER format and append it to the chained list
  */
 int mbedtls_x509_crl_parse_der( mbedtls_x509_crl *chain,
-                        const unsigned char *buf, mbedtls_size_t buflen )
+                        const unsigned char *buf, xalSize_t buflen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
     unsigned char *p = NULL, *end = NULL;
     mbedtls_x509_buf sig_params1, sig_params2, sig_oid2;
     mbedtls_x509_crl *crl = chain;
@@ -361,7 +361,7 @@ int mbedtls_x509_crl_parse_der( mbedtls_x509_crl *chain,
         return( MBEDTLS_ERR_X509_INVALID_FORMAT );
     }
 
-    if( len != (mbedtls_size_t) ( end - p ) )
+    if( len != (xalSize_t) ( end - p ) )
     {
         mbedtls_x509_crl_free( crl );
         return( MBEDTLS_ERROR_ADD( MBEDTLS_ERR_X509_INVALID_FORMAT,
@@ -531,11 +531,11 @@ int mbedtls_x509_crl_parse_der( mbedtls_x509_crl *chain,
 /*
  * Parse one or more CRLs and add them to the chained list
  */
-int mbedtls_x509_crl_parse( mbedtls_x509_crl *chain, const unsigned char *buf, mbedtls_size_t buflen )
+int mbedtls_x509_crl_parse( mbedtls_x509_crl *chain, const unsigned char *buf, xalSize_t buflen )
 {
 #if defined(MBEDTLS_PEM_PARSE_C)
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t use_len = 0;
+    xalSize_t use_len = 0;
     mbedtls_pem_context pem;
     int is_pem = 0;
 
@@ -599,7 +599,7 @@ int mbedtls_x509_crl_parse( mbedtls_x509_crl *chain, const unsigned char *buf, m
 int mbedtls_x509_crl_parse_file( mbedtls_x509_crl *chain, const char *path )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t n;
+    xalSize_t n;
     unsigned char *buf;
 
     if( ( ret = mbedtls_pk_load_file( path, &buf, &n ) ) != 0 )
@@ -623,11 +623,11 @@ int mbedtls_x509_crl_parse_file( mbedtls_x509_crl *chain, const char *path )
 /*
  * Return an informational string about the CRL.
  */
-int mbedtls_x509_crl_info( char *buf, mbedtls_size_t size, const char *prefix,
+int mbedtls_x509_crl_info( char *buf, xalSize_t size, const char *prefix,
                    const mbedtls_x509_crl *crl )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t n;
+    xalSize_t n;
     char *p;
     const mbedtls_x509_crl_entry *entry;
 

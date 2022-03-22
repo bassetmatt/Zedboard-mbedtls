@@ -52,9 +52,9 @@
  *          PSA layer.
  */
 psa_status_t mbedtls_psa_hkdf_expand( psa_algorithm_t alg,
-                                      const unsigned char *prk, mbedtls_size_t prk_len,
-                                      const unsigned char *info, mbedtls_size_t info_len,
-                                      unsigned char *okm, mbedtls_size_t okm_len );
+                                      const unsigned char *prk, xalSize_t prk_len,
+                                      const unsigned char *info, xalSize_t info_len,
+                                      unsigned char *okm, xalSize_t okm_len );
 
 #endif /* MBEDTLS_PSA_CRYPTO_C */
 

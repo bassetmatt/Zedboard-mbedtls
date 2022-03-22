@@ -104,7 +104,7 @@ void ecdsa_prim_test_vectors( int id, char * d_str, char * xQ_str,
     if( grp.nbits % 8 != 0 )
     {
         unsigned char shift = 8 - ( grp.nbits % 8 );
-        mbedtls_size_t i;
+        xalSize_t i;
 
         for( i = 0; i < rnd_info.length - 1; i++ )
             rnd_buf->x[i] = rnd_buf->x[i] << shift | rnd_buf->x[i+1] >> ( 8 - shift );
@@ -148,7 +148,7 @@ void ecdsa_det_test_vectors( int id, char * d_str, int md_alg, char * msg,
     mbedtls_ecp_group grp;
     mbedtls_mpi d, r, s, r_check, s_check;
     unsigned char hash[MBEDTLS_MD_MAX_SIZE];
-    mbedtls_size_t hlen;
+    xalSize_t hlen;
     const mbedtls_md_info_t *md_info;
 
     mbedtls_ecp_group_init( &grp );
@@ -190,7 +190,7 @@ void ecdsa_write_read_zero( int id )
     mbedtls_test_rnd_pseudo_info rnd_info;
     unsigned char hash[32];
     unsigned char sig[200];
-    mbedtls_size_t sig_len, i;
+    xalSize_t sig_len, i;
 
     mbedtls_ecdsa_init( &ctx );
     memset( &rnd_info, 0x00, sizeof( mbedtls_test_rnd_pseudo_info ) );
@@ -250,7 +250,7 @@ void ecdsa_write_read_random( int id )
     mbedtls_test_rnd_pseudo_info rnd_info;
     unsigned char hash[32];
     unsigned char sig[200];
-    mbedtls_size_t sig_len, i;
+    xalSize_t sig_len, i;
 
     mbedtls_ecdsa_init( &ctx );
     memset( &rnd_info, 0x00, sizeof( mbedtls_test_rnd_pseudo_info ) );
@@ -379,7 +379,7 @@ void ecdsa_write_restart( int id, char *d_str, int md_alg,
     mbedtls_ecdsa_context ctx;
     unsigned char hash[MBEDTLS_MD_MAX_SIZE];
     unsigned char sig[MBEDTLS_ECDSA_MAX_LEN];
-    mbedtls_size_t hlen, slen;
+    xalSize_t hlen, slen;
     const mbedtls_md_info_t *md_info;
 
     mbedtls_ecdsa_restart_init( &rs_ctx );

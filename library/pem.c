@@ -52,9 +52,9 @@ void mbedtls_pem_init( mbedtls_pem_context *ctx )
  * Read a 16-byte hex string and convert it to binary
  */
 static int pem_get_iv( const unsigned char *s, unsigned char *iv,
-                       mbedtls_size_t iv_len )
+                       xalSize_t iv_len )
 {
-    mbedtls_size_t i, j, k;
+    xalSize_t i, j, k;
 
     memset( iv, 0, iv_len );
 
@@ -73,13 +73,13 @@ static int pem_get_iv( const unsigned char *s, unsigned char *iv,
     return( 0 );
 }
 
-static int pem_pbkdf1( unsigned char *key, mbedtls_size_t keylen,
+static int pem_pbkdf1( unsigned char *key, xalSize_t keylen,
                        unsigned char *iv,
-                       const unsigned char *pwd, mbedtls_size_t pwdlen )
+                       const unsigned char *pwd, xalSize_t pwdlen )
 {
     mbedtls_md5_context md5_ctx;
     unsigned char md5sum[16];
-    mbedtls_size_t use_len;
+    xalSize_t use_len;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     mbedtls_md5_init( &md5_ctx );
@@ -136,8 +136,8 @@ exit:
  * Decrypt with DES-CBC, using PBKDF1 for key derivation
  */
 static int pem_des_decrypt( unsigned char des_iv[8],
-                            unsigned char *buf, mbedtls_size_t buflen,
-                            const unsigned char *pwd, mbedtls_size_t pwdlen )
+                            unsigned char *buf, xalSize_t buflen,
+                            const unsigned char *pwd, xalSize_t pwdlen )
 {
     mbedtls_des_context des_ctx;
     unsigned char des_key[8];
@@ -164,8 +164,8 @@ exit:
  * Decrypt with 3DES-CBC, using PBKDF1 for key derivation
  */
 static int pem_des3_decrypt( unsigned char des3_iv[8],
-                             unsigned char *buf, mbedtls_size_t buflen,
-                             const unsigned char *pwd, mbedtls_size_t pwdlen )
+                             unsigned char *buf, xalSize_t buflen,
+                             const unsigned char *pwd, xalSize_t pwdlen )
 {
     mbedtls_des3_context des3_ctx;
     unsigned char des3_key[24];
@@ -194,8 +194,8 @@ exit:
  * Decrypt with AES-XXX-CBC, using PBKDF1 for key derivation
  */
 static int pem_aes_decrypt( unsigned char aes_iv[16], unsigned int keylen,
-                            unsigned char *buf, mbedtls_size_t buflen,
-                            const unsigned char *pwd, mbedtls_size_t pwdlen )
+                            unsigned char *buf, xalSize_t buflen,
+                            const unsigned char *pwd, xalSize_t pwdlen )
 {
     mbedtls_aes_context aes_ctx;
     unsigned char aes_key[32];
@@ -224,10 +224,10 @@ exit:
 
 int mbedtls_pem_read_buffer( mbedtls_pem_context *ctx, const char *header, const char *footer,
                      const unsigned char *data, const unsigned char *pwd,
-                     mbedtls_size_t pwdlen, mbedtls_size_t *use_len )
+                     xalSize_t pwdlen, xalSize_t *use_len )
 {
     int ret, enc;
-    mbedtls_size_t len;
+    xalSize_t len;
     unsigned char *buf;
     const unsigned char *s1, *s2, *end;
 #if defined(MBEDTLS_MD5_C) && defined(MBEDTLS_CIPHER_MODE_CBC) &&         \
@@ -431,12 +431,12 @@ void mbedtls_pem_free( mbedtls_pem_context *ctx )
 
 #if defined(MBEDTLS_PEM_WRITE_C)
 int mbedtls_pem_write_buffer( const char *header, const char *footer,
-                      const unsigned char *der_data, mbedtls_size_t der_len,
-                      unsigned char *buf, mbedtls_size_t buf_len, mbedtls_size_t *olen )
+                      const unsigned char *der_data, xalSize_t der_len,
+                      unsigned char *buf, xalSize_t buf_len, xalSize_t *olen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *encode_buf = NULL, *c, *p = buf;
-    mbedtls_size_t len = 0, use_len, add_len = 0;
+    xalSize_t len = 0, use_len, add_len = 0;
 
     mbedtls_base64_encode( NULL, 0, &use_len, der_data, der_len );
     add_len = strlen( header ) + strlen( footer ) + ( use_len / 64 ) + 1;

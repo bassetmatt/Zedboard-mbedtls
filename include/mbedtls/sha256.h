@@ -116,7 +116,7 @@ int mbedtls_sha256_starts( mbedtls_sha256_context *ctx, int is224 );
  */
 int mbedtls_sha256_update( mbedtls_sha256_context *ctx,
                            const unsigned char *input,
-                           mbedtls_size_t ilen );
+                           xalSize_t ilen );
 
 /**
  * \brief          This function finishes the SHA-256 operation, and writes
@@ -172,7 +172,7 @@ int mbedtls_internal_sha256_process( mbedtls_sha256_context *ctx,
  * \return         A negative error code on failure.
  */
 int mbedtls_sha256( const unsigned char *input,
-                    mbedtls_size_t ilen,
+                    xalSize_t ilen,
                     unsigned char *output,
                     int is224 );
 

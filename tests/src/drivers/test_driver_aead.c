@@ -30,12 +30,12 @@ mbedtls_test_driver_aead_hooks_t
 
 psa_status_t mbedtls_test_transparent_aead_encrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, mbedtls_size_t nonce_length,
-    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
-    const uint8_t *plaintext, mbedtls_size_t plaintext_length,
-    uint8_t *ciphertext, mbedtls_size_t ciphertext_size, mbedtls_size_t *ciphertext_length )
+    const uint8_t *nonce, xalSize_t nonce_length,
+    const uint8_t *additional_data, xalSize_t additional_data_length,
+    const uint8_t *plaintext, xalSize_t plaintext_length,
+    uint8_t *ciphertext, xalSize_t ciphertext_size, xalSize_t *ciphertext_length )
 {
     mbedtls_test_driver_aead_hooks.hits_encrypt++;
 
@@ -78,12 +78,12 @@ psa_status_t mbedtls_test_transparent_aead_encrypt(
 
 psa_status_t mbedtls_test_transparent_aead_decrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, mbedtls_size_t nonce_length,
-    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
-    const uint8_t *ciphertext, mbedtls_size_t ciphertext_length,
-    uint8_t *plaintext, mbedtls_size_t plaintext_size, mbedtls_size_t *plaintext_length )
+    const uint8_t *nonce, xalSize_t nonce_length,
+    const uint8_t *additional_data, xalSize_t additional_data_length,
+    const uint8_t *ciphertext, xalSize_t ciphertext_length,
+    uint8_t *plaintext, xalSize_t plaintext_size, xalSize_t *plaintext_length )
 {
     mbedtls_test_driver_aead_hooks.hits_decrypt++;
 
@@ -127,7 +127,7 @@ psa_status_t mbedtls_test_transparent_aead_decrypt(
 psa_status_t mbedtls_test_transparent_aead_encrypt_setup(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     mbedtls_test_driver_aead_hooks.hits_encrypt_setup++;
@@ -159,7 +159,7 @@ psa_status_t mbedtls_test_transparent_aead_encrypt_setup(
 psa_status_t mbedtls_test_transparent_aead_decrypt_setup(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     mbedtls_test_driver_aead_hooks.hits_decrypt_setup++;
@@ -191,7 +191,7 @@ psa_status_t mbedtls_test_transparent_aead_decrypt_setup(
 psa_status_t mbedtls_test_transparent_aead_set_nonce(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const uint8_t *nonce,
-    mbedtls_size_t nonce_length )
+    xalSize_t nonce_length )
 {
     mbedtls_test_driver_aead_hooks.hits_set_nonce++;
 
@@ -218,8 +218,8 @@ psa_status_t mbedtls_test_transparent_aead_set_nonce(
 
 psa_status_t mbedtls_test_transparent_aead_set_lengths(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
-    mbedtls_size_t ad_length,
-    mbedtls_size_t plaintext_length )
+    xalSize_t ad_length,
+    xalSize_t plaintext_length )
 {
     mbedtls_test_driver_aead_hooks.hits_set_lengths++;
 
@@ -248,7 +248,7 @@ psa_status_t mbedtls_test_transparent_aead_set_lengths(
 psa_status_t mbedtls_test_transparent_aead_update_ad(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length )
+    xalSize_t input_length )
 {
     mbedtls_test_driver_aead_hooks.hits_update_ad++;
 
@@ -276,10 +276,10 @@ psa_status_t mbedtls_test_transparent_aead_update_ad(
 psa_status_t mbedtls_test_transparent_aead_update(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    const uint8_t *input,
-   mbedtls_size_t input_length,
+   xalSize_t input_length,
    uint8_t *output,
-   mbedtls_size_t output_size,
-   mbedtls_size_t *output_length )
+   xalSize_t output_size,
+   xalSize_t *output_length )
 {
     mbedtls_test_driver_aead_hooks.hits_update++;
 
@@ -311,11 +311,11 @@ psa_status_t mbedtls_test_transparent_aead_update(
 psa_status_t mbedtls_test_transparent_aead_finish(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    uint8_t *ciphertext,
-   mbedtls_size_t ciphertext_size,
-   mbedtls_size_t *ciphertext_length,
+   xalSize_t ciphertext_size,
+   xalSize_t *ciphertext_length,
    uint8_t *tag,
-   mbedtls_size_t tag_size,
-   mbedtls_size_t *tag_length )
+   xalSize_t tag_size,
+   xalSize_t *tag_length )
 {
    mbedtls_test_driver_aead_hooks.hits_finish++;
 
@@ -349,10 +349,10 @@ psa_status_t mbedtls_test_transparent_aead_finish(
 psa_status_t mbedtls_test_transparent_aead_verify(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    uint8_t *plaintext,
-   mbedtls_size_t plaintext_size,
-   mbedtls_size_t *plaintext_length,
+   xalSize_t plaintext_size,
+   xalSize_t *plaintext_length,
    const uint8_t *tag,
-   mbedtls_size_t tag_length )
+   xalSize_t tag_length )
 {
    mbedtls_test_driver_aead_hooks.hits_verify++;
 
@@ -364,7 +364,7 @@ psa_status_t mbedtls_test_transparent_aead_verify(
     else
     {
        uint8_t check_tag[PSA_AEAD_TAG_MAX_SIZE];
-       mbedtls_size_t check_tag_length;
+       xalSize_t check_tag_length;
 
 #if defined(MBEDTLS_PSA_BUILTIN_AEAD)
        mbedtls_test_driver_aead_hooks.driver_status =

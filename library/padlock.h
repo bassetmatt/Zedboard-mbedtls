@@ -106,7 +106,7 @@ int mbedtls_padlock_xcryptecb( mbedtls_aes_context *ctx,
  */
 int mbedtls_padlock_xcryptcbc( mbedtls_aes_context *ctx,
                                int mode,
-                               mbedtls_size_t length,
+                               xalSize_t length,
                                unsigned char iv[16],
                                const unsigned char *input,
                                unsigned char *output );

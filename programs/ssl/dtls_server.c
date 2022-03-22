@@ -103,7 +103,7 @@ int main( void )
     unsigned char buf[1024];
     const char *pers = "dtls_server";
     unsigned char client_ip[16] = { 0 };
-    mbedtls_size_t cliip_len;
+    xalSize_t cliip_len;
     mbedtls_ssl_cookie_ctx cookie_ctx;
 
     mbedtls_entropy_context entropy;

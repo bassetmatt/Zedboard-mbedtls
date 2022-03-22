@@ -819,7 +819,7 @@ error:
  * SNI callback.
  */
 int sni_callback( void *p_info, mbedtls_ssl_context *ssl,
-                  const unsigned char *name, mbedtls_size_t name_len )
+                  const unsigned char *name, xalSize_t name_len )
 {
     const sni_entry *cur = (const sni_entry *) p_info;
 
@@ -857,7 +857,7 @@ int cert_callback( mbedtls_ssl_context *ssl )
     if( cur != NULL )
     {
         /*(exercise mbedtls_ssl_get_hs_sni(); not otherwise used here)*/
-        mbedtls_size_t name_len;
+        xalSize_t name_len;
         const unsigned char *name = mbedtls_ssl_get_hs_sni( ssl, &name_len );
         if( strlen( cur->name ) != name_len ||
             memcmp( cur->name, name, name_len ) != 0 )
@@ -884,7 +884,7 @@ typedef struct _psk_entry psk_entry;
 struct _psk_entry
 {
     const char *name;
-    mbedtls_size_t key_len;
+    xalSize_t key_len;
     unsigned char key[MBEDTLS_PSK_MAX_LEN];
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
     mbedtls_svc_key_id_t slot;
@@ -968,7 +968,7 @@ error:
  * PSK callback
  */
 int psk_callback( void *p_info, mbedtls_ssl_context *ssl,
-                  const unsigned char *name, mbedtls_size_t name_len )
+                  const unsigned char *name, xalSize_t name_len )
 {
     psk_entry *cur = (psk_entry *) p_info;
 
@@ -1043,9 +1043,9 @@ typedef enum {
 typedef struct
 {
     ssl_async_key_slot_t slots[4]; /* key, key2, sni1, sni2 */
-    mbedtls_size_t slots_used;
+    xalSize_t slots_used;
     ssl_async_inject_error_t inject_error;
-    int (*f_rng)(void *, unsigned char *, mbedtls_size_t);
+    int (*f_rng)(void *, unsigned char *, xalSize_t);
     void *p_rng;
 } ssl_async_key_context_t;
 
@@ -1087,7 +1087,7 @@ typedef struct
     ssl_async_operation_type_t operation_type;
     mbedtls_md_type_t md_alg;
     unsigned char input[SSL_ASYNC_INPUT_MAX_SIZE];
-    mbedtls_size_t input_len;
+    xalSize_t input_len;
     unsigned remaining_delay;
 } ssl_async_operation_context_t;
 
@@ -1096,7 +1096,7 @@ static int ssl_async_start( mbedtls_ssl_context *ssl,
                             ssl_async_operation_type_t op_type,
                             mbedtls_md_type_t md_alg,
                             const unsigned char *input,
-                            mbedtls_size_t input_len )
+                            xalSize_t input_len )
 {
     ssl_async_key_context_t *config_data =
         mbedtls_ssl_conf_get_async_config_data( ssl->conf );
@@ -1161,7 +1161,7 @@ static int ssl_async_sign( mbedtls_ssl_context *ssl,
                            mbedtls_x509_crt *cert,
                            mbedtls_md_type_t md_alg,
                            const unsigned char *hash,
-                           mbedtls_size_t hash_len )
+                           xalSize_t hash_len )
 {
     return( ssl_async_start( ssl, cert,
                              ASYNC_OP_SIGN, md_alg,
@@ -1171,7 +1171,7 @@ static int ssl_async_sign( mbedtls_ssl_context *ssl,
 static int ssl_async_decrypt( mbedtls_ssl_context *ssl,
                               mbedtls_x509_crt *cert,
                               const unsigned char *input,
-                              mbedtls_size_t input_len )
+                              xalSize_t input_len )
 {
     return( ssl_async_start( ssl, cert,
                              ASYNC_OP_DECRYPT, MBEDTLS_MD_NONE,
@@ -1180,8 +1180,8 @@ static int ssl_async_decrypt( mbedtls_ssl_context *ssl,
 
 static int ssl_async_resume( mbedtls_ssl_context *ssl,
                              unsigned char *output,
-                             mbedtls_size_t *output_len,
-                             mbedtls_size_t output_size )
+                             xalSize_t *output_len,
+                             xalSize_t output_size )
 {
     ssl_async_operation_context_t *ctx = mbedtls_ssl_get_async_operation_data( ssl );
     ssl_async_key_context_t *config_data =
@@ -1250,7 +1250,7 @@ static void ssl_async_cancel( mbedtls_ssl_context *ssl )
 static psa_status_t psa_setup_psk_key_slot( mbedtls_svc_key_id_t *slot,
                                             psa_algorithm_t alg,
                                             unsigned char *psk,
-                                            mbedtls_size_t psk_len )
+                                            xalSize_t psk_len )
 {
     psa_status_t status;
     psa_key_attributes_t key_attributes;
@@ -1278,7 +1278,7 @@ int report_cid_usage( mbedtls_ssl_context *ssl,
 {
     int ret;
     unsigned char peer_cid[ MBEDTLS_SSL_CID_OUT_LEN_MAX ];
-    mbedtls_size_t peer_cid_len;
+    xalSize_t peer_cid_len;
     int cid_negotiated;
 
     if( opt.transport != MBEDTLS_SSL_TRANSPORT_DATAGRAM )
@@ -1304,7 +1304,7 @@ int report_cid_usage( mbedtls_ssl_context *ssl,
     }
     else
     {
-        mbedtls_size_t idx=0;
+        xalSize_t idx=0;
         mbedtls_printf( "(%s) Use of Connection ID has been negotiated.\n",
                         additional_description );
         mbedtls_printf( "(%s) Peer CID (length %u Bytes): ",
@@ -1334,12 +1334,12 @@ int main( int argc, char *argv[] )
     mbedtls_svc_key_id_t psk_slot = MBEDTLS_SVC_KEY_ID_INIT;
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
     unsigned char psk[MBEDTLS_PSK_MAX_LEN];
-    mbedtls_size_t psk_len = 0;
+    xalSize_t psk_len = 0;
     psk_entry *psk_info = NULL;
 #endif
     const char *pers = "ssl_server2";
     unsigned char client_ip[16] = { 0 };
-    mbedtls_size_t cliip_len;
+    xalSize_t cliip_len;
 #if defined(MBEDTLS_SSL_COOKIE_C)
     mbedtls_ssl_cookie_ctx cookie_ctx;
 #endif
@@ -1396,12 +1396,12 @@ int main( int argc, char *argv[] )
 #if defined(MBEDTLS_SSL_DTLS_CONNECTION_ID)
     unsigned char cid[MBEDTLS_SSL_CID_IN_LEN_MAX];
     unsigned char cid_renego[MBEDTLS_SSL_CID_IN_LEN_MAX];
-    mbedtls_size_t cid_len = 0;
-    mbedtls_size_t cid_renego_len = 0;
+    xalSize_t cid_len = 0;
+    xalSize_t cid_renego_len = 0;
 #endif
 #if defined(MBEDTLS_SSL_CONTEXT_SERIALIZATION)
     unsigned char *context_buf = NULL;
-    mbedtls_size_t context_buf_len = 0;
+    xalSize_t context_buf_len = 0;
 #endif
 
 #if defined(MBEDTLS_SSL_PROTO_TLS1_3) && \
@@ -1436,7 +1436,7 @@ int main( int argc, char *argv[] )
 #if defined(MBEDTLS_MEMORY_BUFFER_ALLOC_C)
     mbedtls_memory_buffer_alloc_init( alloc_buf, sizeof(alloc_buf) );
 #if defined(MBEDTLS_MEMORY_DEBUG)
-    mbedtls_size_t current_heap_memory, peak_heap_memory, heap_blocks;
+    xalSize_t current_heap_memory, peak_heap_memory, heap_blocks;
 #endif  /* MBEDTLS_MEMORY_DEBUG */
 #endif  /* MBEDTLS_MEMORY_BUFFER_ALLOC_C */
 
@@ -3376,7 +3376,7 @@ handshake:
 
     if( opt.eap_tls != 0 )
     {
-        mbedtls_size_t j = 0;
+        xalSize_t j = 0;
 
         if( ( ret = mbedtls_ssl_tls_prf( eap_tls_keying.tls_prf_type,
                                          eap_tls_keying.master_secret,
@@ -3427,7 +3427,7 @@ handshake:
 #if defined( MBEDTLS_SSL_DTLS_SRTP )
     else if( opt.use_srtp != 0  )
     {
-        mbedtls_size_t j = 0;
+        xalSize_t j = 0;
         mbedtls_dtls_srtp_info dtls_srtp_negotiation_result;
         mbedtls_ssl_get_dtls_srtp_negotiation_result( &ssl, &dtls_srtp_negotiation_result );
 
@@ -3831,7 +3831,7 @@ data_exchange:
 #if defined(MBEDTLS_SSL_CONTEXT_SERIALIZATION)
     if( opt.serialize != 0 )
     {
-        mbedtls_size_t buf_len;
+        xalSize_t buf_len;
 
         mbedtls_printf( "  . Serializing live connection..." );
 
@@ -3869,7 +3869,7 @@ data_exchange:
         {
             FILE *b64_file;
             uint8_t *b64_buf;
-            mbedtls_size_t b64_len;
+            xalSize_t b64_len;
 
             mbedtls_printf( "  . Save serialized context to a file... " );
 
@@ -4081,7 +4081,7 @@ exit:
 #endif
 
 #if defined(MBEDTLS_SSL_ASYNC_PRIVATE)
-    for( i = 0; (mbedtls_size_t) i < ssl_async_keys.slots_used; i++ )
+    for( i = 0; (xalSize_t) i < ssl_async_keys.slots_used; i++ )
     {
         if( ssl_async_keys.slots[i].pk_owned )
         {

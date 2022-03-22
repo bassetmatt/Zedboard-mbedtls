@@ -105,11 +105,11 @@ void mbedtls_test_opaque_free( void )
                              PSA_CRYPTO_TEST_DRIVER_OPAQUE_PAD_PREFIX_SIZE
 
 
-mbedtls_size_t mbedtls_test_opaque_size_function(
+xalSize_t mbedtls_test_opaque_size_function(
     const psa_key_type_t key_type,
-    const mbedtls_size_t key_bits )
+    const xalSize_t key_bits )
 {
-    mbedtls_size_t key_buffer_size = 0;
+    xalSize_t key_buffer_size = 0;
 
     key_buffer_size = PSA_EXPORT_KEY_OUTPUT_SIZE( key_type, key_bits );
     if( key_buffer_size == 0 )
@@ -120,7 +120,7 @@ mbedtls_size_t mbedtls_test_opaque_size_function(
     return( key_buffer_size );
 }
 
-static mbedtls_size_t mbedtls_test_opaque_get_base_size()
+static xalSize_t mbedtls_test_opaque_get_base_size()
 {
     return TEST_DRIVER_KEY_CONTEXT_BASE_SIZE;
 }
@@ -135,12 +135,12 @@ static mbedtls_size_t mbedtls_test_opaque_get_base_size()
  * */
 static psa_status_t mbedtls_test_opaque_wrap_key(
     const uint8_t *key,
-    mbedtls_size_t key_length,
+    xalSize_t key_length,
     uint8_t *wrapped_key_buffer,
-    mbedtls_size_t wrapped_key_buffer_size,
-    mbedtls_size_t *wrapped_key_buffer_length )
+    xalSize_t wrapped_key_buffer_size,
+    xalSize_t *wrapped_key_buffer_length )
 {
-    mbedtls_size_t opaque_key_base_size = mbedtls_test_opaque_get_base_size();
+    xalSize_t opaque_key_base_size = mbedtls_test_opaque_get_base_size();
     uint64_t prefix = PSA_CRYPTO_TEST_DRIVER_OPAQUE_PAD_PREFIX;
 
     if( key_length + opaque_key_base_size > wrapped_key_buffer_size )
@@ -167,14 +167,14 @@ static psa_status_t mbedtls_test_opaque_wrap_key(
  * */
 static psa_status_t mbedtls_test_opaque_unwrap_key(
     const uint8_t *wrapped_key,
-    mbedtls_size_t wrapped_key_length,
+    xalSize_t wrapped_key_length,
     uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length)
+    xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length)
 {
     /* Remove the pad prefix from the wrapped key */
-    mbedtls_size_t opaque_key_base_size = mbedtls_test_opaque_get_base_size();
-    mbedtls_size_t clear_key_size;
+    xalSize_t opaque_key_base_size = mbedtls_test_opaque_get_base_size();
+    xalSize_t clear_key_size;
 
     /* Check for underflow */
     if( wrapped_key_length < opaque_key_base_size )
@@ -193,7 +193,7 @@ static psa_status_t mbedtls_test_opaque_unwrap_key(
 
 psa_status_t mbedtls_test_transparent_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key, mbedtls_size_t key_size, mbedtls_size_t *key_length )
+    uint8_t *key, xalSize_t key_size, xalSize_t *key_length )
 {
     ++mbedtls_test_driver_key_management_hooks.hits;
 
@@ -243,7 +243,7 @@ psa_status_t mbedtls_test_transparent_generate_key(
 
 psa_status_t mbedtls_test_opaque_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key, mbedtls_size_t key_size, mbedtls_size_t *key_length )
+    uint8_t *key, xalSize_t key_size, xalSize_t *key_length )
 {
     (void) attributes;
     (void) key;
@@ -255,11 +255,11 @@ psa_status_t mbedtls_test_opaque_generate_key(
 psa_status_t mbedtls_test_transparent_import_key(
     const psa_key_attributes_t *attributes,
     const uint8_t *data,
-    mbedtls_size_t data_length,
+    xalSize_t data_length,
     uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length,
-    mbedtls_size_t *bits)
+    xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length,
+    xalSize_t *bits)
 {
     psa_key_type_t type = psa_get_key_type( attributes );
 
@@ -323,11 +323,11 @@ psa_status_t mbedtls_test_transparent_import_key(
 psa_status_t mbedtls_test_opaque_import_key(
     const psa_key_attributes_t *attributes,
     const uint8_t *data,
-    mbedtls_size_t data_length,
+    xalSize_t data_length,
     uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
-    mbedtls_size_t *key_buffer_length,
-    mbedtls_size_t *bits)
+    xalSize_t key_buffer_size,
+    xalSize_t *key_buffer_length,
+    xalSize_t *bits)
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_type_t type = psa_get_key_type( attributes );
@@ -422,8 +422,8 @@ exit:
 
 psa_status_t mbedtls_test_opaque_export_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key, mbedtls_size_t key_length,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
+    const uint8_t *key, xalSize_t key_length,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length )
 {
     if( key_length == sizeof( psa_drv_slot_number_t ) )
     {
@@ -501,8 +501,8 @@ psa_status_t mbedtls_test_opaque_export_key(
 
 psa_status_t mbedtls_test_transparent_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length )
 {
     ++mbedtls_test_driver_key_management_hooks.hits;
 
@@ -566,8 +566,8 @@ psa_status_t mbedtls_test_transparent_export_public_key(
 
 psa_status_t mbedtls_test_opaque_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key, mbedtls_size_t key_length,
-    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
+    const uint8_t *key, xalSize_t key_length,
+    uint8_t *data, xalSize_t data_size, xalSize_t *data_length )
 {
     if( key_length != sizeof( psa_drv_slot_number_t ) )
     {
@@ -679,7 +679,7 @@ psa_status_t mbedtls_test_opaque_export_public_key(
 psa_status_t mbedtls_test_opaque_get_builtin_key(
     psa_drv_slot_number_t slot_number,
     psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length )
+    uint8_t *key_buffer, xalSize_t key_buffer_size, xalSize_t *key_buffer_length )
 {
     switch( slot_number )
     {
@@ -727,8 +727,8 @@ psa_status_t mbedtls_test_opaque_get_builtin_key(
 
 psa_status_t mbedtls_test_opaque_copy_key(
     psa_key_attributes_t *attributes,
-    const uint8_t *source_key, mbedtls_size_t source_key_length,
-    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length)
+    const uint8_t *source_key, xalSize_t source_key_length,
+    uint8_t *key_buffer, xalSize_t key_buffer_size, xalSize_t *key_buffer_length)
 {
     /* This is a case where the opaque test driver emulates an SE without storage.
      * With that all key context is stored in the wrapped buffer.

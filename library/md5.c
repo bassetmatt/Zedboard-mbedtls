@@ -221,10 +221,10 @@ int mbedtls_internal_md5_process( mbedtls_md5_context *ctx,
  */
 int mbedtls_md5_update( mbedtls_md5_context *ctx,
                             const unsigned char *input,
-                            mbedtls_size_t ilen )
+                            xalSize_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t fill;
+    xalSize_t fill;
     uint32_t left;
 
     if( ilen == 0 )
@@ -330,7 +330,7 @@ int mbedtls_md5_finish( mbedtls_md5_context *ctx,
  * output = MD5( input buffer )
  */
 int mbedtls_md5( const unsigned char *input,
-                     mbedtls_size_t ilen,
+                     xalSize_t ilen,
                      unsigned char output[16] )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -368,7 +368,7 @@ static const unsigned char md5_test_buf[7][81] =
     { "12345678901234567890123456789012345678901234567890123456789012345678901234567890" }
 };
 
-static const mbedtls_size_t md5_test_buflen[7] =
+static const xalSize_t md5_test_buflen[7] =
 {
     0, 1, 3, 14, 26, 62, 80
 };

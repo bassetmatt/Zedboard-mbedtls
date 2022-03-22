@@ -21,7 +21,7 @@
 #include "mbedtls/mbedtls_config.h"
 
 #include <stdlib.h>
-static inline void *custom_calloc( mbedtls_size_t nmemb, mbedtls_size_t size )
+static inline void *custom_calloc( xalSize_t nmemb, xalSize_t size )
 {
     if( nmemb == 0 || size == 0 )
         return( NULL );

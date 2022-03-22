@@ -264,7 +264,7 @@ mbedtls_x509_time;
  * \return         The length of the string written (not including the
  *                 terminated nul byte), or a negative error code.
  */
-int mbedtls_x509_dn_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_name *dn );
+int mbedtls_x509_dn_gets( char *buf, xalSize_t size, const mbedtls_x509_name *dn );
 
 /**
  * \brief          Store the certificate serial in printable form into buf;
@@ -277,7 +277,7 @@ int mbedtls_x509_dn_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_nam
  * \return         The length of the string written (not including the
  *                 terminated nul byte), or a negative error code.
  */
-int mbedtls_x509_serial_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_buf *serial );
+int mbedtls_x509_serial_gets( char *buf, xalSize_t size, const mbedtls_x509_buf *serial );
 
 /**
  * \brief          Check a given mbedtls_x509_time against the system time
@@ -335,30 +335,30 @@ int mbedtls_x509_get_serial( unsigned char **p, const unsigned char *end,
 int mbedtls_x509_get_ext( unsigned char **p, const unsigned char *end,
                   mbedtls_x509_buf *ext, int tag );
 #if !defined(MBEDTLS_X509_REMOVE_INFO)
-int mbedtls_x509_sig_alg_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_buf *sig_oid,
+int mbedtls_x509_sig_alg_gets( char *buf, xalSize_t size, const mbedtls_x509_buf *sig_oid,
                        mbedtls_pk_type_t pk_alg, mbedtls_md_type_t md_alg,
                        const void *sig_opts );
 #endif
-int mbedtls_x509_key_size_helper( char *buf, mbedtls_size_t buf_size, const char *name );
+int mbedtls_x509_key_size_helper( char *buf, xalSize_t buf_size, const char *name );
 int mbedtls_x509_string_to_names( mbedtls_asn1_named_data **head, const char *name );
-int mbedtls_x509_set_extension( mbedtls_asn1_named_data **head, const char *oid, mbedtls_size_t oid_len,
+int mbedtls_x509_set_extension( mbedtls_asn1_named_data **head, const char *oid, xalSize_t oid_len,
                         int critical, const unsigned char *val,
-                        mbedtls_size_t val_len );
+                        xalSize_t val_len );
 int mbedtls_x509_write_extensions( unsigned char **p, unsigned char *start,
                            mbedtls_asn1_named_data *first );
 int mbedtls_x509_write_names( unsigned char **p, unsigned char *start,
                       mbedtls_asn1_named_data *first );
 int mbedtls_x509_write_sig( unsigned char **p, unsigned char *start,
-                    const char *oid, mbedtls_size_t oid_len,
-                    unsigned char *sig, mbedtls_size_t size );
+                    const char *oid, xalSize_t oid_len,
+                    unsigned char *sig, xalSize_t size );
 
 #define MBEDTLS_X509_SAFE_SNPRINTF                          \
     do {                                                    \
-        if( ret < 0 || (mbedtls_size_t) ret >= n )                  \
+        if( ret < 0 || (xalSize_t) ret >= n )                  \
             return( MBEDTLS_ERR_X509_BUFFER_TOO_SMALL );    \
                                                             \
-        n -= (mbedtls_size_t) ret;                                  \
-        p += (mbedtls_size_t) ret;                                  \
+        n -= (xalSize_t) ret;                                  \
+        p += (xalSize_t) ret;                                  \
     } while( 0 )
 
 #ifdef __cplusplus

@@ -231,7 +231,7 @@ int mbedtls_pk_can_do( const mbedtls_pk_context *ctx, mbedtls_pk_type_t type )
 /*
  * Helper for mbedtls_pk_sign and mbedtls_pk_verify
  */
-static inline int pk_hashlen_helper( mbedtls_md_type_t md_alg, mbedtls_size_t *hash_len )
+static inline int pk_hashlen_helper( mbedtls_md_type_t md_alg, xalSize_t *hash_len )
 {
     const mbedtls_md_info_t *md_info;
 
@@ -274,8 +274,8 @@ static int pk_restart_setup( mbedtls_pk_restart_ctx *ctx,
  */
 int mbedtls_pk_verify_restartable( mbedtls_pk_context *ctx,
                mbedtls_md_type_t md_alg,
-               const unsigned char *hash, mbedtls_size_t hash_len,
-               const unsigned char *sig, mbedtls_size_t sig_len,
+               const unsigned char *hash, xalSize_t hash_len,
+               const unsigned char *sig, xalSize_t sig_len,
                mbedtls_pk_restart_ctx *rs_ctx )
 {
     PK_VALIDATE_RET( ctx != NULL );
@@ -321,8 +321,8 @@ int mbedtls_pk_verify_restartable( mbedtls_pk_context *ctx,
  * Verify a signature
  */
 int mbedtls_pk_verify( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-               const unsigned char *hash, mbedtls_size_t hash_len,
-               const unsigned char *sig, mbedtls_size_t sig_len )
+               const unsigned char *hash, xalSize_t hash_len,
+               const unsigned char *sig, xalSize_t sig_len )
 {
     return( mbedtls_pk_verify_restartable( ctx, md_alg, hash, hash_len,
                                            sig, sig_len, NULL ) );
@@ -333,8 +333,8 @@ int mbedtls_pk_verify( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
  */
 int mbedtls_pk_verify_ext( mbedtls_pk_type_t type, const void *options,
                    mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-                   const unsigned char *hash, mbedtls_size_t hash_len,
-                   const unsigned char *sig, mbedtls_size_t sig_len )
+                   const unsigned char *hash, xalSize_t hash_len,
+                   const unsigned char *sig, xalSize_t sig_len )
 {
     PK_VALIDATE_RET( ctx != NULL );
     PK_VALIDATE_RET( ( md_alg == MBEDTLS_MD_NONE && hash_len == 0 ) ||
@@ -372,14 +372,14 @@ int mbedtls_pk_verify_ext( mbedtls_pk_type_t type, const void *options,
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
     if( pss_opts->mgf1_hash_id == md_alg &&
-        ( (mbedtls_size_t) pss_opts->expected_salt_len == hash_len ||
+        ( (xalSize_t) pss_opts->expected_salt_len == hash_len ||
             pss_opts->expected_salt_len  == MBEDTLS_RSA_SALT_LEN_ANY ) )
     {
         /* see RSA_PUB_DER_MAX_BYTES in pkwrite.c */
         unsigned char buf[ 38 + 2 * MBEDTLS_MPI_MAX_SIZE ];
         unsigned char *p;
         int key_len;
-        mbedtls_size_t signature_length;
+        xalSize_t signature_length;
         psa_status_t status = PSA_ERROR_DATA_CORRUPT;
         psa_status_t destruction_status = PSA_ERROR_DATA_CORRUPT;
 
@@ -457,9 +457,9 @@ int mbedtls_pk_verify_ext( mbedtls_pk_type_t type, const void *options,
  */
 int mbedtls_pk_sign_restartable( mbedtls_pk_context *ctx,
              mbedtls_md_type_t md_alg,
-             const unsigned char *hash, mbedtls_size_t hash_len,
-             unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
-             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
+             const unsigned char *hash, xalSize_t hash_len,
+             unsigned char *sig, xalSize_t sig_size, xalSize_t *sig_len,
+             int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng,
              mbedtls_pk_restart_ctx *rs_ctx )
 {
     PK_VALIDATE_RET( ctx != NULL );
@@ -509,9 +509,9 @@ int mbedtls_pk_sign_restartable( mbedtls_pk_context *ctx,
  * Make a signature
  */
 int mbedtls_pk_sign( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-             const unsigned char *hash, mbedtls_size_t hash_len,
-             unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
-             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
+             const unsigned char *hash, xalSize_t hash_len,
+             unsigned char *sig, xalSize_t sig_size, xalSize_t *sig_len,
+             int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng )
 {
     return( mbedtls_pk_sign_restartable( ctx, md_alg, hash, hash_len,
                                          sig, sig_size, sig_len,
@@ -522,9 +522,9 @@ int mbedtls_pk_sign( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
  * Decrypt message
  */
 int mbedtls_pk_decrypt( mbedtls_pk_context *ctx,
-                const unsigned char *input, mbedtls_size_t ilen,
-                unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
-                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
+                const unsigned char *input, xalSize_t ilen,
+                unsigned char *output, xalSize_t *olen, xalSize_t osize,
+                int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng )
 {
     PK_VALIDATE_RET( ctx != NULL );
     PK_VALIDATE_RET( input != NULL || ilen == 0 );
@@ -545,9 +545,9 @@ int mbedtls_pk_decrypt( mbedtls_pk_context *ctx,
  * Encrypt message
  */
 int mbedtls_pk_encrypt( mbedtls_pk_context *ctx,
-                const unsigned char *input, mbedtls_size_t ilen,
-                unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
-                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
+                const unsigned char *input, xalSize_t ilen,
+                unsigned char *output, xalSize_t *olen, xalSize_t osize,
+                int (*f_rng)(void *, unsigned char *, xalSize_t), void *p_rng )
 {
     PK_VALIDATE_RET( ctx != NULL );
     PK_VALIDATE_RET( input != NULL || ilen == 0 );
@@ -569,7 +569,7 @@ int mbedtls_pk_encrypt( mbedtls_pk_context *ctx,
  */
 int mbedtls_pk_check_pair( const mbedtls_pk_context *pub,
                            const mbedtls_pk_context *prv,
-                           int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                           int (*f_rng)(void *, unsigned char *, xalSize_t),
                            void *p_rng )
 {
     PK_VALIDATE_RET( pub != NULL );
@@ -604,7 +604,7 @@ int mbedtls_pk_check_pair( const mbedtls_pk_context *pub,
 /*
  * Get key size in bits
  */
-mbedtls_size_t mbedtls_pk_get_bitlen( const mbedtls_pk_context *ctx )
+xalSize_t mbedtls_pk_get_bitlen( const mbedtls_pk_context *ctx )
 {
     /* For backward compatibility, accept NULL or a context that
      * isn't set up yet, and return a fake value that should be safe. */
@@ -671,11 +671,11 @@ int mbedtls_pk_wrap_as_opaque( mbedtls_pk_context *pk,
 #else
     const mbedtls_ecp_keypair *ec;
     unsigned char d[MBEDTLS_ECP_MAX_BYTES];
-    mbedtls_size_t d_len;
+    xalSize_t d_len;
     psa_ecc_family_t curve_id;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_type_t key_type;
-    mbedtls_size_t bits;
+    xalSize_t bits;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     /* export the private key material in the format PSA wants */

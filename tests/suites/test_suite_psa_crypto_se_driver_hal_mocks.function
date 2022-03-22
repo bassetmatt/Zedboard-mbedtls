@@ -22,7 +22,7 @@ static struct
     uint16_t called;
     psa_key_slot_number_t key_slot;
     psa_key_attributes_t attributes;
-    mbedtls_size_t pubkey_size;
+    xalSize_t pubkey_size;
     psa_status_t return_value;
 } mock_generate_data;
 
@@ -31,8 +31,8 @@ static struct
     uint16_t called;
     psa_key_slot_number_t key_slot;
     psa_key_attributes_t attributes;
-    mbedtls_size_t bits;
-    mbedtls_size_t data_length;
+    xalSize_t bits;
+    xalSize_t data_length;
     psa_status_t return_value;
 } mock_import_data;
 
@@ -40,7 +40,7 @@ static struct
 {
     uint16_t called;
     psa_key_slot_number_t slot_number;
-    mbedtls_size_t data_size;
+    xalSize_t data_size;
     psa_status_t return_value;
 } mock_export_data;
 
@@ -48,7 +48,7 @@ static struct
 {
     uint16_t called;
     psa_key_slot_number_t slot_number;
-    mbedtls_size_t data_size;
+    xalSize_t data_size;
     psa_status_t return_value;
 } mock_export_public_data;
 
@@ -57,8 +57,8 @@ static struct
     uint16_t called;
     psa_key_slot_number_t key_slot;
     psa_algorithm_t alg;
-    mbedtls_size_t hash_length;
-    mbedtls_size_t signature_size;
+    xalSize_t hash_length;
+    xalSize_t signature_size;
     psa_status_t return_value;
 } mock_sign_data;
 
@@ -67,8 +67,8 @@ static struct
     uint16_t called;
     psa_key_slot_number_t key_slot;
     psa_algorithm_t alg;
-    mbedtls_size_t hash_length;
-    mbedtls_size_t signature_length;
+    xalSize_t hash_length;
+    xalSize_t signature_length;
     psa_status_t return_value;
 } mock_verify_data;
 
@@ -134,8 +134,8 @@ static psa_status_t mock_generate( psa_drv_se_context_t *drv_context,
                                    psa_key_slot_number_t key_slot,
                                    const psa_key_attributes_t *attributes,
                                    uint8_t *pubkey,
-                                   mbedtls_size_t pubkey_size,
-                                   mbedtls_size_t *pubkey_length )
+                                   xalSize_t pubkey_size,
+                                   xalSize_t *pubkey_length )
 {
     (void) drv_context;
     (void) pubkey;
@@ -153,8 +153,8 @@ static psa_status_t mock_import( psa_drv_se_context_t *drv_context,
                                  psa_key_slot_number_t key_slot,
                                  const psa_key_attributes_t *attributes,
                                  const uint8_t *data,
-                                 mbedtls_size_t data_length,
-                                 mbedtls_size_t *bits )
+                                 xalSize_t data_length,
+                                 xalSize_t *bits )
 {
     (void) drv_context;
     (void) data;
@@ -172,8 +172,8 @@ static psa_status_t mock_import( psa_drv_se_context_t *drv_context,
 psa_status_t mock_export( psa_drv_se_context_t *context,
                           psa_key_slot_number_t slot_number,
                           uint8_t *p_data,
-                          mbedtls_size_t data_size,
-                          mbedtls_size_t *p_data_length )
+                          xalSize_t data_size,
+                          xalSize_t *p_data_length )
 {
     (void) context;
     (void) p_data;
@@ -189,8 +189,8 @@ psa_status_t mock_export( psa_drv_se_context_t *context,
 psa_status_t mock_export_public( psa_drv_se_context_t *context,
                                  psa_key_slot_number_t slot_number,
                                  uint8_t *p_data,
-                                 mbedtls_size_t data_size,
-                                 mbedtls_size_t *p_data_length )
+                                 xalSize_t data_size,
+                                 xalSize_t *p_data_length )
 {
     (void) context;
     (void) p_data;
@@ -207,10 +207,10 @@ psa_status_t mock_sign( psa_drv_se_context_t *context,
                         psa_key_slot_number_t key_slot,
                         psa_algorithm_t alg,
                         const uint8_t *p_hash,
-                        mbedtls_size_t hash_length,
+                        xalSize_t hash_length,
                         uint8_t *p_signature,
-                        mbedtls_size_t signature_size,
-                        mbedtls_size_t *p_signature_length )
+                        xalSize_t signature_size,
+                        xalSize_t *p_signature_length )
 {
     (void) context;
     (void) p_hash;
@@ -230,9 +230,9 @@ psa_status_t mock_verify( psa_drv_se_context_t *context,
                           psa_key_slot_number_t key_slot,
                           psa_algorithm_t alg,
                           const uint8_t *p_hash,
-                          mbedtls_size_t hash_length,
+                          xalSize_t hash_length,
                           const uint8_t *p_signature,
-                          mbedtls_size_t signature_length )
+                          xalSize_t signature_length )
 {
     (void) context;
     (void) p_hash;
@@ -405,7 +405,7 @@ void mock_export( int mock_export_return_value, int expected_result )
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     const uint8_t key_material[3] = {0xfa, 0xca, 0xde};
     uint8_t exported[sizeof( key_material )];
-    mbedtls_size_t exported_length;
+    xalSize_t exported_length;
 
     mock_export_data.return_value = mock_export_return_value;
     memset( &driver, 0, sizeof( driver ) );
@@ -526,7 +526,7 @@ void mock_export_public( int mock_export_public_return_value,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     const uint8_t key_material[3] = {0xfa, 0xca, 0xde};
     uint8_t exported[sizeof( key_material )];
-    mbedtls_size_t exported_length;
+    xalSize_t exported_length;
 
     mock_export_public_data.return_value = mock_export_public_return_value;
     memset( &driver, 0, sizeof( driver ) );
@@ -578,7 +578,7 @@ void mock_sign( int mock_sign_return_value, int expected_result )
     psa_algorithm_t algorithm = PSA_ALG_ECDSA(PSA_ALG_SHA_256);
     const uint8_t hash[1] = {'H'};
     uint8_t signature[1] = {'S'};
-    mbedtls_size_t signature_length;
+    xalSize_t signature_length;
 
     mock_sign_data.return_value = mock_sign_return_value;
     memset( &driver, 0, sizeof( driver ) );

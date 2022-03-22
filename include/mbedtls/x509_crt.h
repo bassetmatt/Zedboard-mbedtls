@@ -414,7 +414,7 @@ extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_none;
  */
 int mbedtls_x509_crt_parse_der( mbedtls_x509_crt *chain,
                                 const unsigned char *buf,
-                                mbedtls_size_t buflen );
+                                xalSize_t buflen );
 
 /**
  * \brief          The type of certificate extension callbacks.
@@ -495,7 +495,7 @@ typedef int (*mbedtls_x509_crt_ext_cb_t)( void *p_ctx,
  */
 int mbedtls_x509_crt_parse_der_with_ext_cb( mbedtls_x509_crt *chain,
                                             const unsigned char *buf,
-                                            mbedtls_size_t buflen,
+                                            xalSize_t buflen,
                                             int make_copy,
                                             mbedtls_x509_crt_ext_cb_t cb,
                                             void *p_ctx );
@@ -529,7 +529,7 @@ int mbedtls_x509_crt_parse_der_with_ext_cb( mbedtls_x509_crt *chain,
  */
 int mbedtls_x509_crt_parse_der_nocopy( mbedtls_x509_crt *chain,
                                        const unsigned char *buf,
-                                       mbedtls_size_t buflen );
+                                       xalSize_t buflen );
 
 /**
  * \brief          Parse one DER-encoded or one or more concatenated PEM-encoded
@@ -561,7 +561,7 @@ int mbedtls_x509_crt_parse_der_nocopy( mbedtls_x509_crt *chain,
  * \return         A negative X509 or PEM error code otherwise.
  *
  */
-int mbedtls_x509_crt_parse( mbedtls_x509_crt *chain, const unsigned char *buf, mbedtls_size_t buflen );
+int mbedtls_x509_crt_parse( mbedtls_x509_crt *chain, const unsigned char *buf, xalSize_t buflen );
 
 #if defined(MBEDTLS_FS_IO)
 /**
@@ -638,7 +638,7 @@ int mbedtls_x509_parse_subject_alt_name( const mbedtls_x509_buf *san_buf,
  * \return         The length of the string written (not including the
  *                 terminated nul byte), or a negative error code.
  */
-int mbedtls_x509_crt_info( char *buf, mbedtls_size_t size, const char *prefix,
+int mbedtls_x509_crt_info( char *buf, xalSize_t size, const char *prefix,
                    const mbedtls_x509_crt *crt );
 
 /**
@@ -653,7 +653,7 @@ int mbedtls_x509_crt_info( char *buf, mbedtls_size_t size, const char *prefix,
  * \return         The length of the string written (not including the
  *                 terminated nul byte), or a negative error code.
  */
-int mbedtls_x509_crt_verify_info( char *buf, mbedtls_size_t size, const char *prefix,
+int mbedtls_x509_crt_verify_info( char *buf, xalSize_t size, const char *prefix,
                           uint32_t flags );
 #endif /* !MBEDTLS_X509_REMOVE_INFO */
 
@@ -913,7 +913,7 @@ int mbedtls_x509_crt_check_key_usage( const mbedtls_x509_crt *crt,
  */
 int mbedtls_x509_crt_check_extended_key_usage( const mbedtls_x509_crt *crt,
                                                const char *usage_oid,
-                                               mbedtls_size_t usage_len );
+                                               xalSize_t usage_len );
 
 #if defined(MBEDTLS_X509_CRL_PARSE_C)
 /**
@@ -1071,9 +1071,9 @@ void mbedtls_x509write_crt_set_md_alg( mbedtls_x509write_cert *ctx, mbedtls_md_t
  * \return          0 if successful, or a MBEDTLS_ERR_X509_ALLOC_FAILED
  */
 int mbedtls_x509write_crt_set_extension( mbedtls_x509write_cert *ctx,
-                                 const char *oid, mbedtls_size_t oid_len,
+                                 const char *oid, xalSize_t oid_len,
                                  int critical,
-                                 const unsigned char *val, mbedtls_size_t val_len );
+                                 const unsigned char *val, xalSize_t val_len );
 
 /**
  * \brief           Set the basicConstraints extension for a CRT
@@ -1161,8 +1161,8 @@ void mbedtls_x509write_crt_free( mbedtls_x509write_cert *ctx );
  *
  * \note            \p f_rng is used for the signature operation.
  */
-int mbedtls_x509write_crt_der( mbedtls_x509write_cert *ctx, unsigned char *buf, mbedtls_size_t size,
-                       int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+int mbedtls_x509write_crt_der( mbedtls_x509write_cert *ctx, unsigned char *buf, xalSize_t size,
+                       int (*f_rng)(void *, unsigned char *, xalSize_t),
                        void *p_rng );
 
 #if defined(MBEDTLS_PEM_WRITE_C)
@@ -1179,8 +1179,8 @@ int mbedtls_x509write_crt_der( mbedtls_x509write_cert *ctx, unsigned char *buf, 
  *
  * \note            \p f_rng is used for the signature operation.
  */
-int mbedtls_x509write_crt_pem( mbedtls_x509write_cert *ctx, unsigned char *buf, mbedtls_size_t size,
-                       int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+int mbedtls_x509write_crt_pem( mbedtls_x509write_cert *ctx, unsigned char *buf, xalSize_t size,
+                       int (*f_rng)(void *, unsigned char *, xalSize_t),
                        void *p_rng );
 #endif /* MBEDTLS_PEM_WRITE_C */
 #endif /* MBEDTLS_X509_CRT_WRITE_C */

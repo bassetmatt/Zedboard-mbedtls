@@ -258,7 +258,7 @@ psa_status_t mbedtls_psa_hash_clone(
 psa_status_t mbedtls_psa_hash_update(
     mbedtls_psa_hash_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length )
+    xalSize_t input_length )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -318,12 +318,12 @@ psa_status_t mbedtls_psa_hash_update(
 psa_status_t mbedtls_psa_hash_finish(
     mbedtls_psa_hash_operation_t *operation,
     uint8_t *hash,
-    mbedtls_size_t hash_size,
-    mbedtls_size_t *hash_length )
+    xalSize_t hash_size,
+    xalSize_t *hash_length )
 {
     psa_status_t status;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t actual_hash_length = PSA_HASH_LENGTH( operation->alg );
+    xalSize_t actual_hash_length = PSA_HASH_LENGTH( operation->alg );
 
     /* Fill the output buffer with something that isn't a valid hash
      * (barring an attack on the hash and deliberately-crafted input),
@@ -392,10 +392,10 @@ exit:
 psa_status_t mbedtls_psa_hash_compute(
     psa_algorithm_t alg,
     const uint8_t *input,
-    mbedtls_size_t input_length,
+    xalSize_t input_length,
     uint8_t *hash,
-    mbedtls_size_t hash_size,
-    mbedtls_size_t *hash_length)
+    xalSize_t hash_size,
+    xalSize_t *hash_length)
 {
     mbedtls_psa_hash_operation_t operation = MBEDTLS_PSA_HASH_OPERATION_INIT;
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;

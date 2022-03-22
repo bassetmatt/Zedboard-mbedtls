@@ -44,7 +44,7 @@
  */
 int mbedtls_asn1_get_len( unsigned char **p,
                   const unsigned char *end,
-                  mbedtls_size_t *len )
+                  xalSize_t *len )
 {
     if( ( end - *p ) < 1 )
         return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
@@ -67,7 +67,7 @@ int mbedtls_asn1_get_len( unsigned char **p,
             if( ( end - *p ) < 3 )
                 return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
 
-            *len = ( (mbedtls_size_t)(*p)[1] << 8 ) | (*p)[2];
+            *len = ( (xalSize_t)(*p)[1] << 8 ) | (*p)[2];
             (*p) += 3;
             break;
 
@@ -75,8 +75,8 @@ int mbedtls_asn1_get_len( unsigned char **p,
             if( ( end - *p ) < 4 )
                 return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
 
-            *len = ( (mbedtls_size_t)(*p)[1] << 16 ) |
-                   ( (mbedtls_size_t)(*p)[2] << 8  ) | (*p)[3];
+            *len = ( (xalSize_t)(*p)[1] << 16 ) |
+                   ( (xalSize_t)(*p)[2] << 8  ) | (*p)[3];
             (*p) += 4;
             break;
 
@@ -84,8 +84,8 @@ int mbedtls_asn1_get_len( unsigned char **p,
             if( ( end - *p ) < 5 )
                 return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
 
-            *len = ( (mbedtls_size_t)(*p)[1] << 24 ) | ( (mbedtls_size_t)(*p)[2] << 16 ) |
-                   ( (mbedtls_size_t)(*p)[3] << 8  ) |           (*p)[4];
+            *len = ( (xalSize_t)(*p)[1] << 24 ) | ( (xalSize_t)(*p)[2] << 16 ) |
+                   ( (xalSize_t)(*p)[3] << 8  ) |           (*p)[4];
             (*p) += 5;
             break;
 
@@ -94,7 +94,7 @@ int mbedtls_asn1_get_len( unsigned char **p,
         }
     }
 
-    if( *len > (mbedtls_size_t) ( end - *p ) )
+    if( *len > (xalSize_t) ( end - *p ) )
         return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
 
     return( 0 );
@@ -102,7 +102,7 @@ int mbedtls_asn1_get_len( unsigned char **p,
 
 int mbedtls_asn1_get_tag( unsigned char **p,
                   const unsigned char *end,
-                  mbedtls_size_t *len, int tag )
+                  xalSize_t *len, int tag )
 {
     if( ( end - *p ) < 1 )
         return( MBEDTLS_ERR_ASN1_OUT_OF_DATA );
@@ -120,7 +120,7 @@ int mbedtls_asn1_get_bool( unsigned char **p,
                    int *val )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len, MBEDTLS_ASN1_BOOLEAN ) ) != 0 )
         return( ret );
@@ -139,7 +139,7 @@ static int asn1_get_tagged_int( unsigned char **p,
                                 int tag, int *val )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len, tag ) ) != 0 )
         return( ret );
@@ -198,7 +198,7 @@ int mbedtls_asn1_get_mpi( unsigned char **p,
                   mbedtls_mpi *X )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len, MBEDTLS_ASN1_INTEGER ) ) != 0 )
         return( ret );
@@ -251,11 +251,11 @@ int mbedtls_asn1_traverse_sequence_of(
     unsigned char tag_must_mask, unsigned char tag_must_val,
     unsigned char tag_may_mask, unsigned char tag_may_val,
     int (*cb)( void *ctx, int tag,
-               unsigned char *start, mbedtls_size_t len ),
+               unsigned char *start, xalSize_t len ),
     void *ctx )
 {
     int ret;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     /* Get main sequence tag */
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len,
@@ -297,7 +297,7 @@ int mbedtls_asn1_traverse_sequence_of(
  * Get a bit string without unused bits
  */
 int mbedtls_asn1_get_bitstring_null( unsigned char **p, const unsigned char *end,
-                             mbedtls_size_t *len )
+                             xalSize_t *len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -335,7 +335,7 @@ typedef struct
 static int asn1_get_sequence_of_cb( void *ctx,
                                     int tag,
                                     unsigned char *start,
-                                    mbedtls_size_t len )
+                                    xalSize_t len )
 {
     asn1_get_sequence_of_cb_ctx_t *cb_ctx =
         (asn1_get_sequence_of_cb_ctx_t *) ctx;
@@ -381,7 +381,7 @@ int mbedtls_asn1_get_alg( unsigned char **p,
                   mbedtls_asn1_buf *alg, mbedtls_asn1_buf *params )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE ) ) != 0 )
@@ -462,7 +462,7 @@ void mbedtls_asn1_free_named_data_list( mbedtls_asn1_named_data **head )
 }
 
 const mbedtls_asn1_named_data *mbedtls_asn1_find_named_data( const mbedtls_asn1_named_data *list,
-                                       const char *oid, mbedtls_size_t len )
+                                       const char *oid, xalSize_t len )
 {
     while( list != NULL )
     {

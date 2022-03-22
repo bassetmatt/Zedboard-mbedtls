@@ -55,7 +55,7 @@
 typedef struct
 {
     void *persistent_data;
-    mbedtls_size_t persistent_data_size;
+    xalSize_t persistent_data_size;
     uintptr_t transient_data;
 } psa_drv_se_internal_context_t;
 
@@ -75,7 +75,7 @@ static psa_se_drv_table_entry_t driver_table[PSA_MAX_SE_DRIVERS];
 psa_se_drv_table_entry_t *psa_get_se_driver_entry(
     psa_key_lifetime_t lifetime )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     psa_key_location_t location = PSA_KEY_LIFETIME_GET_LOCATION( lifetime );
     /* In the driver table, location=0 means an entry that isn't used.
      * No driver has a location of 0 because it's a reserved value
@@ -144,7 +144,7 @@ psa_status_t psa_load_se_persistent_data(
 {
     psa_status_t status;
     psa_storage_uid_t uid;
-    mbedtls_size_t length;
+    xalSize_t length;
 
     status = psa_get_se_driver_its_file_uid( driver, &uid );
     if( status != PSA_SUCCESS )
@@ -154,7 +154,7 @@ psa_status_t psa_load_se_persistent_data(
      * If the data in storage is larger, it is truncated. If the data
      * in storage is smaller, silently keep what is already at the end
      * of the output buffer. */
-    /* psa_get_se_driver_its_file_uid ensures that the mbedtls_size_t
+    /* psa_get_se_driver_its_file_uid ensures that the xalSize_t
      * persistent_data_size is in range, but compilers don't know that,
      * so cast to reassure them. */
     return( psa_its_get( uid, 0,
@@ -173,7 +173,7 @@ psa_status_t psa_save_se_persistent_data(
     if( status != PSA_SUCCESS )
         return( status );
 
-    /* psa_get_se_driver_its_file_uid ensures that the mbedtls_size_t
+    /* psa_get_se_driver_its_file_uid ensures that the xalSize_t
      * persistent_data_size is in range, but compilers don't know that,
      * so cast to reassure them. */
     return( psa_its_set( uid,
@@ -272,7 +272,7 @@ psa_status_t psa_destroy_se_key( psa_se_drv_table_entry_t *driver,
 
 psa_status_t psa_init_all_se_drivers( void )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     for( i = 0; i < PSA_MAX_SE_DRIVERS; i++ )
     {
         psa_se_drv_table_entry_t *driver = &driver_table[i];
@@ -305,7 +305,7 @@ psa_status_t psa_register_se_driver(
     psa_key_location_t location,
     const psa_drv_se_t *methods)
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     psa_status_t status;
 
     if( methods->hal_version != PSA_DRV_SE_HAL_VERSION )
@@ -365,7 +365,7 @@ error:
 
 void psa_unregister_all_se_drivers( void )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
     for( i = 0; i < PSA_MAX_SE_DRIVERS; i++ )
     {
         if( driver_table[i].u.internal.persistent_data != NULL )

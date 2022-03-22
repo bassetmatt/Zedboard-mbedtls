@@ -13,7 +13,7 @@ void camellia_invalid_param( )
     mbedtls_camellia_context ctx;
     unsigned char buf[16] = { 0 };
     const int invalid_mode = 42;
-    mbedtls_size_t off;
+    xalSize_t off;
     ((void) off);
 
     TEST_EQUAL( MBEDTLS_ERR_CAMELLIA_BAD_INPUT_DATA,
@@ -148,7 +148,7 @@ void camellia_encrypt_cfb128( data_t * key_str, data_t * iv_str,
 {
     unsigned char output[100];
     mbedtls_camellia_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset(output, 0x00, 100);
     mbedtls_camellia_init( &ctx );
@@ -171,7 +171,7 @@ void camellia_decrypt_cfb128( data_t * key_str, data_t * iv_str,
 {
     unsigned char output[100];
     mbedtls_camellia_context ctx;
-    mbedtls_size_t iv_offset = 0;
+    xalSize_t iv_offset = 0;
 
     memset(output, 0x00, 100);
     mbedtls_camellia_init( &ctx );

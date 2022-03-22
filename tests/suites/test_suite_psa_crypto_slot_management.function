@@ -210,7 +210,7 @@ void persistent_slot_lifecycle( int lifetime_arg, int owner_id_arg, int id_arg,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_attributes_t read_attributes = PSA_KEY_ATTRIBUTES_INIT;
     uint8_t *reexported = NULL;
-    mbedtls_size_t reexported_length = -1;
+    xalSize_t reexported_length = -1;
 
 #if defined(MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER)
     mbedtls_svc_key_id_t wrong_owner_id =
@@ -360,9 +360,9 @@ void create_existent( int lifetime_arg, int owner_id_arg, int id_arg,
     psa_key_type_t type1 = PSA_KEY_TYPE_RAW_DATA;
     const uint8_t material1[5] = "a key";
     const uint8_t material2[5] = "b key";
-    mbedtls_size_t bits1 = PSA_BYTES_TO_BITS( sizeof( material1 ) );
+    xalSize_t bits1 = PSA_BYTES_TO_BITS( sizeof( material1 ) );
     uint8_t reexported[sizeof( material1 )];
-    mbedtls_size_t reexported_length;
+    xalSize_t reexported_length;
     reopen_policy_t reopen_policy = reopen_policy_arg;
 
     TEST_USES_KEY_ID( id );
@@ -583,7 +583,7 @@ void copy_across_lifetimes( int source_lifetime_arg, int source_owner_id_arg,
                 psa_get_key_enrollment_algorithm( &target_attributes ) );
     if( expected_usage & PSA_KEY_USAGE_EXPORT )
     {
-        mbedtls_size_t length;
+        xalSize_t length;
         ASSERT_ALLOC( export_buffer, material->len );
         PSA_ASSERT( psa_export_key( returned_target_id, export_buffer,
                                     material->len, &length ) );
@@ -592,7 +592,7 @@ void copy_across_lifetimes( int source_lifetime_arg, int source_owner_id_arg,
     }
     else
     {
-        mbedtls_size_t length;
+        xalSize_t length;
         /* Check that the key is actually non-exportable. */
         TEST_EQUAL( psa_export_key( returned_target_id, export_buffer,
                                     material->len, &length ),
@@ -704,7 +704,7 @@ void copy_to_occupied( int source_lifetime_arg, int source_id_arg,
                 psa_get_key_algorithm( &attributes2 ) );
     if( target_usage & PSA_KEY_USAGE_EXPORT )
     {
-        mbedtls_size_t length;
+        xalSize_t length;
         ASSERT_ALLOC( export_buffer, target_material->len );
         PSA_ASSERT( psa_export_key( returned_target_id, export_buffer,
                                     target_material->len, &length ) );
@@ -821,12 +821,12 @@ exit:
 void many_transient_keys( int max_keys_arg )
 {
     mbedtls_svc_key_id_t *keys = NULL;
-    mbedtls_size_t max_keys = max_keys_arg;
-    mbedtls_size_t i, j;
+    xalSize_t max_keys = max_keys_arg;
+    xalSize_t i, j;
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    uint8_t exported[sizeof( mbedtls_size_t )];
-    mbedtls_size_t exported_length;
+    uint8_t exported[sizeof( xalSize_t )];
+    xalSize_t exported_length;
 
     ASSERT_ALLOC( keys, max_keys );
     PSA_ASSERT( psa_crypto_init( ) );
@@ -870,10 +870,10 @@ exit:
 void key_slot_eviction_to_import_new_key( int lifetime_arg )
 {
     psa_key_lifetime_t lifetime = (psa_key_lifetime_t)lifetime_arg;
-    mbedtls_size_t i;
+    xalSize_t i;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    uint8_t exported[sizeof( mbedtls_size_t )];
-    mbedtls_size_t exported_length;
+    uint8_t exported[sizeof( xalSize_t )];
+    xalSize_t exported_length;
     mbedtls_svc_key_id_t key, returned_key_id;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -946,10 +946,10 @@ exit:
 void non_reusable_key_slots_integrity_in_case_of_key_slot_starvation( )
 {
     psa_status_t status;
-    mbedtls_size_t i;
+    xalSize_t i;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    uint8_t exported[sizeof( mbedtls_size_t )];
-    mbedtls_size_t exported_length;
+    uint8_t exported[sizeof( xalSize_t )];
+    xalSize_t exported_length;
     mbedtls_svc_key_id_t persistent_key = MBEDTLS_SVC_KEY_ID_INIT;
     mbedtls_svc_key_id_t persistent_key2 = MBEDTLS_SVC_KEY_ID_INIT;
     mbedtls_svc_key_id_t returned_key_id = MBEDTLS_SVC_KEY_ID_INIT;

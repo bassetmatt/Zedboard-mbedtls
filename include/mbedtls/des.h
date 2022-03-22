@@ -279,7 +279,7 @@ int mbedtls_des_crypt_ecb( mbedtls_des_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_des_crypt_cbc( mbedtls_des_context *ctx,
                     int mode,
-                    mbedtls_size_t length,
+                    xalSize_t length,
                     unsigned char iv[8],
                     const unsigned char *input,
                     unsigned char *output );
@@ -323,7 +323,7 @@ int mbedtls_des3_crypt_ecb( mbedtls_des3_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_des3_crypt_cbc( mbedtls_des3_context *ctx,
                      int mode,
-                     mbedtls_size_t length,
+                     xalSize_t length,
                      unsigned char iv[8],
                      const unsigned char *input,
                      unsigned char *output );

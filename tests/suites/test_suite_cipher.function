@@ -18,7 +18,7 @@
 static int check_cipher_info( mbedtls_cipher_type_t type,
                               const mbedtls_cipher_info_t *info )
 {
-    mbedtls_size_t key_bitlen, block_size, iv_size;
+    xalSize_t key_bitlen, block_size, iv_size;
 
     TEST_ASSERT( info != NULL );
     TEST_EQUAL( type, mbedtls_cipher_info_get_type( info ) );
@@ -114,7 +114,7 @@ exit:
  * it, and instead start with a fresh context.
  */
 static int cipher_reset_key( mbedtls_cipher_context_t *ctx, int cipher_id,
-        int use_psa, mbedtls_size_t tag_len, const data_t *key, int direction )
+        int use_psa, xalSize_t tag_len, const data_t *key, int direction )
 {
     mbedtls_cipher_free( ctx );
     mbedtls_cipher_init( ctx );
@@ -149,9 +149,9 @@ exit:
  * return   1 if it is,
  *          0 if it isn't.
  */
-int buffer_is_all_zero( const uint8_t *buf, mbedtls_size_t size )
+int buffer_is_all_zero( const uint8_t *buf, xalSize_t size )
 {
-    for( mbedtls_size_t i = 0; i < size; i++ )
+    for( xalSize_t i = 0; i < size; i++ )
         if( buf[i] != 0 )
             return 0;
     return 1;
@@ -193,7 +193,7 @@ void cipher_invalid_param_unconditional( )
     int valid_bitlen = valid_size * 8;
     const mbedtls_cipher_info_t *valid_info = mbedtls_cipher_info_from_type(
         *( mbedtls_cipher_list() ) );
-    mbedtls_size_t size_t_var;
+    xalSize_t size_t_var;
 
     (void)valid_mode; /* In some configurations this is unused */
 
@@ -338,7 +338,7 @@ void cipher_special_behaviours(  )
 #if defined (MBEDTLS_CIPHER_MODE_CBC)
     unsigned char iv[32];
 #endif
-    mbedtls_size_t olen = 0;
+    xalSize_t olen = 0;
 
     mbedtls_cipher_init( &ctx );
     memset( input, 0, sizeof( input ) );
@@ -381,7 +381,7 @@ exit:
 void enc_dec_buf( int cipher_id, char * cipher_string, int key_len,
                   int length_val, int pad_mode )
 {
-    mbedtls_size_t length = length_val, outlen, total_len, i, block_size, iv_len;
+    xalSize_t length = length_val, outlen, total_len, i, block_size, iv_len;
     unsigned char key[64];
     unsigned char iv[16];
     unsigned char ad[13];
@@ -517,7 +517,7 @@ exit:
 void enc_fail( int cipher_id, int pad_mode, int key_len, int length_val,
                int ret )
 {
-    mbedtls_size_t length = length_val;
+    xalSize_t length = length_val;
     unsigned char key[32];
     unsigned char iv[16];
 
@@ -527,7 +527,7 @@ void enc_fail( int cipher_id, int pad_mode, int key_len, int length_val,
     unsigned char inbuf[64];
     unsigned char encbuf[64];
 
-    mbedtls_size_t outlen = 0;
+    xalSize_t outlen = 0;
 
     memset( key, 0, 32 );
     memset( iv , 0, 16 );
@@ -573,7 +573,7 @@ void dec_empty_buf( int cipher,
     unsigned char key[32];
 
     unsigned char *iv = NULL;
-    mbedtls_size_t iv_len = 16;
+    xalSize_t iv_len = 16;
 
     mbedtls_cipher_context_t ctx_dec;
     const mbedtls_cipher_info_t *cipher_info;
@@ -581,7 +581,7 @@ void dec_empty_buf( int cipher,
     unsigned char encbuf[64];
     unsigned char decbuf[64];
 
-    mbedtls_size_t outlen = 0;
+    xalSize_t outlen = 0;
 
     memset( key, 0, 32 );
 
@@ -650,11 +650,11 @@ void enc_dec_buf_multipart( int cipher_id, int key_len, int first_length_val,
                             int first_encrypt_output_len, int second_encrypt_output_len,
                             int first_decrypt_output_len, int second_decrypt_output_len )
 {
-    mbedtls_size_t first_length = first_length_val;
-    mbedtls_size_t second_length = second_length_val;
-    mbedtls_size_t length = first_length + second_length;
-    mbedtls_size_t block_size;
-    mbedtls_size_t iv_len;
+    xalSize_t first_length = first_length_val;
+    xalSize_t second_length = second_length_val;
+    xalSize_t length = first_length + second_length;
+    xalSize_t block_size;
+    xalSize_t iv_len;
     unsigned char key[32];
     unsigned char iv[16];
 
@@ -666,8 +666,8 @@ void enc_dec_buf_multipart( int cipher_id, int key_len, int first_length_val,
     unsigned char encbuf[64];
     unsigned char decbuf[64];
 
-    mbedtls_size_t outlen = 0;
-    mbedtls_size_t totaloutlen = 0;
+    xalSize_t outlen = 0;
+    xalSize_t totaloutlen = 0;
 
     memset( key, 0, 32 );
     memset( iv , 0, 16 );
@@ -724,10 +724,10 @@ void enc_dec_buf_multipart( int cipher_id, int key_len, int first_length_val,
 
     /* encode length number of bytes from inbuf */
     TEST_ASSERT( 0 == mbedtls_cipher_update( &ctx_enc, inbuf, first_length, encbuf, &outlen ) );
-    TEST_ASSERT( (mbedtls_size_t)first_encrypt_output_len == outlen );
+    TEST_ASSERT( (xalSize_t)first_encrypt_output_len == outlen );
     totaloutlen = outlen;
     TEST_ASSERT( 0 == mbedtls_cipher_update( &ctx_enc, inbuf + first_length, second_length, encbuf + totaloutlen, &outlen ) );
-    TEST_ASSERT( (mbedtls_size_t)second_encrypt_output_len == outlen );
+    TEST_ASSERT( (xalSize_t)second_encrypt_output_len == outlen );
     totaloutlen += outlen;
     TEST_ASSERT( totaloutlen == length ||
                  ( totaloutlen % block_size == 0 &&
@@ -744,10 +744,10 @@ void enc_dec_buf_multipart( int cipher_id, int key_len, int first_length_val,
     /* decode the previously encoded string */
     second_length = totaloutlen - first_length;
     TEST_ASSERT( 0 == mbedtls_cipher_update( &ctx_dec, encbuf, first_length, decbuf, &outlen ) );
-    TEST_ASSERT( (mbedtls_size_t)first_decrypt_output_len == outlen );
+    TEST_ASSERT( (xalSize_t)first_decrypt_output_len == outlen );
     totaloutlen = outlen;
     TEST_ASSERT( 0 == mbedtls_cipher_update( &ctx_dec, encbuf + first_length, second_length, decbuf + totaloutlen, &outlen ) );
-    TEST_ASSERT( (mbedtls_size_t)second_decrypt_output_len == outlen );
+    TEST_ASSERT( (xalSize_t)second_decrypt_output_len == outlen );
     totaloutlen += outlen;
 
     TEST_ASSERT( totaloutlen == length ||
@@ -776,7 +776,7 @@ void decrypt_test_vec( int cipher_id, int pad_mode, data_t * key,
 {
     unsigned char output[265];
     mbedtls_cipher_context_t ctx;
-    mbedtls_size_t outlen, total_len;
+    xalSize_t outlen, total_len;
 
     mbedtls_cipher_init( &ctx );
 
@@ -842,14 +842,14 @@ void auth_crypt_tv( int cipher_id, data_t * key, data_t * iv,
     int using_nist_kw, using_nist_kw_padding;
 
     mbedtls_cipher_context_t ctx;
-    mbedtls_size_t outlen;
+    xalSize_t outlen;
 
     unsigned char *cipher_plus_tag = NULL;
-    mbedtls_size_t cipher_plus_tag_len;
+    xalSize_t cipher_plus_tag_len;
     unsigned char *decrypt_buf = NULL;
-    mbedtls_size_t decrypt_buf_len = 0;
+    xalSize_t decrypt_buf_len = 0;
     unsigned char *encrypt_buf = NULL;
-    mbedtls_size_t encrypt_buf_len = 0;
+    xalSize_t encrypt_buf_len = 0;
 
     /* Null pointers are documented as valid for inputs of length 0.
      * The test framework passes non-null pointers, so set them to NULL.
@@ -1027,7 +1027,7 @@ void test_vec_ecb( int cipher_id, int operation, data_t * key,
 {
     mbedtls_cipher_context_t ctx;
     unsigned char output[32];
-    mbedtls_size_t outlen;
+    xalSize_t outlen;
 
     mbedtls_cipher_init( &ctx );
 
@@ -1065,7 +1065,7 @@ void test_vec_crypt( int cipher_id, int operation, data_t *key,
 {
     mbedtls_cipher_context_t ctx;
     unsigned char output[32];
-    mbedtls_size_t outlen;
+    xalSize_t outlen;
 
     mbedtls_cipher_init( &ctx );
 
@@ -1131,7 +1131,7 @@ void check_padding( int pad_mode, data_t * input, int ret, int dlen_check
 {
     mbedtls_cipher_info_t cipher_info;
     mbedtls_cipher_context_t ctx;
-    mbedtls_size_t dlen;
+    xalSize_t dlen;
 
     /* build a fake context just for getting access to get_padding */
     mbedtls_cipher_init( &ctx );
@@ -1143,7 +1143,7 @@ void check_padding( int pad_mode, data_t * input, int ret, int dlen_check
 
     TEST_ASSERT( ret == ctx.get_padding( input->x, input->len, &dlen ) );
     if( 0 == ret )
-        TEST_ASSERT( dlen == (mbedtls_size_t) dlen_check );
+        TEST_ASSERT( dlen == (xalSize_t) dlen_check );
 }
 /* END_CASE */
 
@@ -1151,7 +1151,7 @@ void check_padding( int pad_mode, data_t * input, int ret, int dlen_check
 void iv_len_validity( int cipher_id, char * cipher_string,
                int iv_len_val, int ret )
 {
-    mbedtls_size_t iv_len = iv_len_val;
+    xalSize_t iv_len = iv_len_val;
     unsigned char iv[16];
 
     /* Initialise iv buffer */

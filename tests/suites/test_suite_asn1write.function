@@ -10,7 +10,7 @@ typedef struct
     unsigned char *start;
     unsigned char *end;
     unsigned char *p;
-    mbedtls_size_t size;
+    xalSize_t size;
 } generic_write_data_t;
 
 int generic_write_start_step( generic_write_data_t *data )
@@ -39,7 +39,7 @@ int generic_write_finish_step( generic_write_data_t *data,
         TEST_EQUAL( ret, data->end - data->p );
         TEST_ASSERT( data->p >= data->start );
         TEST_ASSERT( data->p <= data->end );
-        ASSERT_COMPARE( data->p, (mbedtls_size_t)( data->end - data->p ),
+        ASSERT_COMPARE( data->p, (xalSize_t)( data->end - data->p ),
                         expected->x, expected->len );
     }
     ok = 1;
@@ -254,14 +254,14 @@ void mbedtls_asn1_write_len( int len, data_t * asn1, int buf_len,
     int ret;
     unsigned char buf[150];
     unsigned char *p;
-    mbedtls_size_t i;
-    mbedtls_size_t read_len;
+    xalSize_t i;
+    xalSize_t read_len;
 
     memset( buf, GUARD_VAL, sizeof( buf ) );
 
     p = buf + GUARD_LEN + buf_len;
 
-    ret = mbedtls_asn1_write_len( &p, buf + GUARD_LEN, (mbedtls_size_t) len );
+    ret = mbedtls_asn1_write_len( &p, buf + GUARD_LEN, (xalSize_t) len );
 
     TEST_ASSERT( ret == result );
 
@@ -292,7 +292,7 @@ void mbedtls_asn1_write_len( int len, data_t * asn1, int buf_len,
              */
             TEST_ASSERT( ret == MBEDTLS_ERR_ASN1_OUT_OF_DATA );
         }
-        TEST_ASSERT( read_len == (mbedtls_size_t) len );
+        TEST_ASSERT( read_len == (xalSize_t) len );
         TEST_ASSERT( p == buf + GUARD_LEN + buf_len );
     }
 }
@@ -305,7 +305,7 @@ void test_asn1_write_bitstrings( data_t *bitstring, int bits,
     generic_write_data_t data = { NULL, NULL, NULL, NULL, 0 };
     int ret;
     int ( *func )( unsigned char **p, const unsigned char *start,
-                   const unsigned char *buf, mbedtls_size_t bits ) =
+                   const unsigned char *buf, xalSize_t bits ) =
         ( is_named ? mbedtls_asn1_write_named_bitstring :
           mbedtls_asn1_write_bitstring );
 
@@ -336,7 +336,7 @@ void store_named_data_find( data_t *oid0, data_t *oid1,
         { {0x06, 0, NULL}, {0, 0, NULL}, NULL, 0 },
     };
     mbedtls_asn1_named_data *pointers[ARRAY_LENGTH( nd ) + 1];
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_asn1_named_data *head = NULL;
     mbedtls_asn1_named_data *found = NULL;
 
@@ -399,7 +399,7 @@ void store_named_data_val_found( int old_len, int new_len )
 
     if( old_len != 0 )
     {
-        ASSERT_ALLOC( nd.val.p, (mbedtls_size_t) old_len );
+        ASSERT_ALLOC( nd.val.p, (xalSize_t) old_len );
         old_val = nd.val.p;
         nd.val.len = old_len;
         memset( old_val, 'x', old_len );
@@ -417,7 +417,7 @@ void store_named_data_val_found( int old_len, int new_len )
 
     if( new_val != NULL)
         ASSERT_COMPARE( found->val.p, found->val.len,
-                        new_val, (mbedtls_size_t) new_len );
+                        new_val, (xalSize_t) new_len );
     if( new_len == 0)
         TEST_ASSERT( found->val.p == NULL );
     else if( new_len == old_len )
@@ -436,7 +436,7 @@ void store_named_data_val_new( int new_len )
     mbedtls_asn1_named_data *head = NULL;
     mbedtls_asn1_named_data *found = NULL;
     const unsigned char *oid = (unsigned char *) "OID";
-    mbedtls_size_t oid_len = strlen( (const char *) oid );
+    xalSize_t oid_len = strlen( (const char *) oid );
     const unsigned char *new_val = (unsigned char *) "new value";
 
     if( new_len <= 0 )
@@ -446,7 +446,7 @@ void store_named_data_val_new( int new_len )
 
     found = mbedtls_asn1_store_named_data( &head,
                                            (const char *) oid, oid_len,
-                                           new_val, (mbedtls_size_t) new_len );
+                                           new_val, (xalSize_t) new_len );
     TEST_ASSERT( found != NULL );
     TEST_ASSERT( found == head );
     TEST_ASSERT( found->oid.p != oid );
@@ -459,7 +459,7 @@ void store_named_data_val_new( int new_len )
     {
         TEST_ASSERT( found->val.p != new_val );
         ASSERT_COMPARE( found->val.p, found->val.len,
-                        new_val, (mbedtls_size_t) new_len );
+                        new_val, (xalSize_t) new_len );
     }
 
 exit:

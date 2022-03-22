@@ -161,7 +161,7 @@ int mbedtls_camellia_crypt_ecb( mbedtls_camellia_context *ctx,
  */
 int mbedtls_camellia_crypt_cbc( mbedtls_camellia_context *ctx,
                     int mode,
-                    mbedtls_size_t length,
+                    xalSize_t length,
                     unsigned char iv[16],
                     const unsigned char *input,
                     unsigned char *output );
@@ -207,8 +207,8 @@ int mbedtls_camellia_crypt_cbc( mbedtls_camellia_context *ctx,
  */
 int mbedtls_camellia_crypt_cfb128( mbedtls_camellia_context *ctx,
                        int mode,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *iv_off,
+                       xalSize_t length,
+                       xalSize_t *iv_off,
                        unsigned char iv[16],
                        const unsigned char *input,
                        unsigned char *output );
@@ -290,8 +290,8 @@ int mbedtls_camellia_crypt_cfb128( mbedtls_camellia_context *ctx,
  * \return              A negative error code on failure.
  */
 int mbedtls_camellia_crypt_ctr( mbedtls_camellia_context *ctx,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *nc_off,
+                       xalSize_t length,
+                       xalSize_t *nc_off,
                        unsigned char nonce_counter[16],
                        unsigned char stream_block[16],
                        const unsigned char *input,

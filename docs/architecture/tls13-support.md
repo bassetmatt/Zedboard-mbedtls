@@ -285,7 +285,7 @@ TLS 1.3 specific coding rules:
     Example: `cipher_suites` vector of ClientHello in
              `ssl_tls13_write_client_hello_cipher_suites()`
     ```
-    mbedtls_size_t cipher_suites_len;
+    xalSize_t cipher_suites_len;
     unsigned char *p_cipher_suites_len;
     unsigned char *cipher_suites;
     ```
@@ -391,7 +391,7 @@ General coding rules:
     int mbedtls_ssl_tls13_start_handshake_msg( mbedtls_ssl_context *ssl,
                                                unsigned hs_type,
                                                unsigned char **buf,
-                                               mbedtls_size_t *buf_len );
+                                               xalSize_t *buf_len );
     ```
 
   - When a function's parameters span several lines, group related parameters

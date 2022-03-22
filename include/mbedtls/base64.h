@@ -49,13 +49,13 @@ extern "C" {
  *                 of data that has (or would have) been written.
  *                 If that length cannot be represented, then no data is
  *                 written to the buffer and *olen is set to the maximum
- *                 length representable as a mbedtls_size_t.
+ *                 length representable as a xalSize_t.
  *
  * \note           Call this function with dlen = 0 to obtain the
  *                 required buffer size in *olen
  */
-int mbedtls_base64_encode( unsigned char *dst, mbedtls_size_t dlen, mbedtls_size_t *olen,
-                   const unsigned char *src, mbedtls_size_t slen );
+int mbedtls_base64_encode( unsigned char *dst, xalSize_t dlen, xalSize_t *olen,
+                   const unsigned char *src, xalSize_t slen );
 
 /**
  * \brief          Decode a base64-formatted buffer
@@ -74,8 +74,8 @@ int mbedtls_base64_encode( unsigned char *dst, mbedtls_size_t dlen, mbedtls_size
  * \note           Call this function with *dst = NULL or dlen = 0 to obtain
  *                 the required buffer size in *olen
  */
-int mbedtls_base64_decode( unsigned char *dst, mbedtls_size_t dlen, mbedtls_size_t *olen,
-                   const unsigned char *src, mbedtls_size_t slen );
+int mbedtls_base64_decode( unsigned char *dst, xalSize_t dlen, xalSize_t *olen,
+                   const unsigned char *src, xalSize_t slen );
 
 #if defined(MBEDTLS_SELF_TEST)
 /**

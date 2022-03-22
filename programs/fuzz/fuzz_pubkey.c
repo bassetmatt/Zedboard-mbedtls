@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "mbedtls/pk.h"
 
-int LLVMFuzzerTestOneInput(const uint8_t *Data, mbedtls_size_t Size) {
+int LLVMFuzzerTestOneInput(const uint8_t *Data, xalSize_t Size) {
 #ifdef MBEDTLS_PK_PARSE_C
     int ret;
     mbedtls_pk_context pk;

@@ -64,9 +64,9 @@ int main( void )
 }
 #else
 #if defined(VERBOSE)
-static void dump_buf( const char *title, unsigned char *buf, mbedtls_size_t len )
+static void dump_buf( const char *title, unsigned char *buf, xalSize_t len )
 {
-    mbedtls_size_t i;
+    xalSize_t i;
 
     mbedtls_printf( "%s", title );
     for( i = 0; i < len; i++ )
@@ -78,7 +78,7 @@ static void dump_buf( const char *title, unsigned char *buf, mbedtls_size_t len 
 static void dump_pubkey( const char *title, mbedtls_ecdsa_context *key )
 {
     unsigned char buf[300];
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( mbedtls_ecp_point_write_binary( &key->MBEDTLS_PRIVATE(grp), &key->MBEDTLS_PRIVATE(Q),
                 MBEDTLS_ECP_PF_UNCOMPRESSED, &len, buf, sizeof buf ) != 0 )
@@ -105,7 +105,7 @@ int main( int argc, char *argv[] )
     unsigned char message[100];
     unsigned char hash[32];
     unsigned char sig[MBEDTLS_ECDSA_MAX_LEN];
-    mbedtls_size_t sig_len;
+    xalSize_t sig_len;
     const char *pers = "ecdsa";
     ((void) argv);
 

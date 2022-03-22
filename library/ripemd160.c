@@ -284,10 +284,10 @@ int mbedtls_internal_ripemd160_process( mbedtls_ripemd160_context *ctx,
  */
 int mbedtls_ripemd160_update( mbedtls_ripemd160_context *ctx,
                                   const unsigned char *input,
-                                  mbedtls_size_t ilen )
+                                  xalSize_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t fill;
+    xalSize_t fill;
     uint32_t left;
 
     if( ilen == 0 )
@@ -383,7 +383,7 @@ int mbedtls_ripemd160_finish( mbedtls_ripemd160_context *ctx,
  * output = RIPEMD-160( input buffer )
  */
 int mbedtls_ripemd160( const unsigned char *input,
-                           mbedtls_size_t ilen,
+                           xalSize_t ilen,
                            unsigned char output[20] )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -424,7 +424,7 @@ static const unsigned char ripemd160_test_str[TESTS][81] =
     { "12345678901234567890123456789012345678901234567890123456789012345678901234567890" },
 };
 
-static const mbedtls_size_t ripemd160_test_strlen[TESTS] =
+static const xalSize_t ripemd160_test_strlen[TESTS] =
 {
     0, 1, 3, 14, 26, 56, 62, 80
 };

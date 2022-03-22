@@ -12,9 +12,9 @@ enum reseed_mode
     RESEED_ALWAYS /* prediction resistance, no explicit reseed */
 };
 
-static mbedtls_size_t test_offset_idx = 0;
-static mbedtls_size_t test_max_idx  = 0;
-static int mbedtls_test_entropy_func( void *data, unsigned char *buf, mbedtls_size_t len )
+static xalSize_t test_offset_idx = 0;
+static xalSize_t test_max_idx  = 0;
+static int mbedtls_test_entropy_func( void *data, unsigned char *buf, xalSize_t len )
 {
     const unsigned char *p = (unsigned char *) data;
     if( test_offset_idx + len > test_max_idx )
@@ -33,7 +33,7 @@ static void ctr_drbg_validate_internal( int reseed_mode, data_t * nonce,
     mbedtls_ctr_drbg_context ctx;
     unsigned char buf[64];
 
-    mbedtls_size_t entropy_chunk_len = (mbedtls_size_t) entropy_len_arg;
+    xalSize_t entropy_chunk_len = (xalSize_t) entropy_len_arg;
 
     TEST_ASSERT( entropy_chunk_len <= sizeof( buf ) );
 
@@ -195,8 +195,8 @@ void ctr_drbg_entropy_strength( int expected_bit_strength )
                           /*nonce*/     MBEDTLS_CTR_DRBG_ENTROPY_NONCE_LEN +
                           /*reseed*/          MBEDTLS_CTR_DRBG_ENTROPY_LEN];
     mbedtls_ctr_drbg_context ctx;
-    mbedtls_size_t last_idx;
-    mbedtls_size_t byte_strength = expected_bit_strength / 8;
+    xalSize_t last_idx;
+    xalSize_t byte_strength = expected_bit_strength / 8;
 
     mbedtls_ctr_drbg_init( &ctx );
     test_offset_idx = 0;
@@ -227,8 +227,8 @@ void ctr_drbg_entropy_usage( int entropy_nonce_len )
     unsigned char add[16];
     unsigned char entropy[1024];
     mbedtls_ctr_drbg_context ctx;
-    mbedtls_size_t i, reps = 10;
-    mbedtls_size_t expected_idx = 0;
+    xalSize_t i, reps = 10;
+    xalSize_t expected_idx = 0;
 
     mbedtls_ctr_drbg_init( &ctx );
     test_offset_idx = 0;

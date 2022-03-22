@@ -59,7 +59,7 @@ int main( int argc, char *argv[] )
     FILE *f;
     int ret = 1;
     int exit_code = MBEDTLS_EXIT_FAILURE;
-    mbedtls_size_t i;
+    xalSize_t i;
     mbedtls_pk_context pk;
     unsigned char hash[32];
     unsigned char buf[MBEDTLS_MPI_MAX_SIZE];

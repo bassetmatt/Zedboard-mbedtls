@@ -44,7 +44,7 @@
  * \return              \c 0 if the test failed, otherwise 1.
  */
 int mbedtls_test_asn1_skip_integer( unsigned char **p, const unsigned char *end,
-                                    mbedtls_size_t min_bits, mbedtls_size_t max_bits,
+                                    xalSize_t min_bits, xalSize_t max_bits,
                                     int must_be_odd );
 
 #endif /* ASN1_HELPERS_H */

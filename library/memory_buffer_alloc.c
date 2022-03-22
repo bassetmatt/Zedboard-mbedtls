@@ -44,34 +44,34 @@
 typedef struct _memory_header memory_header;
 struct _memory_header
 {
-    mbedtls_size_t          magic1;
-    mbedtls_size_t          size;
-    mbedtls_size_t          alloc;
+    xalSize_t          magic1;
+    xalSize_t          size;
+    xalSize_t          alloc;
     memory_header   *prev;
     memory_header   *next;
     memory_header   *prev_free;
     memory_header   *next_free;
 #if defined(MBEDTLS_MEMORY_BACKTRACE)
     char            **trace;
-    mbedtls_size_t          trace_count;
+    xalSize_t          trace_count;
 #endif
-    mbedtls_size_t          magic2;
+    xalSize_t          magic2;
 };
 
 typedef struct
 {
     unsigned char   *buf;
-    mbedtls_size_t          len;
+    xalSize_t          len;
     memory_header   *first;
     memory_header   *first_free;
     int             verify;
 #if defined(MBEDTLS_MEMORY_DEBUG)
-    mbedtls_size_t          alloc_count;
-    mbedtls_size_t          free_count;
-    mbedtls_size_t          total_used;
-    mbedtls_size_t          maximum_used;
-    mbedtls_size_t          header_count;
-    mbedtls_size_t          maximum_header_count;
+    xalSize_t          alloc_count;
+    xalSize_t          free_count;
+    xalSize_t          total_used;
+    xalSize_t          maximum_used;
+    xalSize_t          header_count;
+    xalSize_t          maximum_header_count;
 #endif
 #if defined(MBEDTLS_THREADING_C)
     mbedtls_threading_mutex_t   mutex;
@@ -85,15 +85,15 @@ static buffer_alloc_ctx heap;
 static void debug_header( memory_header *hdr )
 {
 #if defined(MBEDTLS_MEMORY_BACKTRACE)
-    mbedtls_size_t i;
+    xalSize_t i;
 #endif
 
     mbedtls_fprintf( stderr, "HDR:  PTR(%10zu), PREV(%10zu), NEXT(%10zu), "
                               "ALLOC(%zu), SIZE(%10zu)\n",
-                      (mbedtls_size_t) hdr, (mbedtls_size_t) hdr->prev, (mbedtls_size_t) hdr->next,
+                      (xalSize_t) hdr, (xalSize_t) hdr->prev, (xalSize_t) hdr->next,
                       hdr->alloc, hdr->size );
     mbedtls_fprintf( stderr, "      FPREV(%10zu), FNEXT(%10zu)\n",
-                      (mbedtls_size_t) hdr->prev_free, (mbedtls_size_t) hdr->next_free );
+                      (xalSize_t) hdr->prev_free, (xalSize_t) hdr->next_free );
 
 #if defined(MBEDTLS_MEMORY_BACKTRACE)
     mbedtls_fprintf( stderr, "TRACE: \n" );
@@ -221,15 +221,15 @@ static int verify_chain( void )
     return( 0 );
 }
 
-static void *buffer_alloc_calloc( mbedtls_size_t n, mbedtls_size_t size )
+static void *buffer_alloc_calloc( xalSize_t n, xalSize_t size )
 {
     memory_header *new, *cur = heap.first_free;
     unsigned char *p;
     void *ret;
-    mbedtls_size_t original_len, len;
+    xalSize_t original_len, len;
 #if defined(MBEDTLS_MEMORY_BACKTRACE)
     void *trace_buffer[MAX_BT];
-    mbedtls_size_t trace_cnt;
+    xalSize_t trace_cnt;
 #endif
 
     if( heap.buf == NULL || heap.first == NULL )
@@ -239,7 +239,7 @@ static void *buffer_alloc_calloc( mbedtls_size_t n, mbedtls_size_t size )
 
     if( n == 0 || size == 0 || len / n != size )
         return( NULL );
-    else if( len > (mbedtls_size_t)-MBEDTLS_MEMORY_ALIGN_MULTIPLE )
+    else if( len > (xalSize_t)-MBEDTLS_MEMORY_ALIGN_MULTIPLE )
         return( NULL );
 
     if( len % MBEDTLS_MEMORY_ALIGN_MULTIPLE )
@@ -522,7 +522,7 @@ void mbedtls_memory_buffer_alloc_status( void )
     }
 }
 
-void mbedtls_memory_buffer_alloc_max_get( mbedtls_size_t *max_used, mbedtls_size_t *max_blocks )
+void mbedtls_memory_buffer_alloc_max_get( xalSize_t *max_used, xalSize_t *max_blocks )
 {
     *max_used   = heap.maximum_used;
     *max_blocks = heap.maximum_header_count;
@@ -534,7 +534,7 @@ void mbedtls_memory_buffer_alloc_max_reset( void )
     heap.maximum_header_count = 0;
 }
 
-void mbedtls_memory_buffer_alloc_cur_get( mbedtls_size_t *cur_used, mbedtls_size_t *cur_blocks )
+void mbedtls_memory_buffer_alloc_cur_get( xalSize_t *cur_used, xalSize_t *cur_blocks )
 {
     *cur_used   = heap.total_used;
     *cur_blocks = heap.header_count;
@@ -542,7 +542,7 @@ void mbedtls_memory_buffer_alloc_cur_get( mbedtls_size_t *cur_used, mbedtls_size
 #endif /* MBEDTLS_MEMORY_DEBUG */
 
 #if defined(MBEDTLS_THREADING_C)
-static void *buffer_alloc_calloc_mutexed( mbedtls_size_t n, mbedtls_size_t size )
+static void *buffer_alloc_calloc_mutexed( xalSize_t n, xalSize_t size )
 {
     void *buf;
     if( mbedtls_mutex_lock( &heap.mutex ) != 0 )
@@ -564,7 +564,7 @@ static void buffer_alloc_free_mutexed( void *ptr )
 }
 #endif /* MBEDTLS_THREADING_C */
 
-void mbedtls_memory_buffer_alloc_init( unsigned char *buf, mbedtls_size_t len )
+void mbedtls_memory_buffer_alloc_init( unsigned char *buf, xalSize_t len )
 {
     memset( &heap, 0, sizeof( buffer_alloc_ctx ) );
 
@@ -578,13 +578,13 @@ void mbedtls_memory_buffer_alloc_init( unsigned char *buf, mbedtls_size_t len )
 
     if( len < sizeof( memory_header ) + MBEDTLS_MEMORY_ALIGN_MULTIPLE )
         return;
-    else if( (mbedtls_size_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE )
+    else if( (xalSize_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE )
     {
         /* Adjust len first since buf is used in the computation */
         len -= MBEDTLS_MEMORY_ALIGN_MULTIPLE
-             - (mbedtls_size_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE;
+             - (xalSize_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE;
         buf += MBEDTLS_MEMORY_ALIGN_MULTIPLE
-             - (mbedtls_size_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE;
+             - (xalSize_t)buf % MBEDTLS_MEMORY_ALIGN_MULTIPLE;
     }
 
     memset( buf, 0, len );
@@ -613,7 +613,7 @@ static int check_pointer( void *p )
     if( p == NULL )
         return( -1 );
 
-    if( (mbedtls_size_t) p % MBEDTLS_MEMORY_ALIGN_MULTIPLE != 0 )
+    if( (xalSize_t) p % MBEDTLS_MEMORY_ALIGN_MULTIPLE != 0 )
         return( -1 );
 
     return( 0 );

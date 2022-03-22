@@ -33,8 +33,8 @@ mbedtls_test_driver_hash_hooks_t
 
 psa_status_t mbedtls_test_transparent_hash_compute(
     psa_algorithm_t alg,
-    const uint8_t *input, mbedtls_size_t input_length,
-    uint8_t *hash, mbedtls_size_t hash_size, mbedtls_size_t *hash_length )
+    const uint8_t *input, xalSize_t input_length,
+    uint8_t *hash, xalSize_t hash_size, xalSize_t *hash_length )
 {
     mbedtls_test_driver_hash_hooks.hits++;
 
@@ -134,7 +134,7 @@ psa_status_t mbedtls_test_transparent_hash_clone(
 psa_status_t mbedtls_test_transparent_hash_update(
     mbedtls_transparent_test_driver_hash_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length )
+    xalSize_t input_length )
 {
     mbedtls_test_driver_hash_hooks.hits++;
 
@@ -167,8 +167,8 @@ psa_status_t mbedtls_test_transparent_hash_update(
 psa_status_t mbedtls_test_transparent_hash_finish(
     mbedtls_transparent_test_driver_hash_operation_t *operation,
     uint8_t *hash,
-    mbedtls_size_t hash_size,
-    mbedtls_size_t *hash_length )
+    xalSize_t hash_size,
+    xalSize_t *hash_length )
 {
     mbedtls_test_driver_hash_hooks.hits++;
 

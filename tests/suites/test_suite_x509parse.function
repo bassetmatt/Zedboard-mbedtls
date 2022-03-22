@@ -207,7 +207,7 @@ int verify_print( void *data, mbedtls_x509_crt *crt, int certificate_depth, uint
     int ret;
     verify_print_context *ctx = (verify_print_context *) data;
     char *p = ctx->p;
-    mbedtls_size_t n = ctx->buf + sizeof( ctx->buf ) - ctx->p;
+    xalSize_t n = ctx->buf + sizeof( ctx->buf ) - ctx->p;
     ((void) flags);
 
     ret = mbedtls_snprintf( p, n, "depth %d - serial ", certificate_depth );
@@ -231,12 +231,12 @@ int verify_print( void *data, mbedtls_x509_crt *crt, int certificate_depth, uint
 }
 
 int verify_parse_san( mbedtls_x509_subject_alternative_name *san,
-                      char **buf, mbedtls_size_t *size )
+                      char **buf, xalSize_t *size )
 {
     int ret;
-    mbedtls_size_t i;
+    xalSize_t i;
     char *p = *buf;
-    mbedtls_size_t n = *size;
+    xalSize_t n = *size;
 
     ret = mbedtls_snprintf( p, n, "type : %d", san->type );
     MBEDTLS_X509_SAFE_SNPRINTF;
@@ -314,7 +314,7 @@ int parse_crt_ext_cb( void *p_ctx, mbedtls_x509_crt const *crt, mbedtls_x509_buf
     {
         /* Handle unknown certificate policy */
         int ret, parse_ret = 0;
-        mbedtls_size_t len;
+        xalSize_t len;
         unsigned char **p = (unsigned char **)&cp;
 
         /* Get main sequence tag */
@@ -409,7 +409,7 @@ void x509_parse_san( char * crt_file, char * result_str )
     mbedtls_x509_sequence *cur = NULL;
     char buf[2000];
     char *p = buf;
-    mbedtls_size_t n = sizeof( buf );
+    xalSize_t n = sizeof( buf );
 
     mbedtls_x509_crt_init( &crt );
     memset( buf, 0, 2000 );
@@ -1003,7 +1003,7 @@ void mbedtls_x509_csr_parse( data_t * csr_der, char * ref_out, int ref_ret )
 
     if( ref_ret == 0 )
     {
-        mbedtls_size_t my_out_len = mbedtls_x509_csr_info( my_out, sizeof( my_out ), "", &csr );
+        xalSize_t my_out_len = mbedtls_x509_csr_info( my_out, sizeof( my_out ), "", &csr );
         TEST_ASSERT( my_out_len == strlen( ref_out ) );
         TEST_ASSERT( strcmp( my_out, ref_out ) == 0 );
     }
@@ -1061,7 +1061,7 @@ void mbedtls_x509_crt_verify_max( char *ca_file, char *chain_dir, int nb_int,
      * plus one "end-entity" cert (nb_int + 1) */
     ret = mbedtls_snprintf( file_buf, sizeof file_buf, "%s/c%02d.pem", chain_dir,
                                                             nb_int + 1 );
-    TEST_ASSERT( ret > 0 && (mbedtls_size_t) ret < sizeof file_buf );
+    TEST_ASSERT( ret > 0 && (xalSize_t) ret < sizeof file_buf );
     TEST_ASSERT( mbedtls_x509_crt_parse_file( &chain, file_buf ) == 0 );
 
     /* Try to verify that chain */
@@ -1161,7 +1161,7 @@ void x509_oid_numstr( data_t * oid_buf, char * numstr, int blen, int ret )
     oid.p   = oid_buf->x;
     oid.len   = oid_buf->len;
 
-    TEST_ASSERT( (mbedtls_size_t) blen <= sizeof num_buf );
+    TEST_ASSERT( (xalSize_t) blen <= sizeof num_buf );
 
     TEST_ASSERT( mbedtls_oid_get_numeric_string( num_buf, blen, &oid ) == ret );
 
@@ -1221,7 +1221,7 @@ void x509_get_time( int tag, char * time_str, int ret, int year, int mon,
     *end = strlen( time_str );
     TEST_ASSERT( *end < 20 );
     end++;
-    memcpy( end, time_str, (mbedtls_size_t)*(end - 1) );
+    memcpy( end, time_str, (xalSize_t)*(end - 1) );
     end += *(end - 1);
 
     TEST_ASSERT( mbedtls_x509_get_time( &start, end, &time ) == ret );

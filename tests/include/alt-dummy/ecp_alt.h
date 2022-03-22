@@ -27,8 +27,8 @@ typedef struct mbedtls_ecp_group
     const mbedtls_mpi B;
     const mbedtls_ecp_point G;
     const mbedtls_mpi N;
-    const mbedtls_size_t pbits;
-    const mbedtls_size_t nbits;
+    const xalSize_t pbits;
+    const xalSize_t nbits;
 }
 mbedtls_ecp_group;
 

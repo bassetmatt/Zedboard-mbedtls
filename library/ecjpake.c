@@ -103,7 +103,7 @@ int mbedtls_ecjpake_setup( mbedtls_ecjpake_context *ctx,
                            mbedtls_md_type_t hash,
                            mbedtls_ecp_group_id curve,
                            const unsigned char *secret,
-                           mbedtls_size_t len )
+                           xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -169,7 +169,7 @@ static int ecjpake_write_len_point( unsigned char **p,
                                     const mbedtls_ecp_point *P )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     /* Need at least 4 for length plus 1 for point */
     if( end < *p || end - *p < 5 )
@@ -209,7 +209,7 @@ static int ecjpake_hash( const mbedtls_md_info_t *md_info,
     unsigned char buf[ECJPAKE_HASH_BUF_LEN];
     unsigned char *p = buf;
     const unsigned char *end = buf + sizeof( buf );
-    const mbedtls_size_t id_len = strlen( id );
+    const xalSize_t id_len = strlen( id );
     unsigned char hash[MBEDTLS_MD_MAX_SIZE];
 
     /* Write things to temporary buffer */
@@ -223,7 +223,7 @@ static int ecjpake_hash( const mbedtls_md_info_t *md_info,
     MBEDTLS_PUT_UINT32_BE( id_len, p, 0 );
     p += 4;
 
-    if( end < p || (mbedtls_size_t)( end - p ) < id_len )
+    if( end < p || (xalSize_t)( end - p ) < id_len )
         return( MBEDTLS_ERR_ECP_BUFFER_TOO_SMALL );
 
     memcpy( p, id, id_len );
@@ -256,7 +256,7 @@ static int ecjpake_zkp_read( const mbedtls_md_info_t *md_info,
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_point V, VV;
     mbedtls_mpi r, h;
-    mbedtls_size_t r_len;
+    xalSize_t r_len;
 
     mbedtls_ecp_point_init( &V );
     mbedtls_ecp_point_init( &VV );
@@ -274,7 +274,7 @@ static int ecjpake_zkp_read( const mbedtls_md_info_t *md_info,
 
     MBEDTLS_MPI_CHK( mbedtls_ecp_tls_read_point( grp, &V, p, end - *p ) );
 
-    if( end < *p || (mbedtls_size_t)( end - *p ) < 1 )
+    if( end < *p || (xalSize_t)( end - *p ) < 1 )
     {
         ret = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
         goto cleanup;
@@ -282,7 +282,7 @@ static int ecjpake_zkp_read( const mbedtls_md_info_t *md_info,
 
     r_len = *(*p)++;
 
-    if( end < *p || (mbedtls_size_t)( end - *p ) < r_len || r_len == 0 )
+    if( end < *p || (xalSize_t)( end - *p ) < r_len || r_len == 0 )
     {
         ret = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
         goto cleanup;
@@ -325,14 +325,14 @@ static int ecjpake_zkp_write( const mbedtls_md_info_t *md_info,
                               const char *id,
                               unsigned char **p,
                               const unsigned char *end,
-                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                              int (*f_rng)(void *, unsigned char *, xalSize_t),
                               void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_point V;
     mbedtls_mpi v;
     mbedtls_mpi h; /* later recycled to hold r */
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( end < *p )
         return( MBEDTLS_ERR_ECP_BUFFER_TOO_SMALL );
@@ -355,7 +355,7 @@ static int ecjpake_zkp_write( const mbedtls_md_info_t *md_info,
     *p += len;
 
     len = mbedtls_mpi_size( &h ); /* actually r */
-    if( end < *p || (mbedtls_size_t)( end - *p ) < 1 + len || len > 255 )
+    if( end < *p || (xalSize_t)( end - *p ) < 1 + len || len > 255 )
     {
         ret = MBEDTLS_ERR_ECP_BUFFER_TOO_SMALL;
         goto cleanup;
@@ -423,11 +423,11 @@ static int ecjpake_kkp_write( const mbedtls_md_info_t *md_info,
                               const char *id,
                               unsigned char **p,
                               const unsigned char *end,
-                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                              int (*f_rng)(void *, unsigned char *, xalSize_t),
                               void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t len;
+    xalSize_t len;
 
     if( end < *p )
         return( MBEDTLS_ERR_ECP_BUFFER_TOO_SMALL );
@@ -459,7 +459,7 @@ static int ecjpake_kkpp_read( const mbedtls_md_info_t *md_info,
                               mbedtls_ecp_point *Xb,
                               const char *id,
                               const unsigned char *buf,
-                              mbedtls_size_t len )
+                              xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
@@ -494,9 +494,9 @@ static int ecjpake_kkpp_write( const mbedtls_md_info_t *md_info,
                                mbedtls_ecp_point *Xb,
                                const char *id,
                                unsigned char *buf,
-                               mbedtls_size_t len,
-                               mbedtls_size_t *olen,
-                               int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                               xalSize_t len,
+                               xalSize_t *olen,
+                               int (*f_rng)(void *, unsigned char *, xalSize_t),
                                void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -519,7 +519,7 @@ cleanup:
  */
 int mbedtls_ecjpake_read_round_one( mbedtls_ecjpake_context *ctx,
                                     const unsigned char *buf,
-                                    mbedtls_size_t len )
+                                    xalSize_t len )
 {
     ECJPAKE_VALIDATE_RET( ctx != NULL );
     ECJPAKE_VALIDATE_RET( buf != NULL );
@@ -534,8 +534,8 @@ int mbedtls_ecjpake_read_round_one( mbedtls_ecjpake_context *ctx,
  * Generate and write the first round message
  */
 int mbedtls_ecjpake_write_round_one( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                            unsigned char *buf, xalSize_t len, xalSize_t *olen,
+                            int (*f_rng)(void *, unsigned char *, xalSize_t),
                             void *p_rng )
 {
     ECJPAKE_VALIDATE_RET( ctx   != NULL );
@@ -577,7 +577,7 @@ cleanup:
  */
 int mbedtls_ecjpake_read_round_two( mbedtls_ecjpake_context *ctx,
                                             const unsigned char *buf,
-                                            mbedtls_size_t len )
+                                            xalSize_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
@@ -640,7 +640,7 @@ static int ecjpake_mul_secret( mbedtls_mpi *R, int sign,
                                const mbedtls_mpi *X,
                                const mbedtls_mpi *S,
                                const mbedtls_mpi *N,
-                               int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                               int (*f_rng)(void *, unsigned char *, xalSize_t),
                                void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -668,8 +668,8 @@ cleanup:
  * Generate and write the second round message (S: 7.4.2.5, C: 7.4.2.6)
  */
 int mbedtls_ecjpake_write_round_two( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                            unsigned char *buf, xalSize_t len, xalSize_t *olen,
+                            int (*f_rng)(void *, unsigned char *, xalSize_t),
                             void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -678,7 +678,7 @@ int mbedtls_ecjpake_write_round_two( mbedtls_ecjpake_context *ctx,
     mbedtls_mpi xm;         /* C: xc, S: xs */
     unsigned char *p = buf;
     const unsigned char *end = buf + len;
-    mbedtls_size_t ec_len;
+    xalSize_t ec_len;
 
     ECJPAKE_VALIDATE_RET( ctx   != NULL );
     ECJPAKE_VALIDATE_RET( buf   != NULL );
@@ -750,15 +750,15 @@ cleanup:
  * Derive PMS (7.4.2.7 / 7.4.2.8)
  */
 int mbedtls_ecjpake_derive_secret( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                            unsigned char *buf, xalSize_t len, xalSize_t *olen,
+                            int (*f_rng)(void *, unsigned char *, xalSize_t),
                             void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_point K;
     mbedtls_mpi m_xm2_s, one;
     unsigned char kx[MBEDTLS_ECP_MAX_BYTES];
-    mbedtls_size_t x_bytes;
+    xalSize_t x_bytes;
 
     ECJPAKE_VALIDATE_RET( ctx   != NULL );
     ECJPAKE_VALIDATE_RET( buf   != NULL );
@@ -964,13 +964,13 @@ static const unsigned char ecjpake_test_pms[] = {
  * except we only use the low byte as the output. See
  * https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
  */
-static int self_test_rng( void *ctx, unsigned char *out, mbedtls_size_t len )
+static int self_test_rng( void *ctx, unsigned char *out, xalSize_t len )
 {
     static uint32_t state = 42;
 
     (void) ctx;
 
-    for( mbedtls_size_t i = 0; i < len; i++ )
+    for( xalSize_t i = 0; i < len; i++ )
     {
         state = state * 1664525u + 1013904223u;
         out[i] = (unsigned char) state;
@@ -981,8 +981,8 @@ static int self_test_rng( void *ctx, unsigned char *out, mbedtls_size_t len )
 
 /* Load my private keys and generate the corresponding public keys */
 static int ecjpake_test_load( mbedtls_ecjpake_context *ctx,
-                              const unsigned char *xm1, mbedtls_size_t len1,
-                              const unsigned char *xm2, mbedtls_size_t len2 )
+                              const unsigned char *xm1, xalSize_t len1,
+                              const unsigned char *xm2, xalSize_t len2 )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -1001,14 +1001,14 @@ cleanup:
 
 /* For tests we don't need a secure RNG;
  * use the LGC from Numerical Recipes for simplicity */
-static int ecjpake_lgc( void *p, unsigned char *out, mbedtls_size_t len )
+static int ecjpake_lgc( void *p, unsigned char *out, xalSize_t len )
 {
     static uint32_t x = 42;
     (void) p;
 
     while( len > 0 )
     {
-        mbedtls_size_t use_len = len > 4 ? 4 : len;
+        xalSize_t use_len = len > 4 ? 4 : len;
         x = 1664525 * x + 1013904223;
         memcpy( out, &x, use_len );
         out += use_len;
@@ -1038,7 +1038,7 @@ int mbedtls_ecjpake_self_test( int verbose )
     mbedtls_ecjpake_context cli;
     mbedtls_ecjpake_context srv;
     unsigned char buf[512], pms[32];
-    mbedtls_size_t len, pmslen;
+    xalSize_t len, pmslen;
 
     mbedtls_ecjpake_init( &cli );
     mbedtls_ecjpake_init( &srv );

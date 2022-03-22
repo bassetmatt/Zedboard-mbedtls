@@ -64,8 +64,8 @@ extern "C" {
  * \returns        0 on success, or a MBEDTLS_ERR_XXX code if verification fails.
  */
 int mbedtls_pkcs5_pbes2( const mbedtls_asn1_buf *pbe_params, int mode,
-                 const unsigned char *pwd,  mbedtls_size_t pwdlen,
-                 const unsigned char *data, mbedtls_size_t datalen,
+                 const unsigned char *pwd,  xalSize_t pwdlen,
+                 const unsigned char *data, xalSize_t datalen,
                  unsigned char *output );
 
 #endif /* MBEDTLS_ASN1_PARSE_C */
@@ -85,7 +85,7 @@ int mbedtls_pkcs5_pbes2( const mbedtls_asn1_buf *pbe_params, int mode,
  * \returns        0 on success, or a MBEDTLS_ERR_XXX code if verification fails.
  */
 int mbedtls_pkcs5_pbkdf2_hmac( mbedtls_md_context_t *ctx, const unsigned char *password,
-                       mbedtls_size_t plen, const unsigned char *salt, mbedtls_size_t slen,
+                       xalSize_t plen, const unsigned char *salt, xalSize_t slen,
                        unsigned int iteration_count,
                        uint32_t key_length, unsigned char *output );
 

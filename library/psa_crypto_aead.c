@@ -42,14 +42,14 @@ static psa_status_t psa_aead_setup(
     mbedtls_psa_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t key_bits;
+    xalSize_t key_bits;
     const mbedtls_cipher_info_t *cipher_info;
     mbedtls_cipher_id_t cipher_id;
-    mbedtls_size_t full_tag_length = 0;
+    xalSize_t full_tag_length = 0;
 
     ( void ) key_buffer_size;
 
@@ -140,12 +140,12 @@ static psa_status_t psa_aead_setup(
 
 psa_status_t mbedtls_psa_aead_encrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, mbedtls_size_t nonce_length,
-    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
-    const uint8_t *plaintext, mbedtls_size_t plaintext_length,
-    uint8_t *ciphertext, mbedtls_size_t ciphertext_size, mbedtls_size_t *ciphertext_length )
+    const uint8_t *nonce, xalSize_t nonce_length,
+    const uint8_t *additional_data, xalSize_t additional_data_length,
+    const uint8_t *plaintext, xalSize_t plaintext_length,
+    uint8_t *ciphertext, xalSize_t ciphertext_size, xalSize_t *ciphertext_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_psa_aead_operation_t operation = MBEDTLS_PSA_AEAD_OPERATION_INIT;
@@ -238,13 +238,13 @@ exit:
  * *plaintext_length. This is the size of the plaintext in modes where
  * the encrypted data has the same size as the plaintext, such as
  * CCM and GCM. */
-static psa_status_t psa_aead_unpadded_locate_tag( mbedtls_size_t tag_length,
+static psa_status_t psa_aead_unpadded_locate_tag( xalSize_t tag_length,
                                                   const uint8_t *ciphertext,
-                                                  mbedtls_size_t ciphertext_length,
-                                                  mbedtls_size_t plaintext_size,
+                                                  xalSize_t ciphertext_length,
+                                                  xalSize_t plaintext_size,
                                                   const uint8_t **p_tag )
 {
-    mbedtls_size_t payload_length;
+    xalSize_t payload_length;
     if( tag_length > ciphertext_length )
         return( PSA_ERROR_INVALID_ARGUMENT );
     payload_length = ciphertext_length - tag_length;
@@ -256,12 +256,12 @@ static psa_status_t psa_aead_unpadded_locate_tag( mbedtls_size_t tag_length,
 
 psa_status_t mbedtls_psa_aead_decrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    const uint8_t *key_buffer, xalSize_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, mbedtls_size_t nonce_length,
-    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
-    const uint8_t *ciphertext, mbedtls_size_t ciphertext_length,
-    uint8_t *plaintext, mbedtls_size_t plaintext_size, mbedtls_size_t *plaintext_length )
+    const uint8_t *nonce, xalSize_t nonce_length,
+    const uint8_t *additional_data, xalSize_t additional_data_length,
+    const uint8_t *ciphertext, xalSize_t ciphertext_length,
+    uint8_t *plaintext, xalSize_t plaintext_size, xalSize_t *plaintext_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_psa_aead_operation_t operation = MBEDTLS_PSA_AEAD_OPERATION_INIT;
@@ -353,7 +353,7 @@ psa_status_t mbedtls_psa_aead_encrypt_setup(
     mbedtls_psa_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -373,7 +373,7 @@ psa_status_t mbedtls_psa_aead_decrypt_setup(
     mbedtls_psa_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    mbedtls_size_t key_buffer_size,
+    xalSize_t key_buffer_size,
     psa_algorithm_t alg )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -391,7 +391,7 @@ psa_status_t mbedtls_psa_aead_decrypt_setup(
 psa_status_t mbedtls_psa_aead_set_nonce(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *nonce,
-    mbedtls_size_t nonce_length )
+    xalSize_t nonce_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -455,8 +455,8 @@ psa_status_t mbedtls_psa_aead_set_nonce(
  /* Declare the lengths of the message and additional data for AEAD. */
 psa_status_t mbedtls_psa_aead_set_lengths(
     mbedtls_psa_aead_operation_t *operation,
-    mbedtls_size_t ad_length,
-    mbedtls_size_t plaintext_length )
+    xalSize_t ad_length,
+    xalSize_t plaintext_length )
 {
 #if defined(MBEDTLS_PSA_BUILTIN_ALG_CCM)
     if( operation->alg == PSA_ALG_CCM )
@@ -481,7 +481,7 @@ psa_status_t mbedtls_psa_aead_set_lengths(
 psa_status_t mbedtls_psa_aead_update_ad(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length )
+    xalSize_t input_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -527,12 +527,12 @@ psa_status_t mbedtls_psa_aead_update_ad(
 psa_status_t mbedtls_psa_aead_update(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *input,
-    mbedtls_size_t input_length,
+    xalSize_t input_length,
     uint8_t *output,
-    mbedtls_size_t output_size,
-    mbedtls_size_t *output_length )
+    xalSize_t output_size,
+    xalSize_t *output_length )
 {
-    mbedtls_size_t update_output_length;
+    xalSize_t update_output_length;
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
     update_output_length = input_length;
@@ -595,14 +595,14 @@ psa_status_t mbedtls_psa_aead_update(
 psa_status_t mbedtls_psa_aead_finish(
     mbedtls_psa_aead_operation_t *operation,
     uint8_t *ciphertext,
-    mbedtls_size_t ciphertext_size,
-    mbedtls_size_t *ciphertext_length,
+    xalSize_t ciphertext_size,
+    xalSize_t *ciphertext_length,
     uint8_t *tag,
-    mbedtls_size_t tag_size,
-    mbedtls_size_t *tag_length )
+    xalSize_t tag_size,
+    xalSize_t *tag_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t finish_output_size = 0;
+    xalSize_t finish_output_size = 0;
 
     if( tag_size < operation->tag_length )
         return( PSA_ERROR_BUFFER_TOO_SMALL );

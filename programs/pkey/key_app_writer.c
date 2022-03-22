@@ -120,7 +120,7 @@ static int write_public_key( mbedtls_pk_context *key, const char *output_file )
     FILE *f;
     unsigned char output_buf[16000];
     unsigned char *c = output_buf;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     memset(output_buf, 0, 16000);
 
@@ -162,7 +162,7 @@ static int write_private_key( mbedtls_pk_context *key, const char *output_file )
     FILE *f;
     unsigned char output_buf[16000];
     unsigned char *c = output_buf;
-    mbedtls_size_t len = 0;
+    xalSize_t len = 0;
 
     memset(output_buf, 0, 16000);
 

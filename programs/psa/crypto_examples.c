@@ -60,14 +60,14 @@ int main( void )
 
 static psa_status_t cipher_operation( psa_cipher_operation_t *operation,
                                       const uint8_t * input,
-                                      mbedtls_size_t input_size,
-                                      mbedtls_size_t part_size,
+                                      xalSize_t input_size,
+                                      xalSize_t part_size,
                                       uint8_t * output,
-                                      mbedtls_size_t output_size,
-                                      mbedtls_size_t *output_len )
+                                      xalSize_t output_size,
+                                      xalSize_t *output_len )
 {
     psa_status_t status;
-    mbedtls_size_t bytes_to_write = 0, bytes_written = 0, len = 0;
+    xalSize_t bytes_to_write = 0, bytes_written = 0, len = 0;
 
     *output_len = 0;
     while( bytes_written != input_size )
@@ -97,17 +97,17 @@ exit:
 static psa_status_t cipher_encrypt( psa_key_id_t key,
                                     psa_algorithm_t alg,
                                     uint8_t * iv,
-                                    mbedtls_size_t iv_size,
+                                    xalSize_t iv_size,
                                     const uint8_t * input,
-                                    mbedtls_size_t input_size,
-                                    mbedtls_size_t part_size,
+                                    xalSize_t input_size,
+                                    xalSize_t part_size,
                                     uint8_t * output,
-                                    mbedtls_size_t output_size,
-                                    mbedtls_size_t *output_len )
+                                    xalSize_t output_size,
+                                    xalSize_t *output_len )
 {
     psa_status_t status;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
-    mbedtls_size_t iv_len = 0;
+    xalSize_t iv_len = 0;
 
     memset( &operation, 0, sizeof( operation ) );
     status = psa_cipher_encrypt_setup( &operation, key, alg );
@@ -128,13 +128,13 @@ exit:
 static psa_status_t cipher_decrypt( psa_key_id_t key,
                                     psa_algorithm_t alg,
                                     const uint8_t * iv,
-                                    mbedtls_size_t iv_size,
+                                    xalSize_t iv_size,
                                     const uint8_t * input,
-                                    mbedtls_size_t input_size,
-                                    mbedtls_size_t part_size,
+                                    xalSize_t input_size,
+                                    xalSize_t part_size,
                                     uint8_t * output,
-                                    mbedtls_size_t output_size,
-                                    mbedtls_size_t *output_len )
+                                    xalSize_t output_size,
+                                    xalSize_t *output_len )
 {
     psa_status_t status;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
@@ -168,7 +168,7 @@ cipher_example_encrypt_decrypt_aes_cbc_nopad_1_block( void )
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key = 0;
-    mbedtls_size_t output_len = 0;
+    xalSize_t output_len = 0;
     uint8_t iv[block_size];
     uint8_t input[block_size];
     uint8_t encrypt[block_size];
@@ -218,7 +218,7 @@ static psa_status_t cipher_example_encrypt_decrypt_aes_cbc_pkcs7_multi( void )
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key = 0;
-    mbedtls_size_t output_len = 0;
+    xalSize_t output_len = 0;
     uint8_t iv[block_size], input[input_size],
             encrypt[input_size + block_size], decrypt[input_size + block_size];
 
@@ -265,7 +265,7 @@ static psa_status_t cipher_example_encrypt_decrypt_aes_ctr_multi( void )
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key = 0;
-    mbedtls_size_t output_len = 0;
+    xalSize_t output_len = 0;
     uint8_t iv[block_size], input[input_size], encrypt[input_size],
             decrypt[input_size];
 

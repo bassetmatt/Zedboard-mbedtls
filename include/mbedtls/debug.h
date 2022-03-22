@@ -112,7 +112,7 @@
  * \def MBEDTLS_PRINTF_SIZET
  *
  * MBEDTLS_PRINTF_xxx: Due to issues with older window compilers
- * and MinGW we need to define the printf specifier for mbedtls_size_t
+ * and MinGW we need to define the printf specifier for xalSize_t
  * and long long per platform.
  *
  * Module:  library/debug.c
@@ -207,7 +207,7 @@ void mbedtls_debug_print_ret( const mbedtls_ssl_context *ssl, int level,
  */
 void mbedtls_debug_print_buf( const mbedtls_ssl_context *ssl, int level,
                       const char *file, int line, const char *text,
-                      const unsigned char *buf, mbedtls_size_t len );
+                      const unsigned char *buf, xalSize_t len );
 
 #if defined(MBEDTLS_BIGNUM_C)
 /**

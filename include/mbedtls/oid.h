@@ -432,7 +432,7 @@ extern "C" {
 typedef struct mbedtls_oid_descriptor_t
 {
     const char *MBEDTLS_PRIVATE(asn1);               /*!< OID ASN.1 representation       */
-    mbedtls_size_t MBEDTLS_PRIVATE(asn1_len);                /*!< length of asn1                 */
+    xalSize_t MBEDTLS_PRIVATE(asn1_len);                /*!< length of asn1                 */
 #if !defined(MBEDTLS_X509_REMOVE_INFO)
     const char *MBEDTLS_PRIVATE(name);               /*!< official name (e.g. from RFC)  */
     const char *MBEDTLS_PRIVATE(description);        /*!< human friendly description     */
@@ -450,7 +450,7 @@ typedef struct mbedtls_oid_descriptor_t
  * \return          Length of the string written (excluding final NULL) or
  *                  MBEDTLS_ERR_OID_BUF_TOO_SMALL in case of error
  */
-int mbedtls_oid_get_numeric_string( char *buf, mbedtls_size_t size, const mbedtls_asn1_buf *oid );
+int mbedtls_oid_get_numeric_string( char *buf, xalSize_t size, const mbedtls_asn1_buf *oid );
 
 /**
  * \brief          Translate an X.509 extension OID into local values
@@ -493,7 +493,7 @@ int mbedtls_oid_get_pk_alg( const mbedtls_asn1_buf *oid, mbedtls_pk_type_t *pk_a
  * \return         0 if successful, or MBEDTLS_ERR_OID_NOT_FOUND
  */
 int mbedtls_oid_get_oid_by_pk_alg( mbedtls_pk_type_t pk_alg,
-                           const char **oid, mbedtls_size_t *olen );
+                           const char **oid, xalSize_t *olen );
 
 #if defined(MBEDTLS_ECP_C)
 /**
@@ -516,7 +516,7 @@ int mbedtls_oid_get_ec_grp( const mbedtls_asn1_buf *oid, mbedtls_ecp_group_id *g
  * \return         0 if successful, or MBEDTLS_ERR_OID_NOT_FOUND
  */
 int mbedtls_oid_get_oid_by_ec_grp( mbedtls_ecp_group_id grp_id,
-                           const char **oid, mbedtls_size_t *olen );
+                           const char **oid, xalSize_t *olen );
 #endif /* MBEDTLS_ECP_C */
 
 #if defined(MBEDTLS_MD_C)
@@ -553,7 +553,7 @@ int mbedtls_oid_get_sig_alg_desc( const mbedtls_asn1_buf *oid, const char **desc
  * \return         0 if successful, or MBEDTLS_ERR_OID_NOT_FOUND
  */
 int mbedtls_oid_get_oid_by_sig_alg( mbedtls_pk_type_t pk_alg, mbedtls_md_type_t md_alg,
-                            const char **oid, mbedtls_size_t *olen );
+                            const char **oid, xalSize_t *olen );
 
 /**
  * \brief          Translate hash algorithm OID into md_type
@@ -607,7 +607,7 @@ int mbedtls_oid_get_certificate_policies( const mbedtls_asn1_buf *oid, const cha
  *
  * \return         0 if successful, or MBEDTLS_ERR_OID_NOT_FOUND
  */
-int mbedtls_oid_get_oid_by_md( mbedtls_md_type_t md_alg, const char **oid, mbedtls_size_t *olen );
+int mbedtls_oid_get_oid_by_md( mbedtls_md_type_t md_alg, const char **oid, xalSize_t *olen );
 
 #if defined(MBEDTLS_CIPHER_C)
 /**

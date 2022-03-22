@@ -23,7 +23,7 @@ static int test_written_key( const psa_key_attributes_t *attributes,
 {
     mbedtls_svc_key_id_t created_key_id = MBEDTLS_SVC_KEY_ID_INIT;
     uint8_t *actual_representation = NULL;
-    mbedtls_size_t length;
+    xalSize_t length;
     struct psa_storage_info_t storage_info;
     int ok = 0;
 
@@ -77,7 +77,7 @@ static int test_read_key( const psa_key_attributes_t *expected_attributes,
     struct psa_storage_info_t storage_info;
     int ok = 0;
     uint8_t *exported_material = NULL;
-    mbedtls_size_t length;
+    xalSize_t length;
 
     /* Prime the storage with a key file. */
     PSA_ASSERT( psa_its_set( uid, representation->len, representation->x, 0 ) );
@@ -159,7 +159,7 @@ void key_storage_save( int lifetime_arg, int type_arg, int bits_arg,
 
     psa_key_lifetime_t lifetime = lifetime_arg;
     psa_key_type_t type = type_arg;
-    mbedtls_size_t bits = bits_arg;
+    xalSize_t bits = bits_arg;
     psa_key_usage_t usage = usage_arg;
     psa_algorithm_t alg = alg_arg;
     psa_algorithm_t alg2 = alg2_arg;
@@ -203,7 +203,7 @@ void key_storage_read( int lifetime_arg, int type_arg, int bits_arg,
 
     psa_key_lifetime_t lifetime = lifetime_arg;
     psa_key_type_t type = type_arg;
-    mbedtls_size_t bits = bits_arg;
+    xalSize_t bits = bits_arg;
     psa_key_usage_t usage = usage_arg;
     psa_algorithm_t alg = alg_arg;
     psa_algorithm_t alg2 = alg2_arg;

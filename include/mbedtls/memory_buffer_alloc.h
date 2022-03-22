@@ -64,7 +64,7 @@ extern "C" {
  * \param buf   buffer to use as heap
  * \param len   size of the buffer
  */
-void mbedtls_memory_buffer_alloc_init( unsigned char *buf, mbedtls_size_t len );
+void mbedtls_memory_buffer_alloc_init( unsigned char *buf, xalSize_t len );
 
 /**
  * \brief   Free the mutex for thread-safety and clear remaining memory
@@ -98,7 +98,7 @@ void mbedtls_memory_buffer_alloc_status( void );
  *                      into smaller blocks but larger than the requested size.
  * \param max_blocks    Peak number of blocks in use, including free and used
  */
-void mbedtls_memory_buffer_alloc_max_get( mbedtls_size_t *max_used, mbedtls_size_t *max_blocks );
+void mbedtls_memory_buffer_alloc_max_get( xalSize_t *max_used, xalSize_t *max_blocks );
 
 /**
  * \brief   Reset peak statistics
@@ -113,7 +113,7 @@ void mbedtls_memory_buffer_alloc_max_reset( void );
  *                      into smaller blocks but larger than the requested size.
  * \param cur_blocks    Current number of blocks in use, including free and used
  */
-void mbedtls_memory_buffer_alloc_cur_get( mbedtls_size_t *cur_used, mbedtls_size_t *cur_blocks );
+void mbedtls_memory_buffer_alloc_cur_get( xalSize_t *cur_used, xalSize_t *cur_blocks );
 #endif /* MBEDTLS_MEMORY_DEBUG */
 
 /**

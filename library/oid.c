@@ -124,7 +124,7 @@ int FN_NAME( const mbedtls_asn1_buf *oid, ATTR1_TYPE * ATTR1,               \
  * attribute from a mbedtls_oid_descriptor_t wrapper.
  */
 #define FN_OID_GET_OID_BY_ATTR1(FN_NAME, TYPE_T, LIST, ATTR1_TYPE, ATTR1)   \
-int FN_NAME( ATTR1_TYPE ATTR1, const char **oid, mbedtls_size_t *olen )             \
+int FN_NAME( ATTR1_TYPE ATTR1, const char **oid, xalSize_t *olen )             \
 {                                                                           \
     const TYPE_T *cur = (LIST);                                             \
     while( cur->descriptor.asn1 != NULL ) {                                 \
@@ -145,7 +145,7 @@ int FN_NAME( ATTR1_TYPE ATTR1, const char **oid, mbedtls_size_t *olen )         
 #define FN_OID_GET_OID_BY_ATTR2(FN_NAME, TYPE_T, LIST, ATTR1_TYPE, ATTR1,   \
                                 ATTR2_TYPE, ATTR2)                          \
 int FN_NAME( ATTR1_TYPE ATTR1, ATTR2_TYPE ATTR2, const char **oid ,         \
-             mbedtls_size_t *olen )                                                 \
+             xalSize_t *olen )                                                 \
 {                                                                           \
     const TYPE_T *cur = (LIST);                                             \
     while( cur->descriptor.asn1 != NULL ) {                                 \
@@ -731,19 +731,19 @@ FN_OID_GET_ATTR2(mbedtls_oid_get_pkcs12_pbe_alg, oid_pkcs12_pbe_alg_t, pkcs12_pb
 
 #define OID_SAFE_SNPRINTF                               \
     do {                                                \
-        if( ret < 0 || (mbedtls_size_t) ret >= n )              \
+        if( ret < 0 || (xalSize_t) ret >= n )              \
             return( MBEDTLS_ERR_OID_BUF_TOO_SMALL );    \
                                                         \
-        n -= (mbedtls_size_t) ret;                              \
-        p += (mbedtls_size_t) ret;                              \
+        n -= (xalSize_t) ret;                              \
+        p += (xalSize_t) ret;                              \
     } while( 0 )
 
 /* Return the x.y.z.... style numeric string for the given OID */
-int mbedtls_oid_get_numeric_string( char *buf, mbedtls_size_t size,
+int mbedtls_oid_get_numeric_string( char *buf, xalSize_t size,
                             const mbedtls_asn1_buf *oid )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t i, n;
+    xalSize_t i, n;
     unsigned int value;
     char *p;
 

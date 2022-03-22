@@ -83,7 +83,7 @@ int mbedtls_rsa_deduce_primes( mbedtls_mpi const *N,
          229,  233,  239,  241,  251
     };
 
-    const mbedtls_size_t num_primes = sizeof( primes ) / sizeof( *primes );
+    const xalSize_t num_primes = sizeof( primes ) / sizeof( *primes );
 
     if( P == NULL || Q == NULL || P->p != NULL || Q->p != NULL )
         return( MBEDTLS_ERR_MPI_BAD_INPUT_DATA );
@@ -277,7 +277,7 @@ cleanup:
 int mbedtls_rsa_validate_params( const mbedtls_mpi *N, const mbedtls_mpi *P,
                                  const mbedtls_mpi *Q, const mbedtls_mpi *D,
                                  const mbedtls_mpi *E,
-                                 int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
+                                 int (*f_rng)(void *, unsigned char *, xalSize_t),
                                  void *p_rng )
 {
     int ret = 0;

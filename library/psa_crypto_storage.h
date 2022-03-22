@@ -107,7 +107,7 @@ int psa_is_key_present_in_storage( const mbedtls_svc_key_id_t key );
  */
 psa_status_t psa_save_persistent_key( const psa_core_key_attributes_t *attr,
                                       const uint8_t *data,
-                                      const mbedtls_size_t data_length );
+                                      const xalSize_t data_length );
 
 /**
  * \brief Parses key data and metadata and load persistent key for given
@@ -137,7 +137,7 @@ psa_status_t psa_save_persistent_key( const psa_core_key_attributes_t *attr,
  */
 psa_status_t psa_load_persistent_key( psa_core_key_attributes_t *attr,
                                       uint8_t **data,
-                                      mbedtls_size_t *data_length );
+                                      xalSize_t *data_length );
 
 /**
  * \brief Remove persistent data for the given key slot number.
@@ -162,7 +162,7 @@ psa_status_t psa_destroy_persistent_key( const mbedtls_svc_key_id_t key );
  * \param key_data_length Size of the key data buffer.
  *
  */
-void psa_free_persistent_key_data( uint8_t *key_data, mbedtls_size_t key_data_length );
+void psa_free_persistent_key_data( uint8_t *key_data, xalSize_t key_data_length );
 
 /**
  * \brief Formats key data and metadata for persistent storage
@@ -174,7 +174,7 @@ void psa_free_persistent_key_data( uint8_t *key_data, mbedtls_size_t key_data_le
  *
  */
 void psa_format_key_data_for_storage( const uint8_t *data,
-                                      const mbedtls_size_t data_length,
+                                      const xalSize_t data_length,
                                       const psa_core_key_attributes_t *attr,
                                       uint8_t *storage_data );
 
@@ -195,9 +195,9 @@ void psa_format_key_data_for_storage( const uint8_t *data,
  * \retval #PSA_ERROR_DATA_INVALID
  */
 psa_status_t psa_parse_key_data_from_storage( const uint8_t *storage_data,
-                                              mbedtls_size_t storage_data_length,
+                                              xalSize_t storage_data_length,
                                               uint8_t **key_data,
-                                              mbedtls_size_t *key_data_length,
+                                              xalSize_t *key_data_length,
                                               psa_core_key_attributes_t *attr );
 
 #if defined(MBEDTLS_PSA_CRYPTO_SE_C)
@@ -389,7 +389,7 @@ psa_status_t psa_crypto_stop_transaction( void );
  *         The entropy seed file already exists.
  */
 psa_status_t mbedtls_psa_storage_inject_entropy( const unsigned char *seed,
-                                                 mbedtls_size_t seed_size );
+                                                 xalSize_t seed_size );
 #endif /* MBEDTLS_PSA_INJECT_ENTROPY */
 
 #ifdef __cplusplus

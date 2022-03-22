@@ -1006,7 +1006,7 @@ int mbedtls_aes_crypt_ecb( mbedtls_aes_context *ctx,
  */
 int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
                     int mode,
-                    mbedtls_size_t length,
+                    xalSize_t length,
                     unsigned char iv[16],
                     const unsigned char *input,
                     unsigned char *output )
@@ -1112,14 +1112,14 @@ static void mbedtls_gf128mul_x_ble( unsigned char r[16],
  */
 int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
                            int mode,
-                           mbedtls_size_t length,
+                           xalSize_t length,
                            const unsigned char data_unit[16],
                            const unsigned char *input,
                            unsigned char *output )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t blocks = length / 16;
-    mbedtls_size_t leftover = length % 16;
+    xalSize_t blocks = length / 16;
+    xalSize_t leftover = length % 16;
     unsigned char tweak[16];
     unsigned char prev_tweak[16];
     unsigned char tmp[16];
@@ -1147,7 +1147,7 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
 
     while( blocks-- )
     {
-        mbedtls_size_t i;
+        xalSize_t i;
 
         if( leftover && ( mode == MBEDTLS_AES_DECRYPT ) && blocks == 0 )
         {
@@ -1185,7 +1185,7 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
 
         /* We are now on the final part of the data unit, which doesn't divide
          * evenly by 16. It's time for ciphertext stealing. */
-        mbedtls_size_t i;
+        xalSize_t i;
         unsigned char *prev_output = output - 16;
 
         /* Copy ciphertext bytes from the previous block to our output for each
@@ -1223,15 +1223,15 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
  */
 int mbedtls_aes_crypt_cfb128( mbedtls_aes_context *ctx,
                        int mode,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *iv_off,
+                       xalSize_t length,
+                       xalSize_t *iv_off,
                        unsigned char iv[16],
                        const unsigned char *input,
                        unsigned char *output )
 {
     int c;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t n;
+    xalSize_t n;
 
     AES_VALIDATE_RET( ctx != NULL );
     AES_VALIDATE_RET( mode == MBEDTLS_AES_ENCRYPT ||
@@ -1293,7 +1293,7 @@ exit:
  */
 int mbedtls_aes_crypt_cfb8( mbedtls_aes_context *ctx,
                             int mode,
-                            mbedtls_size_t length,
+                            xalSize_t length,
                             unsigned char iv[16],
                             const unsigned char *input,
                             unsigned char *output )
@@ -1337,14 +1337,14 @@ exit:
  * AES-OFB (Output Feedback Mode) buffer encryption/decryption
  */
 int mbedtls_aes_crypt_ofb( mbedtls_aes_context *ctx,
-                           mbedtls_size_t length,
-                           mbedtls_size_t *iv_off,
+                           xalSize_t length,
+                           xalSize_t *iv_off,
                            unsigned char iv[16],
                            const unsigned char *input,
                            unsigned char *output )
 {
     int ret = 0;
-    mbedtls_size_t n;
+    xalSize_t n;
 
     AES_VALIDATE_RET( ctx != NULL );
     AES_VALIDATE_RET( iv_off != NULL );
@@ -1382,8 +1382,8 @@ exit:
  * AES-CTR buffer encryption/decryption
  */
 int mbedtls_aes_crypt_ctr( mbedtls_aes_context *ctx,
-                       mbedtls_size_t length,
-                       mbedtls_size_t *nc_off,
+                       xalSize_t length,
+                       xalSize_t *nc_off,
                        unsigned char nonce_counter[16],
                        unsigned char stream_block[16],
                        const unsigned char *input,
@@ -1391,7 +1391,7 @@ int mbedtls_aes_crypt_ctr( mbedtls_aes_context *ctx,
 {
     int c, i;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    mbedtls_size_t n;
+    xalSize_t n;
 
     AES_VALIDATE_RET( ctx != NULL );
     AES_VALIDATE_RET( nc_off != NULL );
@@ -1761,7 +1761,7 @@ int mbedtls_aes_self_test( int verbose )
 #endif
 #if defined(MBEDTLS_CIPHER_MODE_CTR) || defined(MBEDTLS_CIPHER_MODE_CFB) || \
     defined(MBEDTLS_CIPHER_MODE_OFB)
-    mbedtls_size_t offset;
+    xalSize_t offset;
 #endif
 #if defined(MBEDTLS_CIPHER_MODE_CTR) || defined(MBEDTLS_CIPHER_MODE_XTS)
     int len;

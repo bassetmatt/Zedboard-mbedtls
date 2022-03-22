@@ -66,9 +66,9 @@ extern "C" {
  *          MD layer.
  */
 int mbedtls_hkdf( const mbedtls_md_info_t *md, const unsigned char *salt,
-                  mbedtls_size_t salt_len, const unsigned char *ikm, mbedtls_size_t ikm_len,
-                  const unsigned char *info, mbedtls_size_t info_len,
-                  unsigned char *okm, mbedtls_size_t okm_len );
+                  xalSize_t salt_len, const unsigned char *ikm, xalSize_t ikm_len,
+                  const unsigned char *info, xalSize_t info_len,
+                  unsigned char *okm, xalSize_t okm_len );
 
 /**
  *  \brief  Take the input keying material \p ikm and extract from it a
@@ -95,8 +95,8 @@ int mbedtls_hkdf( const mbedtls_md_info_t *md, const unsigned char *salt,
  *          MD layer.
  */
 int mbedtls_hkdf_extract( const mbedtls_md_info_t *md,
-                          const unsigned char *salt, mbedtls_size_t salt_len,
-                          const unsigned char *ikm, mbedtls_size_t ikm_len,
+                          const unsigned char *salt, xalSize_t salt_len,
+                          const unsigned char *ikm, xalSize_t ikm_len,
                           unsigned char *prk );
 
 /**
@@ -126,8 +126,8 @@ int mbedtls_hkdf_extract( const mbedtls_md_info_t *md,
  *          MD layer.
  */
 int mbedtls_hkdf_expand( const mbedtls_md_info_t *md, const unsigned char *prk,
-                         mbedtls_size_t prk_len, const unsigned char *info,
-                         mbedtls_size_t info_len, unsigned char *okm, mbedtls_size_t okm_len );
+                         xalSize_t prk_len, const unsigned char *info,
+                         xalSize_t info_len, unsigned char *okm, xalSize_t okm_len );
 
 #ifdef __cplusplus
 }
