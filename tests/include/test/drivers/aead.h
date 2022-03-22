@@ -58,73 +58,73 @@ extern mbedtls_test_driver_aead_hooks_t mbedtls_test_driver_aead_hooks;
 
 psa_status_t mbedtls_test_transparent_aead_encrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, size_t nonce_length,
-    const uint8_t *additional_data, size_t additional_data_length,
-    const uint8_t *plaintext, size_t plaintext_length,
-    uint8_t *ciphertext, size_t ciphertext_size, size_t *ciphertext_length );
+    const uint8_t *nonce, mbedtls_size_t nonce_length,
+    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
+    const uint8_t *plaintext, mbedtls_size_t plaintext_length,
+    uint8_t *ciphertext, mbedtls_size_t ciphertext_size, mbedtls_size_t *ciphertext_length );
 
 psa_status_t mbedtls_test_transparent_aead_decrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, size_t nonce_length,
-    const uint8_t *additional_data, size_t additional_data_length,
-    const uint8_t *ciphertext, size_t ciphertext_length,
-    uint8_t *plaintext, size_t plaintext_size, size_t *plaintext_length );
+    const uint8_t *nonce, mbedtls_size_t nonce_length,
+    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
+    const uint8_t *ciphertext, mbedtls_size_t ciphertext_length,
+    uint8_t *plaintext, mbedtls_size_t plaintext_size, mbedtls_size_t *plaintext_length );
 
 psa_status_t mbedtls_test_transparent_aead_encrypt_setup(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg );
 
 psa_status_t mbedtls_test_transparent_aead_decrypt_setup(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg );
 
 psa_status_t mbedtls_test_transparent_aead_set_nonce(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const uint8_t *nonce,
-    size_t nonce_length );
+    mbedtls_size_t nonce_length );
 
 psa_status_t mbedtls_test_transparent_aead_set_lengths(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
-    size_t ad_length,
-    size_t plaintext_length );
+    mbedtls_size_t ad_length,
+    mbedtls_size_t plaintext_length );
 
 psa_status_t mbedtls_test_transparent_aead_update_ad(
     mbedtls_transparent_test_driver_aead_operation_t *operation,
     const uint8_t *input,
-    size_t input_length );
+    mbedtls_size_t input_length );
 
 psa_status_t mbedtls_test_transparent_aead_update(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    const uint8_t *input,
-   size_t input_length,
+   mbedtls_size_t input_length,
    uint8_t *output,
-   size_t output_size,
-   size_t *output_length );
+   mbedtls_size_t output_size,
+   mbedtls_size_t *output_length );
 
 psa_status_t mbedtls_test_transparent_aead_finish(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    uint8_t *ciphertext,
-   size_t ciphertext_size,
-   size_t *ciphertext_length,
+   mbedtls_size_t ciphertext_size,
+   mbedtls_size_t *ciphertext_length,
    uint8_t *tag,
-   size_t tag_size,
-   size_t *tag_length );
+   mbedtls_size_t tag_size,
+   mbedtls_size_t *tag_length );
 
 psa_status_t mbedtls_test_transparent_aead_verify(
    mbedtls_transparent_test_driver_aead_operation_t *operation,
    uint8_t *plaintext,
-   size_t plaintext_size,
-   size_t *plaintext_length,
+   mbedtls_size_t plaintext_size,
+   mbedtls_size_t *plaintext_length,
    const uint8_t *tag,
-   size_t tag_length );
+   mbedtls_size_t tag_length );
 
 psa_status_t mbedtls_test_transparent_aead_abort(
    mbedtls_transparent_test_driver_aead_operation_t *operation );

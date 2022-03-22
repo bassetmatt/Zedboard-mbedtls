@@ -469,7 +469,7 @@ int mbedtls_md_starts( mbedtls_md_context_t *ctx )
     }
 }
 
-int mbedtls_md_update( mbedtls_md_context_t *ctx, const unsigned char *input, size_t ilen )
+int mbedtls_md_update( mbedtls_md_context_t *ctx, const unsigned char *input, mbedtls_size_t ilen )
 {
     if( ctx == NULL || ctx->md_info == NULL )
         return( MBEDTLS_ERR_MD_BAD_INPUT_DATA );
@@ -549,7 +549,7 @@ int mbedtls_md_finish( mbedtls_md_context_t *ctx, unsigned char *output )
     }
 }
 
-int mbedtls_md( const mbedtls_md_info_t *md_info, const unsigned char *input, size_t ilen,
+int mbedtls_md( const mbedtls_md_info_t *md_info, const unsigned char *input, mbedtls_size_t ilen,
             unsigned char *output )
 {
     if( md_info == NULL )
@@ -595,7 +595,7 @@ int mbedtls_md_file( const mbedtls_md_info_t *md_info, const char *path, unsigne
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     FILE *f;
-    size_t n;
+    mbedtls_size_t n;
     mbedtls_md_context_t ctx;
     unsigned char buf[1024];
 
@@ -631,17 +631,17 @@ cleanup:
 }
 #endif /* MBEDTLS_FS_IO */
 
-int mbedtls_md_hmac_starts( mbedtls_md_context_t *ctx, const unsigned char *key, size_t keylen )
+int mbedtls_md_hmac_starts( mbedtls_md_context_t *ctx, const unsigned char *key, mbedtls_size_t keylen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char sum[MBEDTLS_MD_MAX_SIZE];
     unsigned char *ipad, *opad;
-    size_t i;
+    mbedtls_size_t i;
 
     if( ctx == NULL || ctx->md_info == NULL || ctx->hmac_ctx == NULL )
         return( MBEDTLS_ERR_MD_BAD_INPUT_DATA );
 
-    if( keylen > (size_t) ctx->md_info->block_size )
+    if( keylen > (mbedtls_size_t) ctx->md_info->block_size )
     {
         if( ( ret = mbedtls_md_starts( ctx ) ) != 0 )
             goto cleanup;
@@ -678,7 +678,7 @@ cleanup:
     return( ret );
 }
 
-int mbedtls_md_hmac_update( mbedtls_md_context_t *ctx, const unsigned char *input, size_t ilen )
+int mbedtls_md_hmac_update( mbedtls_md_context_t *ctx, const unsigned char *input, mbedtls_size_t ilen )
 {
     if( ctx == NULL || ctx->md_info == NULL || ctx->hmac_ctx == NULL )
         return( MBEDTLS_ERR_MD_BAD_INPUT_DATA );
@@ -726,8 +726,8 @@ int mbedtls_md_hmac_reset( mbedtls_md_context_t *ctx )
 }
 
 int mbedtls_md_hmac( const mbedtls_md_info_t *md_info,
-                     const unsigned char *key, size_t keylen,
-                     const unsigned char *input, size_t ilen,
+                     const unsigned char *key, mbedtls_size_t keylen,
+                     const unsigned char *input, mbedtls_size_t ilen,
                      unsigned char *output )
 {
     mbedtls_md_context_t ctx;

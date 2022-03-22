@@ -573,7 +573,7 @@ int report_cid_usage( mbedtls_ssl_context *ssl,
 {
     int ret;
     unsigned char peer_cid[ MBEDTLS_SSL_CID_OUT_LEN_MAX ];
-    size_t peer_cid_len;
+    mbedtls_size_t peer_cid_len;
     int cid_negotiated;
 
     if( opt.transport != MBEDTLS_SSL_TRANSPORT_DATAGRAM )
@@ -608,7 +608,7 @@ int report_cid_usage( mbedtls_ssl_context *ssl,
     }
     else
     {
-        size_t idx=0;
+        mbedtls_size_t idx=0;
         mbedtls_printf( "(%s) Use of Connection ID has been negotiated.\n",
                         additional_description );
 
@@ -662,14 +662,14 @@ int main( int argc, char *argv[] )
 
 #if defined(MBEDTLS_KEY_EXCHANGE_SOME_PSK_ENABLED)
     unsigned char psk[MBEDTLS_PSK_MAX_LEN];
-    size_t psk_len = 0;
+    mbedtls_size_t psk_len = 0;
 #endif
 
 #if defined(MBEDTLS_SSL_DTLS_CONNECTION_ID)
     unsigned char cid[MBEDTLS_SSL_CID_IN_LEN_MAX];
     unsigned char cid_renego[MBEDTLS_SSL_CID_IN_LEN_MAX];
-    size_t cid_len = 0;
-    size_t cid_renego_len = 0;
+    mbedtls_size_t cid_len = 0;
+    mbedtls_size_t cid_renego_len = 0;
 #endif
 
 #if defined(MBEDTLS_SSL_ALPN)
@@ -686,7 +686,7 @@ int main( int argc, char *argv[] )
 #endif
 #if defined(MBEDTLS_SSL_DTLS_SRTP)
     unsigned char mki[MBEDTLS_TLS_SRTP_MAX_MKI_LENGTH];
-    size_t mki_len=0;
+    mbedtls_size_t mki_len=0;
 #endif
 
     const char *pers = "ssl_client2";
@@ -710,7 +710,7 @@ int main( int argc, char *argv[] )
     mbedtls_ssl_config conf;
     mbedtls_ssl_session saved_session;
     unsigned char *session_data = NULL;
-    size_t session_data_len = 0;
+    mbedtls_size_t session_data_len = 0;
 #if defined(MBEDTLS_TIMING_C)
     mbedtls_timing_delay_context timer;
 #endif
@@ -727,7 +727,7 @@ int main( int argc, char *argv[] )
     const int *list;
 #if defined(MBEDTLS_SSL_CONTEXT_SERIALIZATION)
     unsigned char *context_buf = NULL;
-    size_t context_buf_len;
+    mbedtls_size_t context_buf_len;
 #endif
     unsigned char eap_tls_keymaterial[16];
     unsigned char eap_tls_iv[8];
@@ -2188,7 +2188,7 @@ int main( int argc, char *argv[] )
 
     if( opt.eap_tls != 0  )
     {
-        size_t j = 0;
+        mbedtls_size_t j = 0;
 
         if( ( ret = mbedtls_ssl_tls_prf( eap_tls_keying.tls_prf_type,
                                          eap_tls_keying.master_secret,
@@ -2239,7 +2239,7 @@ int main( int argc, char *argv[] )
 #if defined( MBEDTLS_SSL_DTLS_SRTP )
     else if( opt.use_srtp != 0  )
     {
-        size_t j = 0;
+        mbedtls_size_t j = 0;
         mbedtls_dtls_srtp_info dtls_srtp_negotiation_result;
         mbedtls_ssl_get_dtls_srtp_negotiation_result( &ssl, &dtls_srtp_negotiation_result );
 
@@ -2768,7 +2768,7 @@ send_request:
 #if defined(MBEDTLS_SSL_CONTEXT_SERIALIZATION)
     if( opt.serialize != 0 )
     {
-        size_t buf_len;
+        mbedtls_size_t buf_len;
 
         mbedtls_printf( "  . Serializing live connection..." );
 
@@ -2806,7 +2806,7 @@ send_request:
         {
             FILE *b64_file;
             uint8_t *b64_buf;
-            size_t b64_len;
+            mbedtls_size_t b64_len;
 
             mbedtls_printf( "  . Save serialized context to a file... " );
 

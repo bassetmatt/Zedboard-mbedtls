@@ -78,7 +78,7 @@ A driver description is a JSON object containing the following properties:
 * `"capabilities"` (mandatory, array of [capabilities](#driver-description-capability)).
 A list of **capabilities**. Each capability describes a family of functions that the driver implements for a certain class of cryptographic mechanisms.
 * `"key_context"` (not permitted for transparent drivers, mandatory for opaque drivers): information about the [representation of keys](#key-format-for-opaque-drivers).
-* `"persistent_state_size"` (not permitted for transparent drivers, optional for opaque drivers, integer or string). The size in bytes of the [persistent state of the driver](#opaque-driver-persistent-state). This may be either a non-negative integer or a C constant expression of type `size_t`.
+* `"persistent_state_size"` (not permitted for transparent drivers, optional for opaque drivers, integer or string). The size in bytes of the [persistent state of the driver](#opaque-driver-persistent-state). This may be either a non-negative integer or a C constant expression of type `mbedtls_size_t`.
 * `"location"` (not permitted for transparent drivers, optional for opaque drivers, integer or string). The [location value](#lifetimes-and-locations) for which this driver is invoked. In other words, this determines the lifetimes for which the driver is invoked. This may be either a non-negative integer or a C constant expression of type `psa_key_location_t`.
 
 ### Driver description capability
@@ -185,7 +185,7 @@ The signature of a driver entry point generally looks like the signature of the 
 * For entry points that operate on an existing key, the `psa_key_id_t` parameter is replaced by a sequence of three parameters that describe the key:
     1. `const psa_key_attributes_t *attributes`: the key attributes.
     2. `const uint8_t *key_buffer`: a key material or key context buffer.
-    3. `size_t key_buffer_size`: the size of the key buffer in bytes.
+    3. `mbedtls_size_t key_buffer_size`: the size of the key buffer in bytes.
 
     For transparent drivers, the key buffer contains the key material, in the same format as defined for `psa_export_key()` and `psa_export_public_key()` in the PSA Cryptography API. For opaque drivers, the content of the key buffer is entirely up to the driver.
 
@@ -193,8 +193,8 @@ The signature of a driver entry point generally looks like the signature of the 
 
 * For entry points that are involved in key creation, the `psa_key_id_t *` output parameter is replaced by a sequence of parameters that convey the key context:
     1. `uint8_t *key_buffer`: a buffer for the key material or key context.
-    2. `size_t key_buffer_size`: the size of the key buffer in bytes.
-    2. `size_t *key_buffer_length`: the length of the data written to the key buffer in bytes.
+    2. `mbedtls_size_t key_buffer_size`: the size of the key buffer in bytes.
+    2. `mbedtls_size_t *key_buffer_length`: the length of the data written to the key buffer in bytes.
 
 Some entry points are grouped in families that must be implemented as a whole. If a driver supports an entry point family, it must provide all the entry points in the family.
 
@@ -204,9 +204,9 @@ Drivers can also have entry points related to random generation. A transparent d
 
 Buffer parameters for driver entry points obey the following conventions:
 
-* An input buffer has the type `const uint8_t *` and is immediately followed by a parameter of type `size_t` that indicates the buffer size.
-* An output buffer has the type `uint8_t *` and is immediately followed by a parameter of type `size_t` that indicates the buffer size. A third parameter of type `size_t *` is provided to report the actual length of the data written in the buffer if the function succeeds.
-* An in-out buffer has the type `uint8_t *` and is immediately followed by a parameter of type `size_t` that indicates the buffer size. In-out buffers are only used when the input and the output have the same length.
+* An input buffer has the type `const uint8_t *` and is immediately followed by a parameter of type `mbedtls_size_t` that indicates the buffer size.
+* An output buffer has the type `uint8_t *` and is immediately followed by a parameter of type `mbedtls_size_t` that indicates the buffer size. A third parameter of type `mbedtls_size_t *` is provided to report the actual length of the data written in the buffer if the function succeeds.
+* An in-out buffer has the type `uint8_t *` and is immediately followed by a parameter of type `mbedtls_size_t` that indicates the buffer size. In-out buffers are only used when the input and the output have the same length.
 
 Buffers of size 0 may be represented with either a null pointer or a non-null pointer.
 
@@ -269,11 +269,11 @@ psa_status_t acme_hash_setup(acme_hash_operation_t *operation,
                              psa_algorithm_t alg);
 psa_status_t acme_hash_update(acme_hash_operation_t *operation,
                               const uint8_t *input,
-                              size_t input_length);
+                              mbedtls_size_t input_length);
 psa_status_t acme_hash_finish(acme_hash_operation_t *operation,
                               uint8_t *hash,
-                              size_t hash_size,
-                              size_t *hash_length);
+                              mbedtls_size_t hash_size,
+                              mbedtls_size_t *hash_length);
 psa_status_t acme_hash_abort(acme_hash_operation_t *operation);
 ```
 
@@ -330,15 +330,15 @@ The entry points that create or format key data have the following prototypes fo
 ```
 psa_status_t acme_import_key(const psa_key_attributes_t *attributes,
                              const uint8_t *data,
-                             size_t data_length,
+                             mbedtls_size_t data_length,
                              uint8_t *key_buffer,
-                             size_t key_buffer_size,
-                             size_t *key_buffer_length,
-                             size_t *bits); // additional parameter, see below
+                             mbedtls_size_t key_buffer_size,
+                             mbedtls_size_t *key_buffer_length,
+                             mbedtls_size_t *bits); // additional parameter, see below
 psa_status_t acme_generate_key(const psa_key_attributes_t *attributes,
                                uint8_t *key_buffer,
-                               size_t key_buffer_size,
-                               size_t *key_buffer_length);
+                               mbedtls_size_t key_buffer_size,
+                               mbedtls_size_t *key_buffer_length);
 ```
 
 TODO: derivation, copy
@@ -388,9 +388,9 @@ A driver can declare an entropy source by providing a `"get_entropy"` entry poin
 
 ```
 psa_status_t acme_get_entropy(uint32_t flags,
-                              size_t *estimate_bits,
+                              mbedtls_size_t *estimate_bits,
                               uint8_t *output,
-                              size_t output_size);
+                              mbedtls_size_t output_size);
 ```
 
 The semantics of the parameters is as follows:
@@ -464,11 +464,11 @@ As discussed in [the general section about key management entry points](#driver-
 ```
 psa_status_t acme_import_key(const psa_key_attributes_t *attributes,
                              const uint8_t *data,
-                             size_t data_length,
+                             mbedtls_size_t data_length,
                              uint8_t *key_buffer,
-                             size_t key_buffer_size,
-                             size_t *key_buffer_length,
-                             size_t *bits);
+                             mbedtls_size_t key_buffer_size,
+                             mbedtls_size_t *key_buffer_length,
+                             mbedtls_size_t *bits);
 ```
 
 This entry point has several roles:
@@ -519,7 +519,7 @@ The `"add_entropy"` entry point has the following prototype for a driver with th
 ```
 psa_status_t acme_add_entropy(acme_random_context_t *context,
                               const uint8_t *entropy,
-                              size_t entropy_size);
+                              mbedtls_size_t entropy_size);
 ```
 
 The semantics of the parameters is as follows:
@@ -563,8 +563,8 @@ The `"get_random"` entry point has the following prototype for a driver with the
 ```
 psa_status_t acme_get_random(acme_random_context_t *context,
                              uint8_t *output,
-                             size_t output_size,
-                             size_t *output_length);
+                             mbedtls_size_t output_size,
+                             mbedtls_size_t *output_length);
 ```
 
 The semantics of the parameters is as follows:
@@ -626,7 +626,7 @@ size_function(key_type, key_bits)
 ```
 where `size_function` is the function named in the `"size_function"` property, `key_type` is the key type and `key_bits` is the key size in bits. The prototype of the size function is
 ```
-size_t size_function(psa_key_type_t key_type, size_t key_bits);
+mbedtls_size_t size_function(psa_key_type_t key_type, mbedtls_size_t key_bits);
 ```
 
 #### Size of a statically allocated key context
@@ -700,10 +700,10 @@ These functions have the following prototypes for a driver with the prefix `"acm
 ```
 psa_status_t acme_allocate_key(const psa_key_attributes_t *attributes,
                                uint8_t *key_buffer,
-                               size_t key_buffer_size);
+                               mbedtls_size_t key_buffer_size);
 psa_status_t acme_destroy_key(const psa_key_attributes_t *attributes,
                               const uint8_t *key_buffer,
-                              size_t key_buffer_size);
+                              mbedtls_size_t key_buffer_size);
 ```
 
 When creating a persistent key with an opaque driver which has an `"allocate_key"` entry point:
@@ -739,15 +739,15 @@ The key creation entry points have the following prototypes for a driver with th
 ```
 psa_status_t acme_import_key(const psa_key_attributes_t *attributes,
                              const uint8_t *data,
-                             size_t data_length,
+                             mbedtls_size_t data_length,
                              uint8_t *key_buffer,
-                             size_t key_buffer_size,
-                             size_t *key_buffer_length,
-                             size_t *bits);
+                             mbedtls_size_t key_buffer_size,
+                             mbedtls_size_t *key_buffer_length,
+                             mbedtls_size_t *bits);
 psa_status_t acme_generate_key(const psa_key_attributes_t *attributes,
                                uint8_t *key_buffer,
-                               size_t key_buffer_size,
-                               size_t *key_buffer_length);
+                               mbedtls_size_t key_buffer_size,
+                               mbedtls_size_t *key_buffer_length);
 ```
 
 If the driver has an [`"allocate_key"` entry point](#key-management-in-a-secure-element-with-storage), the core calls the `"allocate_key"` entry point with the same attributes on the same key buffer before calling the key creation entry point.
@@ -761,16 +761,16 @@ The key export entry points have the following prototypes for a driver with the 
 ```
 psa_status_t acme_export_key(const psa_key_attributes_t *attributes,
                              const uint8_t *key_buffer,
-                             size_t key_buffer_size,
+                             mbedtls_size_t key_buffer_size,
                              uint8_t *data,
-                             size_t data_size,
-                             size_t *data_length);
+                             mbedtls_size_t data_size,
+                             mbedtls_size_t *data_length);
 psa_status_t acme_export_public_key(const psa_key_attributes_t *attributes,
                                     const uint8_t *key_buffer,
-                                    size_t key_buffer_size,
+                                    mbedtls_size_t key_buffer_size,
                                     uint8_t *data,
-                                    size_t data_size,
-                                    size_t *data_length);
+                                    mbedtls_size_t data_size,
+                                    mbedtls_size_t *data_length);
 ```
 
 The core will only call `acme_export_public_key` on a private key. Drivers implementers may choose to store the public key in the key context buffer or to recalculate it on demand. If the key context includes the public key, it needs to have an adequate size; see [“Key format for opaque drivers”](#key-format-for-opaque-drivers).
@@ -790,7 +790,7 @@ The core loads the persistent state in memory before it calls the driver's [init
 The core provides the following callback functions, which an opaque driver may call while it is processing a call from the driver:
 ```
 psa_status_t psa_crypto_driver_get_persistent_state(uint_8_t **persistent_state_ptr);
-psa_status_t psa_crypto_driver_commit_persistent_state(size_t from, size_t length);
+psa_status_t psa_crypto_driver_commit_persistent_state(mbedtls_size_t from, mbedtls_size_t length);
 ```
 
 `psa_crypto_driver_get_persistent_state` sets `*persistent_state_ptr` to a pointer to the first byte of the persistent state. This pointer remains valid during a call to a driver entry point. Once the entry point returns, the pointer is no longer valid. The core guarantees that calls to `psa_crypto_driver_get_persistent_state` within the same entry point return the same address for the persistent state, but this address may change between calls to an entry point.
@@ -811,8 +811,8 @@ A built-in key is identified by its location and its **slot number**. Drivers th
 psa_status_t acme_get_builtin_key(psa_drv_slot_number_t slot_number,
                                   psa_key_attributes_t *attributes,
                                   uint8_t *key_buffer,
-                                  size_t key_buffer_size,
-                                  size_t *key_buffer_length);
+                                  mbedtls_size_t key_buffer_size,
+                                  mbedtls_size_t *key_buffer_length);
 ```
 
 If this function returns `PSA_SUCCESS` or `PSA_ERROR_BUFFER_TOO_SMALL`, it must fill `attributes` with the attributes of the key (except for the key identifier). On success, this function must also fill `key_buffer` with the key context.

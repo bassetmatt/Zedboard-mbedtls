@@ -94,7 +94,7 @@ static psa_status_t psa_its_read_file( psa_storage_uid_t uid,
 {
     char filename[PSA_ITS_STORAGE_FILENAME_LENGTH];
     psa_its_file_header_t header;
-    size_t n;
+    mbedtls_size_t n;
 
     *p_stream = NULL;
     psa_its_fill_filename( uid, filename );
@@ -135,11 +135,11 @@ psa_status_t psa_its_get( psa_storage_uid_t uid,
                           uint32_t data_offset,
                           uint32_t data_length,
                           void *p_data,
-                          size_t *p_data_length )
+                          mbedtls_size_t *p_data_length )
 {
     psa_status_t status;
     FILE *stream = NULL;
-    size_t n;
+    mbedtls_size_t n;
     struct psa_storage_info_t info;
 
     status = psa_its_read_file( uid, &info, &stream );
@@ -193,7 +193,7 @@ psa_status_t psa_its_set( psa_storage_uid_t uid,
     char filename[PSA_ITS_STORAGE_FILENAME_LENGTH];
     FILE *stream = NULL;
     psa_its_file_header_t header;
-    size_t n;
+    mbedtls_size_t n;
 
     memcpy( header.magic, PSA_ITS_MAGIC_STRING, PSA_ITS_MAGIC_LENGTH );
     MBEDTLS_PUT_UINT32_LE( data_length, header.size, 0 );

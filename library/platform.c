@@ -34,7 +34,7 @@
        defined(MBEDTLS_PLATFORM_FREE_MACRO) )
 
 #if !defined(MBEDTLS_PLATFORM_STD_CALLOC)
-static void *platform_calloc_uninit( size_t n, size_t size )
+static void *platform_calloc_uninit( mbedtls_size_t n, mbedtls_size_t size )
 {
     ((void) n);
     ((void) size);
@@ -53,10 +53,10 @@ static void platform_free_uninit( void *ptr )
 #define MBEDTLS_PLATFORM_STD_FREE     platform_free_uninit
 #endif /* !MBEDTLS_PLATFORM_STD_FREE */
 
-static void * (*mbedtls_calloc_func)( size_t, size_t ) = MBEDTLS_PLATFORM_STD_CALLOC;
+static void * (*mbedtls_calloc_func)( mbedtls_size_t, mbedtls_size_t ) = MBEDTLS_PLATFORM_STD_CALLOC;
 static void (*mbedtls_free_func)( void * ) = MBEDTLS_PLATFORM_STD_FREE;
 
-void * mbedtls_calloc( size_t nmemb, size_t size )
+void * mbedtls_calloc( mbedtls_size_t nmemb, mbedtls_size_t size )
 {
     return (*mbedtls_calloc_func)( nmemb, size );
 }
@@ -66,7 +66,7 @@ void mbedtls_free( void * ptr )
     (*mbedtls_free_func)( ptr );
 }
 
-int mbedtls_platform_set_calloc_free( void * (*calloc_func)( size_t, size_t ),
+int mbedtls_platform_set_calloc_free( void * (*calloc_func)( mbedtls_size_t, mbedtls_size_t ),
                               void (*free_func)( void * ) )
 {
     mbedtls_calloc_func = calloc_func;
@@ -79,7 +79,7 @@ int mbedtls_platform_set_calloc_free( void * (*calloc_func)( size_t, size_t ),
 
 #if defined(MBEDTLS_PLATFORM_HAS_NON_CONFORMING_SNPRINTF)
 #include <stdarg.h>
-int mbedtls_platform_win32_snprintf( char *s, size_t n, const char *fmt, ... )
+int mbedtls_platform_win32_snprintf( char *s, mbedtls_size_t n, const char *fmt, ... )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     va_list argp;
@@ -97,7 +97,7 @@ int mbedtls_platform_win32_snprintf( char *s, size_t n, const char *fmt, ... )
 /*
  * Make dummy function to prevent NULL pointer dereferences
  */
-static int platform_snprintf_uninit( char * s, size_t n,
+static int platform_snprintf_uninit( char * s, mbedtls_size_t n,
                                      const char * format, ... )
 {
     ((void) s);
@@ -109,11 +109,11 @@ static int platform_snprintf_uninit( char * s, size_t n,
 #define MBEDTLS_PLATFORM_STD_SNPRINTF    platform_snprintf_uninit
 #endif /* !MBEDTLS_PLATFORM_STD_SNPRINTF */
 
-int (*mbedtls_snprintf)( char * s, size_t n,
+int (*mbedtls_snprintf)( char * s, mbedtls_size_t n,
                           const char * format,
                           ... ) = MBEDTLS_PLATFORM_STD_SNPRINTF;
 
-int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, size_t n,
+int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, mbedtls_size_t n,
                                                  const char * format,
                                                  ... ) )
 {
@@ -124,7 +124,7 @@ int mbedtls_platform_set_snprintf( int (*snprintf_func)( char * s, size_t n,
 
 #if defined(MBEDTLS_PLATFORM_HAS_NON_CONFORMING_VSNPRINTF)
 #include <stdarg.h>
-int mbedtls_platform_win32_vsnprintf( char *s, size_t n, const char *fmt, va_list arg )
+int mbedtls_platform_win32_vsnprintf( char *s, mbedtls_size_t n, const char *fmt, va_list arg )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -136,7 +136,7 @@ int mbedtls_platform_win32_vsnprintf( char *s, size_t n, const char *fmt, va_lis
     ret = vsnprintf_s( s, n, _TRUNCATE, fmt, arg );
 #else
     ret = vsnprintf( s, n, fmt, arg );
-    if( ret < 0 || (size_t) ret == n )
+    if( ret < 0 || (mbedtls_size_t) ret == n )
     {
         s[n-1] = '\0';
         ret = -1;
@@ -152,7 +152,7 @@ int mbedtls_platform_win32_vsnprintf( char *s, size_t n, const char *fmt, va_lis
 /*
  * Make dummy function to prevent NULL pointer dereferences
  */
-static int platform_vsnprintf_uninit( char * s, size_t n,
+static int platform_vsnprintf_uninit( char * s, mbedtls_size_t n,
                                      const char * format, va_list arg )
 {
     ((void) s);
@@ -165,11 +165,11 @@ static int platform_vsnprintf_uninit( char * s, size_t n,
 #define MBEDTLS_PLATFORM_STD_VSNPRINTF    platform_vsnprintf_uninit
 #endif /* !MBEDTLS_PLATFORM_STD_VSNPRINTF */
 
-int (*mbedtls_vsnprintf)( char * s, size_t n,
+int (*mbedtls_vsnprintf)( char * s, mbedtls_size_t n,
                           const char * format,
                           va_list arg ) = MBEDTLS_PLATFORM_STD_VSNPRINTF;
 
-int mbedtls_platform_set_vsnprintf( int (*vsnprintf_func)( char * s, size_t n,
+int mbedtls_platform_set_vsnprintf( int (*vsnprintf_func)( char * s, mbedtls_size_t n,
                                                  const char * format,
                                                  va_list arg ) )
 {
@@ -280,10 +280,10 @@ int mbedtls_platform_set_time( mbedtls_time_t (*time_func)( mbedtls_time_t* time
 /* Default implementations for the platform independent seed functions use
  * standard libc file functions to read from and write to a pre-defined filename
  */
-int mbedtls_platform_std_nv_seed_read( unsigned char *buf, size_t buf_len )
+int mbedtls_platform_std_nv_seed_read( unsigned char *buf, mbedtls_size_t buf_len )
 {
     FILE *file;
-    size_t n;
+    mbedtls_size_t n;
 
     if( ( file = fopen( MBEDTLS_PLATFORM_STD_NV_SEED_FILE, "rb" ) ) == NULL )
         return( -1 );
@@ -299,10 +299,10 @@ int mbedtls_platform_std_nv_seed_read( unsigned char *buf, size_t buf_len )
     return( (int)n );
 }
 
-int mbedtls_platform_std_nv_seed_write( unsigned char *buf, size_t buf_len )
+int mbedtls_platform_std_nv_seed_write( unsigned char *buf, mbedtls_size_t buf_len )
 {
     FILE *file;
-    size_t n;
+    mbedtls_size_t n;
 
     if( ( file = fopen( MBEDTLS_PLATFORM_STD_NV_SEED_FILE, "w" ) ) == NULL )
         return -1;
@@ -323,7 +323,7 @@ int mbedtls_platform_std_nv_seed_write( unsigned char *buf, size_t buf_len )
 /*
  * Make dummy function to prevent NULL pointer dereferences
  */
-static int platform_nv_seed_read_uninit( unsigned char *buf, size_t buf_len )
+static int platform_nv_seed_read_uninit( unsigned char *buf, mbedtls_size_t buf_len )
 {
     ((void) buf);
     ((void) buf_len);
@@ -337,7 +337,7 @@ static int platform_nv_seed_read_uninit( unsigned char *buf, size_t buf_len )
 /*
  * Make dummy function to prevent NULL pointer dereferences
  */
-static int platform_nv_seed_write_uninit( unsigned char *buf, size_t buf_len )
+static int platform_nv_seed_write_uninit( unsigned char *buf, mbedtls_size_t buf_len )
 {
     ((void) buf);
     ((void) buf_len);
@@ -347,14 +347,14 @@ static int platform_nv_seed_write_uninit( unsigned char *buf, size_t buf_len )
 #define MBEDTLS_PLATFORM_STD_NV_SEED_WRITE   platform_nv_seed_write_uninit
 #endif /* !MBEDTLS_PLATFORM_STD_NV_SEED_WRITE */
 
-int (*mbedtls_nv_seed_read)( unsigned char *buf, size_t buf_len ) =
+int (*mbedtls_nv_seed_read)( unsigned char *buf, mbedtls_size_t buf_len ) =
             MBEDTLS_PLATFORM_STD_NV_SEED_READ;
-int (*mbedtls_nv_seed_write)( unsigned char *buf, size_t buf_len ) =
+int (*mbedtls_nv_seed_write)( unsigned char *buf, mbedtls_size_t buf_len ) =
             MBEDTLS_PLATFORM_STD_NV_SEED_WRITE;
 
 int mbedtls_platform_set_nv_seed(
-        int (*nv_seed_read_func)( unsigned char *buf, size_t buf_len ),
-        int (*nv_seed_write_func)( unsigned char *buf, size_t buf_len ) )
+        int (*nv_seed_read_func)( unsigned char *buf, mbedtls_size_t buf_len ),
+        int (*nv_seed_write_func)( unsigned char *buf, mbedtls_size_t buf_len ) )
 {
     mbedtls_nv_seed_read = nv_seed_read_func;
     mbedtls_nv_seed_write = nv_seed_write_func;

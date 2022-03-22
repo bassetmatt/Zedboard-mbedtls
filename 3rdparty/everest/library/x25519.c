@@ -56,9 +56,9 @@ void mbedtls_x25519_free( mbedtls_x25519_context *ctx )
     mbedtls_platform_zeroize( ctx->peer_point, MBEDTLS_X25519_KEY_SIZE_BYTES );
 }
 
-int mbedtls_x25519_make_params( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_make_params( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng )
 {
     int ret = 0;
@@ -104,7 +104,7 @@ int mbedtls_x25519_read_params( mbedtls_x25519_context *ctx,
 int mbedtls_x25519_get_params( mbedtls_x25519_context *ctx, const mbedtls_ecp_keypair *key,
                                mbedtls_x25519_ecdh_side side )
 {
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
 
     switch( side ) {
     case MBEDTLS_X25519_ECDH_THEIRS:
@@ -116,9 +116,9 @@ int mbedtls_x25519_get_params( mbedtls_x25519_context *ctx, const mbedtls_ecp_ke
     }
 }
 
-int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng )
 {
     /* f_rng and p_rng are not used here because this implementation does not
@@ -142,9 +142,9 @@ int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, size_t *olen,
     return( 0 );
 }
 
-int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng )
 {
     int ret = 0;
@@ -172,7 +172,7 @@ int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, size_t *olen,
 }
 
 int mbedtls_x25519_read_public( mbedtls_x25519_context *ctx,
-                        const unsigned char *buf, size_t blen )
+                        const unsigned char *buf, mbedtls_size_t blen )
 {
     if( blen < MBEDTLS_X25519_KEY_SIZE_BYTES + 1 )
         return(MBEDTLS_ERR_ECP_BUFFER_TOO_SMALL);

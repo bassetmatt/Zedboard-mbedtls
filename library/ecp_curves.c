@@ -4511,7 +4511,7 @@ static const mbedtls_ecp_point brainpoolP512r1_T[32] = {
  * Create an MPI from embedded constants
  * (assumes len is an exact multiple of sizeof mbedtls_mpi_uint)
  */
-static inline void ecp_mpi_load( mbedtls_mpi *X, const mbedtls_mpi_uint *p, size_t len )
+static inline void ecp_mpi_load( mbedtls_mpi *X, const mbedtls_mpi_uint *p, mbedtls_size_t len )
 {
     X->s = 1;
     X->n = len / sizeof( mbedtls_mpi_uint );
@@ -4532,12 +4532,12 @@ static inline void ecp_mpi_set1( mbedtls_mpi *X )
  * Make group available from embedded constants
  */
 static int ecp_group_load( mbedtls_ecp_group *grp,
-                           const mbedtls_mpi_uint *p,  size_t plen,
-                           const mbedtls_mpi_uint *a,  size_t alen,
-                           const mbedtls_mpi_uint *b,  size_t blen,
-                           const mbedtls_mpi_uint *gx, size_t gxlen,
-                           const mbedtls_mpi_uint *gy, size_t gylen,
-                           const mbedtls_mpi_uint *n,  size_t nlen,
+                           const mbedtls_mpi_uint *p,  mbedtls_size_t plen,
+                           const mbedtls_mpi_uint *a,  mbedtls_size_t alen,
+                           const mbedtls_mpi_uint *b,  mbedtls_size_t blen,
+                           const mbedtls_mpi_uint *gx, mbedtls_size_t gxlen,
+                           const mbedtls_mpi_uint *gy, mbedtls_size_t gylen,
+                           const mbedtls_mpi_uint *n,  mbedtls_size_t nlen,
                            const mbedtls_ecp_point *T)
 {
     ecp_mpi_load( &grp->P, p, plen );
@@ -4976,7 +4976,7 @@ static inline void sub32( uint32_t *dst, uint32_t src, signed char *carry )
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;                    \
     signed char c = 0, cc;                                              \
     uint32_t cur;                                                       \
-    size_t i = 0, bits = (b);                                           \
+    mbedtls_size_t i = 0, bits = (b);                                           \
     /* N is the size of the product of two b-bit numbers, plus one */   \
     /* limb for fix_negative */                                         \
     MBEDTLS_MPI_CHK( mbedtls_mpi_grow( N, ( b ) * 2 / biL + 1 ) );      \
@@ -5001,9 +5001,9 @@ static inline void sub32( uint32_t *dst, uint32_t src, signed char *carry )
  * c * 2^bits + N, with c negative and N positive shorter than 'bits'
  */
 MBEDTLS_STATIC_TESTABLE
-void mbedtls_ecp_fix_negative( mbedtls_mpi *N, signed char c, size_t bits )
+void mbedtls_ecp_fix_negative( mbedtls_mpi *N, signed char c, mbedtls_size_t bits )
 {
-    size_t i;
+    mbedtls_size_t i;
 
     /* Set N := 2^bits - 1 - N. We know that 0 <= N < 2^bits, so
      * set the absolute value to 0xfff...fff - N. There is no carry
@@ -5169,7 +5169,7 @@ cleanup:
 static int ecp_mod_p521( mbedtls_mpi *N )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_mpi M;
     mbedtls_mpi_uint Mp[P521_WIDTH + 1];
     /* Worst case for the size of M is when mbedtls_mpi_uint is 16 bits:
@@ -5218,7 +5218,7 @@ cleanup:
 static int ecp_mod_p255( mbedtls_mpi *N )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_mpi M;
     mbedtls_mpi_uint Mp[P255_WIDTH + 2];
 
@@ -5275,7 +5275,7 @@ cleanup:
 static int ecp_mod_p448( mbedtls_mpi *N )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_mpi M, Q;
     mbedtls_mpi_uint Mp[P448_WIDTH + 1], Qp[P448_WIDTH];
 
@@ -5333,11 +5333,11 @@ cleanup:
  */
 #define P_KOBLITZ_MAX   ( 256 / 8 / sizeof( mbedtls_mpi_uint ) )  // Max limbs in P
 #define P_KOBLITZ_R     ( 8 / sizeof( mbedtls_mpi_uint ) )        // Limbs in R
-static inline int ecp_mod_koblitz( mbedtls_mpi *N, mbedtls_mpi_uint *Rp, size_t p_limbs,
-                                   size_t adjust, size_t shift, mbedtls_mpi_uint mask )
+static inline int ecp_mod_koblitz( mbedtls_mpi *N, mbedtls_mpi_uint *Rp, mbedtls_size_t p_limbs,
+                                   mbedtls_size_t adjust, mbedtls_size_t shift, mbedtls_mpi_uint mask )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_mpi M, R;
     mbedtls_mpi_uint Mp[P_KOBLITZ_MAX + P_KOBLITZ_R + 1];
 

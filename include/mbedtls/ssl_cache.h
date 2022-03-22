@@ -66,10 +66,10 @@ struct mbedtls_ssl_cache_entry
 #endif
 
     unsigned char MBEDTLS_PRIVATE(session_id)[32];       /*!< session ID         */
-    size_t MBEDTLS_PRIVATE(session_id_len);
+    mbedtls_size_t MBEDTLS_PRIVATE(session_id_len);
 
     unsigned char *MBEDTLS_PRIVATE(session);             /*!< serialized session */
-    size_t MBEDTLS_PRIVATE(session_len);
+    mbedtls_size_t MBEDTLS_PRIVATE(session_len);
 
     mbedtls_ssl_cache_entry *MBEDTLS_PRIVATE(next);      /*!< chain pointer      */
 };
@@ -107,7 +107,7 @@ void mbedtls_ssl_cache_init( mbedtls_ssl_cache_context *cache );
  */
 int mbedtls_ssl_cache_get( void *data,
                            unsigned char const *session_id,
-                           size_t session_id_len,
+                           mbedtls_size_t session_id_len,
                            mbedtls_ssl_session *session );
 
 /**
@@ -122,7 +122,7 @@ int mbedtls_ssl_cache_get( void *data,
  */
 int mbedtls_ssl_cache_set( void *data,
                            unsigned char const *session_id,
-                           size_t session_id_len,
+                           mbedtls_size_t session_id_len,
                            const mbedtls_ssl_session *session );
 
 #if defined(MBEDTLS_HAVE_TIME)

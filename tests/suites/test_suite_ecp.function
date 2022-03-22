@@ -29,7 +29,7 @@ void ecp_invalid_param( )
     mbedtls_ecp_group grp;
     mbedtls_ecp_point P;
     int invalid_fmt = 42;
-    size_t olen;
+    mbedtls_size_t olen;
     unsigned char buf[42] = { 0 };
 
     TEST_EQUAL( MBEDTLS_ERR_ECP_BAD_INPUT_DATA,
@@ -463,7 +463,7 @@ void ecp_muladd( int id,
     mbedtls_ecp_point P1, P2, R;
     mbedtls_mpi u1, u2;
     uint8_t actual_result[MBEDTLS_ECP_MAX_PT_LEN];
-    size_t len;
+    mbedtls_size_t len;
 
     mbedtls_ecp_group_init( &grp );
     mbedtls_ecp_point_init( &P1 );
@@ -539,7 +539,7 @@ void ecp_write_binary( int id, char * x, char * y, char * z, int format,
     mbedtls_ecp_group grp;
     mbedtls_ecp_point P;
     unsigned char buf[256];
-    size_t olen;
+    mbedtls_size_t olen;
 
     memset( buf, 0, sizeof( buf ) );
 
@@ -650,7 +650,7 @@ void ecp_tls_write_read_point( int id )
     mbedtls_ecp_point pt;
     unsigned char buf[256];
     const unsigned char *vbuf;
-    size_t olen;
+    mbedtls_size_t olen;
 
     mbedtls_ecp_group_init( &grp );
     mbedtls_ecp_point_init( &pt );
@@ -710,7 +710,7 @@ void mbedtls_ecp_tls_read_group( data_t * buf, int result, int bits,
     TEST_ASSERT( ret == result );
     if( ret == 0)
     {
-        TEST_ASSERT( mbedtls_mpi_bitlen( &grp.P ) == (size_t) bits );
+        TEST_ASSERT( mbedtls_mpi_bitlen( &grp.P ) == (mbedtls_size_t) bits );
         TEST_ASSERT( vbuf - buf->x ==  record_len);
     }
 
@@ -725,7 +725,7 @@ void ecp_tls_write_read_group( int id )
     mbedtls_ecp_group grp1, grp2;
     unsigned char buf[10];
     const unsigned char *vbuf = buf;
-    size_t len;
+    mbedtls_size_t len;
     int ret;
 
     mbedtls_ecp_group_init( &grp1 );
@@ -960,7 +960,7 @@ void genkey_mx_known_answer( int bits, data_t *seed, data_t *expected )
     else
     {
         TEST_EQUAL( ret, 0 );
-        TEST_EQUAL( (size_t) bits + 1, mbedtls_mpi_bitlen( &d ) );
+        TEST_EQUAL( (mbedtls_size_t) bits + 1, mbedtls_mpi_bitlen( &d ) );
         TEST_EQUAL( 0, mbedtls_mpi_write_binary( &d, actual, expected->len ) );
         /* Test the exact result. This assumes that the output of the
          * RNG is used in a specific way, which is overly constraining.

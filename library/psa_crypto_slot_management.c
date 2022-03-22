@@ -103,7 +103,7 @@ static psa_status_t psa_get_and_lock_key_slot_in_memory(
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_id_t key_id = MBEDTLS_SVC_KEY_ID_GET_KEY_ID( key );
-    size_t slot_idx;
+    mbedtls_size_t slot_idx;
     psa_key_slot_t *slot = NULL;
 
     if( psa_key_id_is_volatile( key_id ) )
@@ -157,7 +157,7 @@ psa_status_t psa_initialize_key_slots( void )
 
 void psa_wipe_all_key_slots( void )
 {
-    size_t slot_idx;
+    mbedtls_size_t slot_idx;
 
     for( slot_idx = 0; slot_idx < MBEDTLS_PSA_KEY_SLOT_COUNT; slot_idx++ )
     {
@@ -172,7 +172,7 @@ psa_status_t psa_get_empty_key_slot( psa_key_id_t *volatile_key_id,
                                      psa_key_slot_t **p_slot )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    size_t slot_idx;
+    mbedtls_size_t slot_idx;
     psa_key_slot_t *selected_slot, *unlocked_persistent_key_slot;
 
     if( ! global_data.key_slots_initialized )
@@ -238,7 +238,7 @@ static psa_status_t psa_load_persistent_key_into_slot( psa_key_slot_t *slot )
 {
     psa_status_t status = PSA_SUCCESS;
     uint8_t *key_data = NULL;
-    size_t key_data_length = 0;
+    mbedtls_size_t key_data_length = 0;
 
     status = psa_load_persistent_key( &slot->attr,
                                       &key_data, &key_data_length );
@@ -282,8 +282,8 @@ static psa_status_t psa_load_builtin_key_into_slot( psa_key_slot_t *slot )
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_lifetime_t lifetime = PSA_KEY_LIFETIME_VOLATILE;
     psa_drv_slot_number_t slot_number = 0;
-    size_t key_buffer_size = 0;
-    size_t key_buffer_length = 0;
+    mbedtls_size_t key_buffer_size = 0;
+    mbedtls_size_t key_buffer_length = 0;
 
     if( ! psa_key_id_is_builtin(
             MBEDTLS_SVC_KEY_ID_GET_KEY_ID( slot->attr.id ) ) )
@@ -545,7 +545,7 @@ psa_status_t psa_purge_key( mbedtls_svc_key_id_t key )
 
 void mbedtls_psa_get_stats( mbedtls_psa_stats_t *stats )
 {
-    size_t slot_idx;
+    mbedtls_size_t slot_idx;
 
     memset( stats, 0, sizeof( *stats ) );
 

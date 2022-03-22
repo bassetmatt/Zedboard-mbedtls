@@ -236,7 +236,7 @@ static void get_options( int argc, char *argv[] )
         {
             uint8_t *delay_cnt;
             char **delay_list;
-            size_t len;
+            mbedtls_size_t len;
             char *buf;
 
             if( strcmp( p, "delay_cli" ) == 0 )
@@ -330,7 +330,7 @@ static void get_options( int argc, char *argv[] )
     }
 }
 
-static const char *msg_type( unsigned char *msg, size_t len )
+static const char *msg_type( unsigned char *msg, mbedtls_size_t len )
 {
     if( len < 1 )                           return( "Invalid" );
     switch( msg[0] )
@@ -397,7 +397,7 @@ typedef struct
     unsigned num_datagrams;
 
     unsigned char data[MAX_MSG_SIZE];
-    size_t len;
+    mbedtls_size_t len;
 
 } ctx_buffer;
 
@@ -435,11 +435,11 @@ static unsigned ctx_buffer_time_remaining( ctx_buffer *buf )
 
 static int ctx_buffer_append( ctx_buffer *buf,
                               const unsigned char * data,
-                              size_t len )
+                              mbedtls_size_t len )
 {
     int ret;
 
-    if( len > (size_t) INT_MAX )
+    if( len > (mbedtls_size_t) INT_MAX )
         return( -1 );
 
     if( len > sizeof( buf->data ) )
@@ -470,7 +470,7 @@ static int ctx_buffer_append( ctx_buffer *buf,
 
 static int dispatch_data( mbedtls_net_context *ctx,
                           const unsigned char * data,
-                          size_t len )
+                          mbedtls_size_t len )
 {
     int ret;
 #if defined(MBEDTLS_TIMING_C)
@@ -648,7 +648,7 @@ int send_packet( const packet *p, const char *why )
 }
 
 #define MAX_DELAYED_MSG 5
-static size_t prev_len;
+static mbedtls_size_t prev_len;
 static packet prev[MAX_DELAYED_MSG];
 
 void clear_pending( void )
@@ -703,7 +703,7 @@ int handle_message( const char *way,
 {
     int ret;
     packet cur;
-    size_t id;
+    mbedtls_size_t id;
 
     uint8_t delay_idx;
     char ** delay_list;
@@ -763,7 +763,7 @@ int handle_message( const char *way,
           strcmp( cur.type, "ApplicationData" ) != 0 &&
           ! ( opt.protect_hvr &&
               strcmp( cur.type, "HelloVerifyRequest" ) == 0 ) &&
-          cur.len != (size_t) opt.protect_len &&
+          cur.len != (mbedtls_size_t) opt.protect_len &&
           held[id] < HOLD_MAX &&
           rand() % opt.drop == 0 ) )
     {
@@ -776,7 +776,7 @@ int handle_message( const char *way,
                strcmp( cur.type, "ApplicationData" ) != 0 &&
                ! ( opt.protect_hvr &&
                    strcmp( cur.type, "HelloVerifyRequest" ) == 0 ) &&
-               cur.len != (size_t) opt.protect_len &&
+               cur.len != (mbedtls_size_t) opt.protect_len &&
                held[id] < HOLD_MAX &&
                rand() % opt.delay == 0 ) )
     {

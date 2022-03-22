@@ -327,7 +327,7 @@ static void psa_set_key_type(psa_key_attributes_t *attributes,
  *                              not supported.
  */
 static void psa_set_key_bits(psa_key_attributes_t *attributes,
-                             size_t bits);
+                             mbedtls_size_t bits);
 
 /** Retrieve the key type from key attributes.
  *
@@ -351,7 +351,7 @@ static psa_key_type_t psa_get_key_type(const psa_key_attributes_t *attributes);
  *
  * \return The key size stored in the attribute structure, in bits.
  */
-static size_t psa_get_key_bits(const psa_key_attributes_t *attributes);
+static mbedtls_size_t psa_get_key_bits(const psa_key_attributes_t *attributes);
 
 /** Retrieve the attributes of a key.
  *
@@ -646,7 +646,7 @@ psa_status_t psa_destroy_key(mbedtls_svc_key_id_t key);
  */
 psa_status_t psa_import_key(const psa_key_attributes_t *attributes,
                             const uint8_t *data,
-                            size_t data_length,
+                            mbedtls_size_t data_length,
                             mbedtls_svc_key_id_t *key);
 
 
@@ -741,8 +741,8 @@ psa_status_t psa_import_key(const psa_key_attributes_t *attributes,
  */
 psa_status_t psa_export_key(mbedtls_svc_key_id_t key,
                             uint8_t *data,
-                            size_t data_size,
-                            size_t *data_length);
+                            mbedtls_size_t data_size,
+                            mbedtls_size_t *data_length);
 
 /**
  * \brief Export a public key or the public part of a key pair in binary format.
@@ -816,8 +816,8 @@ psa_status_t psa_export_key(mbedtls_svc_key_id_t key,
  */
 psa_status_t psa_export_public_key(mbedtls_svc_key_id_t key,
                                    uint8_t *data,
-                                   size_t data_size,
-                                   size_t *data_length);
+                                   mbedtls_size_t data_size,
+                                   mbedtls_size_t *data_length);
 
 
 
@@ -860,10 +860,10 @@ psa_status_t psa_export_public_key(mbedtls_svc_key_id_t key,
  */
 psa_status_t psa_hash_compute(psa_algorithm_t alg,
                               const uint8_t *input,
-                              size_t input_length,
+                              mbedtls_size_t input_length,
                               uint8_t *hash,
-                              size_t hash_size,
-                              size_t *hash_length);
+                              mbedtls_size_t hash_size,
+                              mbedtls_size_t *hash_length);
 
 /** Calculate the hash (digest) of a message and compare it with a
  * reference value.
@@ -895,9 +895,9 @@ psa_status_t psa_hash_compute(psa_algorithm_t alg,
  */
 psa_status_t psa_hash_compare(psa_algorithm_t alg,
                               const uint8_t *input,
-                              size_t input_length,
+                              mbedtls_size_t input_length,
                               const uint8_t *hash,
-                              size_t hash_length);
+                              mbedtls_size_t hash_length);
 
 /** The type of the state data structure for multipart hash operations.
  *
@@ -1015,7 +1015,7 @@ psa_status_t psa_hash_setup(psa_hash_operation_t *operation,
  */
 psa_status_t psa_hash_update(psa_hash_operation_t *operation,
                              const uint8_t *input,
-                             size_t input_length);
+                             mbedtls_size_t input_length);
 
 /** Finish the calculation of the hash of a message.
  *
@@ -1061,8 +1061,8 @@ psa_status_t psa_hash_update(psa_hash_operation_t *operation,
  */
 psa_status_t psa_hash_finish(psa_hash_operation_t *operation,
                              uint8_t *hash,
-                             size_t hash_size,
-                             size_t *hash_length);
+                             mbedtls_size_t hash_size,
+                             mbedtls_size_t *hash_length);
 
 /** Finish the calculation of the hash of a message and compare it with
  * an expected value.
@@ -1102,7 +1102,7 @@ psa_status_t psa_hash_finish(psa_hash_operation_t *operation,
  */
 psa_status_t psa_hash_verify(psa_hash_operation_t *operation,
                              const uint8_t *hash,
-                             size_t hash_length);
+                             mbedtls_size_t hash_length);
 
 /** Abort a hash operation.
  *
@@ -1212,10 +1212,10 @@ psa_status_t psa_hash_clone(const psa_hash_operation_t *source_operation,
 psa_status_t psa_mac_compute(mbedtls_svc_key_id_t key,
                              psa_algorithm_t alg,
                              const uint8_t *input,
-                             size_t input_length,
+                             mbedtls_size_t input_length,
                              uint8_t *mac,
-                             size_t mac_size,
-                             size_t *mac_length);
+                             mbedtls_size_t mac_size,
+                             mbedtls_size_t *mac_length);
 
 /** Calculate the MAC of a message and compare it with a reference value.
  *
@@ -1253,9 +1253,9 @@ psa_status_t psa_mac_compute(mbedtls_svc_key_id_t key,
 psa_status_t psa_mac_verify(mbedtls_svc_key_id_t key,
                             psa_algorithm_t alg,
                             const uint8_t *input,
-                            size_t input_length,
+                            mbedtls_size_t input_length,
                             const uint8_t *mac,
-                            size_t mac_length);
+                            mbedtls_size_t mac_length);
 
 /** The type of the state data structure for multipart MAC operations.
  *
@@ -1450,7 +1450,7 @@ psa_status_t psa_mac_verify_setup(psa_mac_operation_t *operation,
  */
 psa_status_t psa_mac_update(psa_mac_operation_t *operation,
                             const uint8_t *input,
-                            size_t input_length);
+                            mbedtls_size_t input_length);
 
 /** Finish the calculation of the MAC of a message.
  *
@@ -1499,8 +1499,8 @@ psa_status_t psa_mac_update(psa_mac_operation_t *operation,
  */
 psa_status_t psa_mac_sign_finish(psa_mac_operation_t *operation,
                                  uint8_t *mac,
-                                 size_t mac_size,
-                                 size_t *mac_length);
+                                 mbedtls_size_t mac_size,
+                                 mbedtls_size_t *mac_length);
 
 /** Finish the calculation of the MAC of a message and compare it with
  * an expected value.
@@ -1542,7 +1542,7 @@ psa_status_t psa_mac_sign_finish(psa_mac_operation_t *operation,
  */
 psa_status_t psa_mac_verify_finish(psa_mac_operation_t *operation,
                                    const uint8_t *mac,
-                                   size_t mac_length);
+                                   mbedtls_size_t mac_length);
 
 /** Abort a MAC operation.
  *
@@ -1619,10 +1619,10 @@ psa_status_t psa_mac_abort(psa_mac_operation_t *operation);
 psa_status_t psa_cipher_encrypt(mbedtls_svc_key_id_t key,
                                 psa_algorithm_t alg,
                                 const uint8_t *input,
-                                size_t input_length,
+                                mbedtls_size_t input_length,
                                 uint8_t *output,
-                                size_t output_size,
-                                size_t *output_length);
+                                mbedtls_size_t output_size,
+                                mbedtls_size_t *output_length);
 
 /** Decrypt a message using a symmetric cipher.
  *
@@ -1666,10 +1666,10 @@ psa_status_t psa_cipher_encrypt(mbedtls_svc_key_id_t key,
 psa_status_t psa_cipher_decrypt(mbedtls_svc_key_id_t key,
                                 psa_algorithm_t alg,
                                 const uint8_t *input,
-                                size_t input_length,
+                                mbedtls_size_t input_length,
                                 uint8_t *output,
-                                size_t output_size,
-                                size_t *output_length);
+                                mbedtls_size_t output_size,
+                                mbedtls_size_t *output_length);
 
 /** The type of the state data structure for multipart cipher operations.
  *
@@ -1873,8 +1873,8 @@ psa_status_t psa_cipher_decrypt_setup(psa_cipher_operation_t *operation,
  */
 psa_status_t psa_cipher_generate_iv(psa_cipher_operation_t *operation,
                                     uint8_t *iv,
-                                    size_t iv_size,
-                                    size_t *iv_length);
+                                    mbedtls_size_t iv_size,
+                                    mbedtls_size_t *iv_length);
 
 /** Set the IV for a symmetric encryption or decryption operation.
  *
@@ -1914,7 +1914,7 @@ psa_status_t psa_cipher_generate_iv(psa_cipher_operation_t *operation,
  */
 psa_status_t psa_cipher_set_iv(psa_cipher_operation_t *operation,
                                const uint8_t *iv,
-                               size_t iv_length);
+                               mbedtls_size_t iv_length);
 
 /** Encrypt or decrypt a message fragment in an active cipher operation.
  *
@@ -1955,10 +1955,10 @@ psa_status_t psa_cipher_set_iv(psa_cipher_operation_t *operation,
  */
 psa_status_t psa_cipher_update(psa_cipher_operation_t *operation,
                                const uint8_t *input,
-                               size_t input_length,
+                               mbedtls_size_t input_length,
                                uint8_t *output,
-                               size_t output_size,
-                               size_t *output_length);
+                               mbedtls_size_t output_size,
+                               mbedtls_size_t *output_length);
 
 /** Finish encrypting or decrypting a message in a cipher operation.
  *
@@ -2007,8 +2007,8 @@ psa_status_t psa_cipher_update(psa_cipher_operation_t *operation,
  */
 psa_status_t psa_cipher_finish(psa_cipher_operation_t *operation,
                                uint8_t *output,
-                               size_t output_size,
-                               size_t *output_length);
+                               mbedtls_size_t output_size,
+                               mbedtls_size_t *output_length);
 
 /** Abort a cipher operation.
  *
@@ -2107,14 +2107,14 @@ psa_status_t psa_cipher_abort(psa_cipher_operation_t *operation);
 psa_status_t psa_aead_encrypt(mbedtls_svc_key_id_t key,
                               psa_algorithm_t alg,
                               const uint8_t *nonce,
-                              size_t nonce_length,
+                              mbedtls_size_t nonce_length,
                               const uint8_t *additional_data,
-                              size_t additional_data_length,
+                              mbedtls_size_t additional_data_length,
                               const uint8_t *plaintext,
-                              size_t plaintext_length,
+                              mbedtls_size_t plaintext_length,
                               uint8_t *ciphertext,
-                              size_t ciphertext_size,
-                              size_t *ciphertext_length);
+                              mbedtls_size_t ciphertext_size,
+                              mbedtls_size_t *ciphertext_length);
 
 /** Process an authenticated decryption operation.
  *
@@ -2180,14 +2180,14 @@ psa_status_t psa_aead_encrypt(mbedtls_svc_key_id_t key,
 psa_status_t psa_aead_decrypt(mbedtls_svc_key_id_t key,
                               psa_algorithm_t alg,
                               const uint8_t *nonce,
-                              size_t nonce_length,
+                              mbedtls_size_t nonce_length,
                               const uint8_t *additional_data,
-                              size_t additional_data_length,
+                              mbedtls_size_t additional_data_length,
                               const uint8_t *ciphertext,
-                              size_t ciphertext_length,
+                              mbedtls_size_t ciphertext_length,
                               uint8_t *plaintext,
-                              size_t plaintext_size,
-                              size_t *plaintext_length);
+                              mbedtls_size_t plaintext_size,
+                              mbedtls_size_t *plaintext_length);
 
 /** The type of the state data structure for multipart AEAD operations.
  *
@@ -2402,8 +2402,8 @@ psa_status_t psa_aead_decrypt_setup(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_generate_nonce(psa_aead_operation_t *operation,
                                      uint8_t *nonce,
-                                     size_t nonce_size,
-                                     size_t *nonce_length);
+                                     mbedtls_size_t nonce_size,
+                                     mbedtls_size_t *nonce_length);
 
 /** Set the nonce for an authenticated encryption or decryption operation.
  *
@@ -2442,7 +2442,7 @@ psa_status_t psa_aead_generate_nonce(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_set_nonce(psa_aead_operation_t *operation,
                                 const uint8_t *nonce,
-                                size_t nonce_length);
+                                mbedtls_size_t nonce_length);
 
 /** Declare the lengths of the message and additional data for AEAD.
  *
@@ -2486,8 +2486,8 @@ psa_status_t psa_aead_set_nonce(psa_aead_operation_t *operation,
  *         results in this error code.
  */
 psa_status_t psa_aead_set_lengths(psa_aead_operation_t *operation,
-                                  size_t ad_length,
-                                  size_t plaintext_length);
+                                  mbedtls_size_t ad_length,
+                                  mbedtls_size_t plaintext_length);
 
 /** Pass additional data to an active AEAD operation.
  *
@@ -2535,7 +2535,7 @@ psa_status_t psa_aead_set_lengths(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_update_ad(psa_aead_operation_t *operation,
                                 const uint8_t *input,
-                                size_t input_length);
+                                mbedtls_size_t input_length);
 
 /** Encrypt or decrypt a message fragment in an active AEAD operation.
  *
@@ -2619,10 +2619,10 @@ psa_status_t psa_aead_update_ad(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_update(psa_aead_operation_t *operation,
                              const uint8_t *input,
-                             size_t input_length,
+                             mbedtls_size_t input_length,
                              uint8_t *output,
-                             size_t output_size,
-                             size_t *output_length);
+                             mbedtls_size_t output_size,
+                             mbedtls_size_t *output_length);
 
 /** Finish encrypting a message in an AEAD operation.
  *
@@ -2705,11 +2705,11 @@ psa_status_t psa_aead_update(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_finish(psa_aead_operation_t *operation,
                              uint8_t *ciphertext,
-                             size_t ciphertext_size,
-                             size_t *ciphertext_length,
+                             mbedtls_size_t ciphertext_size,
+                             mbedtls_size_t *ciphertext_length,
                              uint8_t *tag,
-                             size_t tag_size,
-                             size_t *tag_length);
+                             mbedtls_size_t tag_size,
+                             mbedtls_size_t *tag_length);
 
 /** Finish authenticating and decrypting a message in an AEAD operation.
  *
@@ -2788,10 +2788,10 @@ psa_status_t psa_aead_finish(psa_aead_operation_t *operation,
  */
 psa_status_t psa_aead_verify(psa_aead_operation_t *operation,
                              uint8_t *plaintext,
-                             size_t plaintext_size,
-                             size_t *plaintext_length,
+                             mbedtls_size_t plaintext_size,
+                             mbedtls_size_t *plaintext_length,
                              const uint8_t *tag,
-                             size_t tag_length);
+                             mbedtls_size_t tag_length);
 
 /** Abort an AEAD operation.
  *
@@ -2887,10 +2887,10 @@ psa_status_t psa_aead_abort(psa_aead_operation_t *operation);
 psa_status_t psa_sign_message( mbedtls_svc_key_id_t key,
                                psa_algorithm_t alg,
                                const uint8_t * input,
-                               size_t input_length,
+                               mbedtls_size_t input_length,
                                uint8_t * signature,
-                               size_t signature_size,
-                               size_t * signature_length );
+                               mbedtls_size_t signature_size,
+                               mbedtls_size_t * signature_length );
 
 /** \brief Verify the signature of a message with a public key, using
  *         a hash-and-sign verification algorithm.
@@ -2939,9 +2939,9 @@ psa_status_t psa_sign_message( mbedtls_svc_key_id_t key,
 psa_status_t psa_verify_message( mbedtls_svc_key_id_t key,
                                  psa_algorithm_t alg,
                                  const uint8_t * input,
-                                 size_t input_length,
+                                 mbedtls_size_t input_length,
                                  const uint8_t * signature,
-                                 size_t signature_length );
+                                 mbedtls_size_t signature_length );
 
 /**
  * \brief Sign a hash or short message with a private key.
@@ -2992,10 +2992,10 @@ psa_status_t psa_verify_message( mbedtls_svc_key_id_t key,
 psa_status_t psa_sign_hash(mbedtls_svc_key_id_t key,
                            psa_algorithm_t alg,
                            const uint8_t *hash,
-                           size_t hash_length,
+                           mbedtls_size_t hash_length,
                            uint8_t *signature,
-                           size_t signature_size,
-                           size_t *signature_length);
+                           mbedtls_size_t signature_size,
+                           mbedtls_size_t *signature_length);
 
 /**
  * \brief Verify the signature of a hash or short message using a public key.
@@ -3043,9 +3043,9 @@ psa_status_t psa_sign_hash(mbedtls_svc_key_id_t key,
 psa_status_t psa_verify_hash(mbedtls_svc_key_id_t key,
                              psa_algorithm_t alg,
                              const uint8_t *hash,
-                             size_t hash_length,
+                             mbedtls_size_t hash_length,
                              const uint8_t *signature,
-                             size_t signature_length);
+                             mbedtls_size_t signature_length);
 
 /**
  * \brief Encrypt a short message with a public key.
@@ -3101,12 +3101,12 @@ psa_status_t psa_verify_hash(mbedtls_svc_key_id_t key,
 psa_status_t psa_asymmetric_encrypt(mbedtls_svc_key_id_t key,
                                     psa_algorithm_t alg,
                                     const uint8_t *input,
-                                    size_t input_length,
+                                    mbedtls_size_t input_length,
                                     const uint8_t *salt,
-                                    size_t salt_length,
+                                    mbedtls_size_t salt_length,
                                     uint8_t *output,
-                                    size_t output_size,
-                                    size_t *output_length);
+                                    mbedtls_size_t output_size,
+                                    mbedtls_size_t *output_length);
 
 /**
  * \brief Decrypt a short message with a private key.
@@ -3162,12 +3162,12 @@ psa_status_t psa_asymmetric_encrypt(mbedtls_svc_key_id_t key,
 psa_status_t psa_asymmetric_decrypt(mbedtls_svc_key_id_t key,
                                     psa_algorithm_t alg,
                                     const uint8_t *input,
-                                    size_t input_length,
+                                    mbedtls_size_t input_length,
                                     const uint8_t *salt,
-                                    size_t salt_length,
+                                    mbedtls_size_t salt_length,
                                     uint8_t *output,
-                                    size_t output_size,
-                                    size_t *output_length);
+                                    mbedtls_size_t output_size,
+                                    mbedtls_size_t *output_length);
 
 /**@}*/
 
@@ -3299,7 +3299,7 @@ psa_status_t psa_key_derivation_setup(
  */
 psa_status_t psa_key_derivation_get_capacity(
     const psa_key_derivation_operation_t *operation,
-    size_t *capacity);
+    mbedtls_size_t *capacity);
 
 /** Set the maximum capacity of a key derivation operation.
  *
@@ -3327,7 +3327,7 @@ psa_status_t psa_key_derivation_get_capacity(
  */
 psa_status_t psa_key_derivation_set_capacity(
     psa_key_derivation_operation_t *operation,
-    size_t capacity);
+    mbedtls_size_t capacity);
 
 /** Use the maximum possible capacity for a key derivation operation.
  *
@@ -3336,7 +3336,7 @@ psa_status_t psa_key_derivation_set_capacity(
  * The value of the maximum possible capacity depends on the key derivation
  * algorithm.
  */
-#define PSA_KEY_DERIVATION_UNLIMITED_CAPACITY ((size_t)(-1))
+#define PSA_KEY_DERIVATION_UNLIMITED_CAPACITY ((mbedtls_size_t)(-1))
 
 /** Provide an input for key derivation or key agreement.
  *
@@ -3382,7 +3382,7 @@ psa_status_t psa_key_derivation_input_bytes(
     psa_key_derivation_operation_t *operation,
     psa_key_derivation_step_t step,
     const uint8_t *data,
-    size_t data_length);
+    mbedtls_size_t data_length);
 
 /** Provide a numeric input for key derivation or key agreement.
  *
@@ -3561,7 +3561,7 @@ psa_status_t psa_key_derivation_key_agreement(
     psa_key_derivation_step_t step,
     mbedtls_svc_key_id_t private_key,
     const uint8_t *peer_key,
-    size_t peer_key_length);
+    mbedtls_size_t peer_key_length);
 
 /** Read some data from a key derivation operation.
  *
@@ -3606,7 +3606,7 @@ psa_status_t psa_key_derivation_key_agreement(
 psa_status_t psa_key_derivation_output_bytes(
     psa_key_derivation_operation_t *operation,
     uint8_t *output,
-    size_t output_length);
+    mbedtls_size_t output_length);
 
 /** Derive a key from an ongoing key derivation operation.
  *
@@ -3814,7 +3814,7 @@ psa_status_t psa_key_derivation_output_key(
 psa_status_t psa_key_derivation_verify_bytes(
     psa_key_derivation_operation_t *operation,
     const uint8_t *expected_output,
-    size_t output_length);
+    mbedtls_size_t output_length);
 
 /** Compare output data from a key derivation operation to an expected value
  * stored in a key object.
@@ -3958,10 +3958,10 @@ psa_status_t psa_key_derivation_abort(
 psa_status_t psa_raw_key_agreement(psa_algorithm_t alg,
                                    mbedtls_svc_key_id_t private_key,
                                    const uint8_t *peer_key,
-                                   size_t peer_key_length,
+                                   mbedtls_size_t peer_key_length,
                                    uint8_t *output,
-                                   size_t output_size,
-                                   size_t *output_length);
+                                   mbedtls_size_t output_size,
+                                   mbedtls_size_t *output_length);
 
 /**@}*/
 
@@ -3994,7 +3994,7 @@ psa_status_t psa_raw_key_agreement(psa_algorithm_t alg,
  *         results in this error code.
  */
 psa_status_t psa_generate_random(uint8_t *output,
-                                 size_t output_size);
+                                 mbedtls_size_t output_size);
 
 /**
  * \brief Generate a key or key pair.

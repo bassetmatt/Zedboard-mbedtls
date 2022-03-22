@@ -34,7 +34,7 @@
 const mbedtls_cipher_info_t *mbedtls_cipher_info_from_psa(
     psa_algorithm_t alg,
     psa_key_type_t key_type,
-    size_t key_bits,
+    mbedtls_size_t key_bits,
     mbedtls_cipher_id_t* cipher_id )
 {
     mbedtls_cipher_mode_t mode;
@@ -131,12 +131,12 @@ const mbedtls_cipher_info_t *mbedtls_cipher_info_from_psa(
 static psa_status_t psa_cipher_setup(
     mbedtls_psa_cipher_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     mbedtls_operation_t cipher_operation )
 {
     int ret = 0;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     const mbedtls_cipher_info_t *cipher_info = NULL;
     psa_key_type_t key_type = attributes->core.type;
 
@@ -208,7 +208,7 @@ exit:
 psa_status_t mbedtls_psa_cipher_encrypt_setup(
     mbedtls_psa_cipher_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg )
 {
     return( psa_cipher_setup( operation, attributes,
@@ -219,7 +219,7 @@ psa_status_t mbedtls_psa_cipher_encrypt_setup(
 psa_status_t mbedtls_psa_cipher_decrypt_setup(
     mbedtls_psa_cipher_operation_t *operation,
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg )
 {
     return( psa_cipher_setup( operation, attributes,
@@ -229,7 +229,7 @@ psa_status_t mbedtls_psa_cipher_decrypt_setup(
 
 psa_status_t mbedtls_psa_cipher_set_iv(
     mbedtls_psa_cipher_operation_t *operation,
-    const uint8_t *iv, size_t iv_length )
+    const uint8_t *iv, mbedtls_size_t iv_length )
 {
     if( iv_length != operation->iv_length )
         return( PSA_ERROR_INVALID_ARGUMENT );
@@ -265,13 +265,13 @@ psa_status_t mbedtls_psa_cipher_set_iv(
 static psa_status_t psa_cipher_update_ecb(
     mbedtls_cipher_context_t *ctx,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *output,
-    size_t *output_length )
+    mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    size_t block_size = ctx->cipher_info->block_size;
-    size_t internal_output_length = 0;
+    mbedtls_size_t block_size = ctx->cipher_info->block_size;
+    mbedtls_size_t internal_output_length = 0;
     *output_length = 0;
 
     if( input_length == 0 )
@@ -283,7 +283,7 @@ static psa_status_t psa_cipher_update_ecb(
     if( ctx->unprocessed_len > 0 )
     {
         /* Fill up to block size, and run the block if there's a full one. */
-        size_t bytes_to_copy = block_size - ctx->unprocessed_len;
+        mbedtls_size_t bytes_to_copy = block_size - ctx->unprocessed_len;
 
         if( input_length < bytes_to_copy )
             bytes_to_copy = input_length;
@@ -345,11 +345,11 @@ exit:
 
 psa_status_t mbedtls_psa_cipher_update(
     mbedtls_psa_cipher_operation_t *operation,
-    const uint8_t *input, size_t input_length,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    const uint8_t *input, mbedtls_size_t input_length,
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    size_t expected_output_size;
+    mbedtls_size_t expected_output_size;
 
     if( ! PSA_ALG_IS_STREAM_CIPHER( operation->alg ) )
     {
@@ -395,7 +395,7 @@ psa_status_t mbedtls_psa_cipher_update(
 
 psa_status_t mbedtls_psa_cipher_finish(
     mbedtls_psa_cipher_operation_t *operation,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
     uint8_t temp_output_buffer[MBEDTLS_MAX_BLOCK_LENGTH];
@@ -447,19 +447,19 @@ psa_status_t mbedtls_psa_cipher_abort(
 psa_status_t mbedtls_psa_cipher_encrypt(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *iv,
-    size_t iv_length,
+    mbedtls_size_t iv_length,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *output,
-    size_t output_size,
-    size_t *output_length )
+    mbedtls_size_t output_size,
+    mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_psa_cipher_operation_t operation = MBEDTLS_PSA_CIPHER_OPERATION_INIT;
-    size_t update_output_length, finish_output_length;
+    mbedtls_size_t update_output_length, finish_output_length;
 
     status = mbedtls_psa_cipher_encrypt_setup( &operation, attributes,
                                                key_buffer, key_buffer_size,
@@ -501,17 +501,17 @@ exit:
 psa_status_t mbedtls_psa_cipher_decrypt(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *output,
-    size_t output_size,
-    size_t *output_length )
+    mbedtls_size_t output_size,
+    mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_psa_cipher_operation_t operation = MBEDTLS_PSA_CIPHER_OPERATION_INIT;
-    size_t olength, accumulated_length;
+    mbedtls_size_t olength, accumulated_length;
 
     status = mbedtls_psa_cipher_decrypt_setup( &operation, attributes,
                                                key_buffer, key_buffer_size,

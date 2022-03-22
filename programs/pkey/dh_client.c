@@ -73,7 +73,7 @@ int main( void )
 
     int ret = 1;
     int exit_code = MBEDTLS_EXIT_FAILURE;
-    size_t n, buflen;
+    mbedtls_size_t n, buflen;
     mbedtls_net_context server_fd;
 
     unsigned char *p, *end;
@@ -204,7 +204,7 @@ int main( void )
 
     p += 2;
 
-    if( ( n = (size_t) ( end - p ) ) != rsa.MBEDTLS_PRIVATE(len) )
+    if( ( n = (mbedtls_size_t) ( end - p ) ) != rsa.MBEDTLS_PRIVATE(len) )
     {
         mbedtls_printf( " failed\n  ! Invalid RSA signature size\n\n" );
         goto exit;

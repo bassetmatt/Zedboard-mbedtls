@@ -91,10 +91,10 @@ const unsigned char msg2_part2[] = { 0x15, 0x16, 0x17 };
 const unsigned char key_bytes[32] = { 0x2a };
 
 /* Print the contents of a buffer in hex */
-void print_buf( const char *title, unsigned char *buf, size_t len )
+void print_buf( const char *title, unsigned char *buf, mbedtls_size_t len )
 {
     printf( "%s:", title );
-    for( size_t i = 0; i < len; i++ )
+    for( mbedtls_size_t i = 0; i < len; i++ )
         printf( " %02x", buf[i] );
     printf( "\n" );
 }
@@ -124,7 +124,7 @@ void print_buf( const char *title, unsigned char *buf, size_t len )
  */
 static int aead_prepare( const char *info,
                            mbedtls_cipher_context_t *ctx,
-                           size_t *tag_len )
+                           mbedtls_size_t *tag_len )
 {
     int ret;
 
@@ -165,7 +165,7 @@ exit:
  * All of this information was present in the command line argument, but his
  * function demonstrates how each piece can be recovered from (ctx, tag_len).
  */
-static void aead_info( const mbedtls_cipher_context_t *ctx, size_t tag_len )
+static void aead_info( const mbedtls_cipher_context_t *ctx, mbedtls_size_t tag_len )
 {
     mbedtls_cipher_type_t type = mbedtls_cipher_get_type( ctx );
     const mbedtls_cipher_info_t *info = mbedtls_cipher_info_from_type( type );
@@ -184,14 +184,14 @@ static void aead_info( const mbedtls_cipher_context_t *ctx, size_t tag_len )
 /*
  * Encrypt a 2-part message.
  */
-static int aead_encrypt( mbedtls_cipher_context_t *ctx, size_t tag_len,
-        const unsigned char *iv, size_t iv_len,
-        const unsigned char *ad, size_t ad_len,
-        const unsigned char *part1, size_t part1_len,
-        const unsigned char *part2, size_t part2_len )
+static int aead_encrypt( mbedtls_cipher_context_t *ctx, mbedtls_size_t tag_len,
+        const unsigned char *iv, mbedtls_size_t iv_len,
+        const unsigned char *ad, mbedtls_size_t ad_len,
+        const unsigned char *part1, mbedtls_size_t part1_len,
+        const unsigned char *part2, mbedtls_size_t part2_len )
 {
     int ret;
-    size_t olen;
+    mbedtls_size_t olen;
 #define MAX_TAG_LENGTH 16
     unsigned char out[MSG_MAX_SIZE + MAX_TAG_LENGTH];
     unsigned char *p = out;
@@ -223,7 +223,7 @@ static int aead_demo( const char *info )
     int ret = 0;
 
     mbedtls_cipher_context_t ctx;
-    size_t tag_len;
+    mbedtls_size_t tag_len;
 
     mbedtls_cipher_init( &ctx );
 

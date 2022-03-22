@@ -75,10 +75,10 @@ static const char *psa_ka_algorithm_name(psa_algorithm_t ka_alg)
     }
 }
 
-static int psa_snprint_key_type(char *buffer, size_t buffer_size,
+static int psa_snprint_key_type(char *buffer, mbedtls_size_t buffer_size,
                                 psa_key_type_t type)
 {
-    size_t required_size = 0;
+    mbedtls_size_t required_size = 0;
     switch (type) {
     %(key_type_cases)s
     default:
@@ -93,10 +93,10 @@ static int psa_snprint_key_type(char *buffer, size_t buffer_size,
 }
 
 #define NO_LENGTH_MODIFIER 0xfffffffflu
-static int psa_snprint_algorithm(char *buffer, size_t buffer_size,
+static int psa_snprint_algorithm(char *buffer, mbedtls_size_t buffer_size,
                                  psa_algorithm_t alg)
 {
-    size_t required_size = 0;
+    mbedtls_size_t required_size = 0;
     psa_algorithm_t core_alg = alg;
     unsigned long length_modifier = NO_LENGTH_MODIFIER;
     if (PSA_ALG_IS_MAC(alg)) {
@@ -155,10 +155,10 @@ static int psa_snprint_algorithm(char *buffer, size_t buffer_size,
     return (int) required_size;
 }
 
-static int psa_snprint_key_usage(char *buffer, size_t buffer_size,
+static int psa_snprint_key_usage(char *buffer, mbedtls_size_t buffer_size,
                                  psa_key_usage_t usage)
 {
-    size_t required_size = 0;
+    mbedtls_size_t required_size = 0;
     if (usage == 0) {
         if (buffer_size > 1) {
             buffer[0] = '0';

@@ -65,7 +65,7 @@
  */
 static int cmac_multiply_by_u( unsigned char *output,
                                const unsigned char *input,
-                               size_t blocksize )
+                               mbedtls_size_t blocksize )
 {
     const unsigned char R_128 = 0x87;
     const unsigned char R_64 = 0x1B;
@@ -121,7 +121,7 @@ static int cmac_generate_subkeys( mbedtls_cipher_context_t *ctx,
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char L[MBEDTLS_CIPHER_BLKSIZE_MAX];
-    size_t olen, block_size;
+    mbedtls_size_t olen, block_size;
 
     mbedtls_platform_zeroize( L, sizeof( L ) );
 
@@ -150,9 +150,9 @@ exit:
 #if !defined(MBEDTLS_CMAC_ALT)
 static void cmac_xor_block( unsigned char *output, const unsigned char *input1,
                             const unsigned char *input2,
-                            const size_t block_size )
+                            const mbedtls_size_t block_size )
 {
-    size_t idx;
+    mbedtls_size_t idx;
 
     for( idx = 0; idx < block_size; idx++ )
         output[ idx ] = input1[ idx ] ^ input2[ idx ];
@@ -165,11 +165,11 @@ static void cmac_xor_block( unsigned char *output, const unsigned char *input1,
  * CBC and we use ECB mode, and anyway we need to XOR K1 or K2 in addition.
  */
 static void cmac_pad( unsigned char padded_block[MBEDTLS_CIPHER_BLKSIZE_MAX],
-                      size_t padded_block_len,
+                      mbedtls_size_t padded_block_len,
                       const unsigned char *last_block,
-                      size_t last_block_len )
+                      mbedtls_size_t last_block_len )
 {
-    size_t j;
+    mbedtls_size_t j;
 
     for( j = 0; j < padded_block_len; j++ )
     {
@@ -183,7 +183,7 @@ static void cmac_pad( unsigned char padded_block[MBEDTLS_CIPHER_BLKSIZE_MAX],
 }
 
 int mbedtls_cipher_cmac_starts( mbedtls_cipher_context_t *ctx,
-                                const unsigned char *key, size_t keybits )
+                                const unsigned char *key, mbedtls_size_t keybits )
 {
     mbedtls_cipher_type_t type;
     mbedtls_cmac_context_t *cmac_ctx;
@@ -223,12 +223,12 @@ int mbedtls_cipher_cmac_starts( mbedtls_cipher_context_t *ctx,
 }
 
 int mbedtls_cipher_cmac_update( mbedtls_cipher_context_t *ctx,
-                                const unsigned char *input, size_t ilen )
+                                const unsigned char *input, mbedtls_size_t ilen )
 {
     mbedtls_cmac_context_t* cmac_ctx;
     unsigned char *state;
     int ret = 0;
-    size_t n, j, olen, block_size;
+    mbedtls_size_t n, j, olen, block_size;
 
     if( ctx == NULL || ctx->cipher_info == NULL || input == NULL ||
         ctx->cmac_ctx == NULL )
@@ -299,7 +299,7 @@ int mbedtls_cipher_cmac_finish( mbedtls_cipher_context_t *ctx,
     unsigned char K2[MBEDTLS_CIPHER_BLKSIZE_MAX];
     unsigned char M_last[MBEDTLS_CIPHER_BLKSIZE_MAX];
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t olen, block_size;
+    mbedtls_size_t olen, block_size;
 
     if( ctx == NULL || ctx->cipher_info == NULL || ctx->cmac_ctx == NULL ||
         output == NULL )
@@ -371,8 +371,8 @@ int mbedtls_cipher_cmac_reset( mbedtls_cipher_context_t *ctx )
 }
 
 int mbedtls_cipher_cmac( const mbedtls_cipher_info_t *cipher_info,
-                         const unsigned char *key, size_t keylen,
-                         const unsigned char *input, size_t ilen,
+                         const unsigned char *key, mbedtls_size_t keylen,
+                         const unsigned char *input, mbedtls_size_t ilen,
                          unsigned char *output )
 {
     mbedtls_cipher_context_t ctx;
@@ -406,8 +406,8 @@ exit:
 /*
  * Implementation of AES-CMAC-PRF-128 defined in RFC 4615
  */
-int mbedtls_aes_cmac_prf_128( const unsigned char *key, size_t key_length,
-                              const unsigned char *input, size_t in_len,
+int mbedtls_aes_cmac_prf_128( const unsigned char *key, mbedtls_size_t key_length,
+                              const unsigned char *input, mbedtls_size_t in_len,
                               unsigned char output[16] )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -712,7 +712,7 @@ static const unsigned char PRFK[] = {
 };
 
 /* Sizes in bytes */
-static const size_t PRFKlen[NB_PRF_TESTS] = {
+static const mbedtls_size_t PRFKlen[NB_PRF_TESTS] = {
     18,
     16,
     10

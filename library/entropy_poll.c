@@ -55,8 +55,8 @@
 #include <windows.h>
 #include <wincrypt.h>
 
-int mbedtls_platform_entropy_poll( void *data, unsigned char *output, size_t len,
-                           size_t *olen )
+int mbedtls_platform_entropy_poll( void *data, unsigned char *output, mbedtls_size_t len,
+                           mbedtls_size_t *olen )
 {
     HCRYPTPROV provider;
     ((void) data);
@@ -93,7 +93,7 @@ int mbedtls_platform_entropy_poll( void *data, unsigned char *output, size_t len
 #define HAVE_GETRANDOM
 #include <errno.h>
 
-static int getrandom_wrapper( void *buf, size_t buflen, unsigned int flags )
+static int getrandom_wrapper( void *buf, mbedtls_size_t buflen, unsigned int flags )
 {
     /* MemSan cannot understand that the syscall writes to the buffer */
 #if defined(__has_feature)
@@ -113,7 +113,7 @@ static int getrandom_wrapper( void *buf, size_t buflen, unsigned int flags )
 #include <errno.h>
 #include <sys/random.h>
 #define HAVE_GETRANDOM
-static int getrandom_wrapper( void *buf, size_t buflen, unsigned int flags )
+static int getrandom_wrapper( void *buf, mbedtls_size_t buflen, unsigned int flags )
 {
     return getrandom( buf, buflen, flags );
 }
@@ -135,10 +135,10 @@ static int getrandom_wrapper( void *buf, size_t buflen, unsigned int flags )
 #if defined(KERN_ARND)
 #define HAVE_SYSCTL_ARND
 
-static int sysctl_arnd_wrapper( unsigned char *buf, size_t buflen )
+static int sysctl_arnd_wrapper( unsigned char *buf, mbedtls_size_t buflen )
 {
     int name[2];
-    size_t len;
+    mbedtls_size_t len;
 
     name[0] = CTL_KERN;
     name[1] = KERN_ARND;
@@ -159,10 +159,10 @@ static int sysctl_arnd_wrapper( unsigned char *buf, size_t buflen )
 #include <stdio.h>
 
 int mbedtls_platform_entropy_poll( void *data,
-                           unsigned char *output, size_t len, size_t *olen )
+                           unsigned char *output, mbedtls_size_t len, mbedtls_size_t *olen )
 {
     FILE *file;
-    size_t read_len;
+    mbedtls_size_t read_len;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     ((void) data);
 
@@ -213,10 +213,10 @@ int mbedtls_platform_entropy_poll( void *data,
 
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
 int mbedtls_nv_seed_poll( void *data,
-                          unsigned char *output, size_t len, size_t *olen )
+                          unsigned char *output, mbedtls_size_t len, mbedtls_size_t *olen )
 {
     unsigned char buf[MBEDTLS_ENTROPY_BLOCK_SIZE];
-    size_t use_len = MBEDTLS_ENTROPY_BLOCK_SIZE;
+    mbedtls_size_t use_len = MBEDTLS_ENTROPY_BLOCK_SIZE;
     ((void) data);
 
     memset( buf, 0, MBEDTLS_ENTROPY_BLOCK_SIZE );

@@ -189,7 +189,7 @@ extern "C" {
 typedef struct mbedtls_mpi
 {
     int MBEDTLS_PRIVATE(s);              /*!<  Sign: -1 if the mpi is negative, 1 otherwise */
-    size_t MBEDTLS_PRIVATE(n);           /*!<  total # of limbs  */
+    mbedtls_size_t MBEDTLS_PRIVATE(n);           /*!<  total # of limbs  */
     mbedtls_mpi_uint *MBEDTLS_PRIVATE(p);          /*!<  pointer to limbs  */
 }
 mbedtls_mpi;
@@ -226,7 +226,7 @@ void mbedtls_mpi_free( mbedtls_mpi *X );
  * \return         #MBEDTLS_ERR_MPI_ALLOC_FAILED if memory allocation failed.
  * \return         Another negative error code on other kinds of failure.
  */
-int mbedtls_mpi_grow( mbedtls_mpi *X, size_t nblimbs );
+int mbedtls_mpi_grow( mbedtls_mpi *X, mbedtls_size_t nblimbs );
 
 /**
  * \brief          This function resizes an MPI downwards, keeping at least the
@@ -243,7 +243,7 @@ int mbedtls_mpi_grow( mbedtls_mpi *X, size_t nblimbs );
  *                 (this can only happen when resizing up).
  * \return         Another negative error code on other kinds of failure.
  */
-int mbedtls_mpi_shrink( mbedtls_mpi *X, size_t nblimbs );
+int mbedtls_mpi_shrink( mbedtls_mpi *X, mbedtls_size_t nblimbs );
 
 /**
  * \brief          Make a copy of an MPI.
@@ -341,7 +341,7 @@ int mbedtls_mpi_lset( mbedtls_mpi *X, mbedtls_mpi_sint z );
  *                 of \c X is unset or set.
  * \return         A negative error code on failure.
  */
-int mbedtls_mpi_get_bit( const mbedtls_mpi *X, size_t pos );
+int mbedtls_mpi_get_bit( const mbedtls_mpi *X, mbedtls_size_t pos );
 
 /**
  * \brief          Modify a specific bit in an MPI.
@@ -358,7 +358,7 @@ int mbedtls_mpi_get_bit( const mbedtls_mpi *X, size_t pos );
  * \return         #MBEDTLS_ERR_MPI_ALLOC_FAILED if memory allocation failed.
  * \return         Another negative error code on other kinds of failure.
  */
-int mbedtls_mpi_set_bit( mbedtls_mpi *X, size_t pos, unsigned char val );
+int mbedtls_mpi_set_bit( mbedtls_mpi *X, mbedtls_size_t pos, unsigned char val );
 
 /**
  * \brief          Return the number of bits of value \c 0 before the
@@ -372,7 +372,7 @@ int mbedtls_mpi_set_bit( mbedtls_mpi *X, size_t pos, unsigned char val );
  * \return         The number of bits of value \c 0 before the least significant
  *                 bit of value \c 1 in \p X.
  */
-size_t mbedtls_mpi_lsb( const mbedtls_mpi *X );
+mbedtls_size_t mbedtls_mpi_lsb( const mbedtls_mpi *X );
 
 /**
  * \brief          Return the number of bits up to and including the most
@@ -386,7 +386,7 @@ size_t mbedtls_mpi_lsb( const mbedtls_mpi *X );
  * \return         The number of bits up to and including the most
  *                 significant bit of value \c 1.
  */
-size_t mbedtls_mpi_bitlen( const mbedtls_mpi *X );
+mbedtls_size_t mbedtls_mpi_bitlen( const mbedtls_mpi *X );
 
 /**
  * \brief          Return the total size of an MPI value in bytes.
@@ -401,7 +401,7 @@ size_t mbedtls_mpi_bitlen( const mbedtls_mpi *X );
  * \return         The least number of bytes capable of storing
  *                 the absolute value of \p X.
  */
-size_t mbedtls_mpi_size( const mbedtls_mpi *X );
+mbedtls_size_t mbedtls_mpi_size( const mbedtls_mpi *X );
 
 /**
  * \brief          Import an MPI from an ASCII string.
@@ -438,7 +438,7 @@ int mbedtls_mpi_read_string( mbedtls_mpi *X, int radix, const char *s );
  * \return         Another negative error code on different kinds of failure.
  */
 int mbedtls_mpi_write_string( const mbedtls_mpi *X, int radix,
-                              char *buf, size_t buflen, size_t *olen );
+                              char *buf, mbedtls_size_t buflen, mbedtls_size_t *olen );
 
 #if defined(MBEDTLS_FS_IO)
 /**
@@ -496,7 +496,7 @@ int mbedtls_mpi_write_file( const char *p, const mbedtls_mpi *X,
  * \return         Another negative error code on different kinds of failure.
  */
 int mbedtls_mpi_read_binary( mbedtls_mpi *X, const unsigned char *buf,
-                             size_t buflen );
+                             mbedtls_size_t buflen );
 
 /**
  * \brief          Import X from unsigned binary data, little endian
@@ -511,7 +511,7 @@ int mbedtls_mpi_read_binary( mbedtls_mpi *X, const unsigned char *buf,
  * \return         Another negative error code on different kinds of failure.
  */
 int mbedtls_mpi_read_binary_le( mbedtls_mpi *X,
-                                const unsigned char *buf, size_t buflen );
+                                const unsigned char *buf, mbedtls_size_t buflen );
 
 /**
  * \brief          Export X into unsigned binary data, big endian.
@@ -529,7 +529,7 @@ int mbedtls_mpi_read_binary_le( mbedtls_mpi *X,
  * \return         Another negative error code on different kinds of failure.
  */
 int mbedtls_mpi_write_binary( const mbedtls_mpi *X, unsigned char *buf,
-                              size_t buflen );
+                              mbedtls_size_t buflen );
 
 /**
  * \brief          Export X into unsigned binary data, little endian.
@@ -547,7 +547,7 @@ int mbedtls_mpi_write_binary( const mbedtls_mpi *X, unsigned char *buf,
  * \return         Another negative error code on different kinds of failure.
  */
 int mbedtls_mpi_write_binary_le( const mbedtls_mpi *X,
-                                 unsigned char *buf, size_t buflen );
+                                 unsigned char *buf, mbedtls_size_t buflen );
 
 /**
  * \brief          Perform a left-shift on an MPI: X <<= count
@@ -559,7 +559,7 @@ int mbedtls_mpi_write_binary_le( const mbedtls_mpi *X,
  * \return         #MBEDTLS_ERR_MPI_ALLOC_FAILED if a memory allocation failed.
  * \return         Another negative error code on different kinds of failure.
  */
-int mbedtls_mpi_shift_l( mbedtls_mpi *X, size_t count );
+int mbedtls_mpi_shift_l( mbedtls_mpi *X, mbedtls_size_t count );
 
 /**
  * \brief          Perform a right-shift on an MPI: X >>= count
@@ -571,7 +571,7 @@ int mbedtls_mpi_shift_l( mbedtls_mpi *X, size_t count );
  * \return         #MBEDTLS_ERR_MPI_ALLOC_FAILED if a memory allocation failed.
  * \return         Another negative error code on different kinds of failure.
  */
-int mbedtls_mpi_shift_r( mbedtls_mpi *X, size_t count );
+int mbedtls_mpi_shift_r( mbedtls_mpi *X, mbedtls_size_t count );
 
 /**
  * \brief          Compare the absolute values of two MPIs.
@@ -872,8 +872,8 @@ int mbedtls_mpi_exp_mod( mbedtls_mpi *X, const mbedtls_mpi *A,
  *                 as a big-endian representation of an MPI; this can
  *                 be relevant in applications like deterministic ECDSA.
  */
-int mbedtls_mpi_fill_random( mbedtls_mpi *X, size_t size,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+int mbedtls_mpi_fill_random( mbedtls_mpi *X, mbedtls_size_t size,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng );
 
 /** Generate a random number uniformly in a range.
@@ -911,7 +911,7 @@ int mbedtls_mpi_fill_random( mbedtls_mpi *X, size_t size,
 int mbedtls_mpi_random( mbedtls_mpi *X,
                         mbedtls_mpi_sint min,
                         const mbedtls_mpi *N,
-                        int (*f_rng)(void *, unsigned char *, size_t),
+                        int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng );
 
 /**
@@ -975,7 +975,7 @@ int mbedtls_mpi_inv_mod( mbedtls_mpi *X, const mbedtls_mpi *A,
  * \return         Another negative error code on other kinds of failure.
  */
 int mbedtls_mpi_is_prime_ext( const mbedtls_mpi *X, int rounds,
-                              int (*f_rng)(void *, unsigned char *, size_t),
+                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                               void *p_rng );
 /**
  * \brief Flags for mbedtls_mpi_gen_prime()
@@ -1007,8 +1007,8 @@ typedef enum {
  * \return         #MBEDTLS_ERR_MPI_BAD_INPUT_DATA if `nbits` is not between
  *                 \c 3 and #MBEDTLS_MPI_MAX_BITS.
  */
-int mbedtls_mpi_gen_prime( mbedtls_mpi *X, size_t nbits, int flags,
-                   int (*f_rng)(void *, unsigned char *, size_t),
+int mbedtls_mpi_gen_prime( mbedtls_mpi *X, mbedtls_size_t nbits, int flags,
+                   int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                    void *p_rng );
 
 #if defined(MBEDTLS_SELF_TEST)

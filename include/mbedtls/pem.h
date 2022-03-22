@@ -69,7 +69,7 @@ extern "C" {
 typedef struct mbedtls_pem_context
 {
     unsigned char *MBEDTLS_PRIVATE(buf);     /*!< buffer for decoded data             */
-    size_t MBEDTLS_PRIVATE(buflen);          /*!< length of the buffer                */
+    mbedtls_size_t MBEDTLS_PRIVATE(buflen);          /*!< length of the buffer                */
     unsigned char *MBEDTLS_PRIVATE(info);    /*!< buffer for extra header information */
 }
 mbedtls_pem_context;
@@ -110,7 +110,7 @@ void mbedtls_pem_init( mbedtls_pem_context *ctx );
 int mbedtls_pem_read_buffer( mbedtls_pem_context *ctx, const char *header, const char *footer,
                      const unsigned char *data,
                      const unsigned char *pwd,
-                     size_t pwdlen, size_t *use_len );
+                     mbedtls_size_t pwdlen, mbedtls_size_t *use_len );
 
 /**
  * \brief       Get the pointer to the decoded binary data in a PEM context.
@@ -124,7 +124,7 @@ int mbedtls_pem_read_buffer( mbedtls_pem_context *ctx, const char *header, const
  * \note            The returned pointer remains valid only until \p ctx is
                     modified or freed.
  */
-static inline const unsigned char *mbedtls_pem_get_buffer( mbedtls_pem_context *ctx, size_t *buflen )
+static inline const unsigned char *mbedtls_pem_get_buffer( mbedtls_pem_context *ctx, mbedtls_size_t *buflen )
 {
     *buflen = ctx->MBEDTLS_PRIVATE(buflen);
     return( ctx->MBEDTLS_PRIVATE(buf) );
@@ -167,8 +167,8 @@ void mbedtls_pem_free( mbedtls_pem_context *ctx );
  * \return          Another PEM or BASE64 error code on other kinds of failure.
  */
 int mbedtls_pem_write_buffer( const char *header, const char *footer,
-                      const unsigned char *der_data, size_t der_len,
-                      unsigned char *buf, size_t buf_len, size_t *olen );
+                      const unsigned char *der_data, mbedtls_size_t der_len,
+                      unsigned char *buf, mbedtls_size_t buf_len, mbedtls_size_t *olen );
 #endif /* MBEDTLS_PEM_WRITE_C */
 
 #ifdef __cplusplus

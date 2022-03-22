@@ -210,7 +210,7 @@ int mbedtls_chachapoly_starts( mbedtls_chachapoly_context *ctx,
  */
 int mbedtls_chachapoly_update_aad( mbedtls_chachapoly_context *ctx,
                                    const unsigned char *aad,
-                                   size_t aad_len );
+                                   mbedtls_size_t aad_len );
 
 /**
  * \brief           Thus function feeds data to be encrypted or decrypted
@@ -244,7 +244,7 @@ int mbedtls_chachapoly_update_aad( mbedtls_chachapoly_context *ctx,
  * \return          Another negative error code on other kinds of failure.
  */
 int mbedtls_chachapoly_update( mbedtls_chachapoly_context *ctx,
-                               size_t len,
+                               mbedtls_size_t len,
                                const unsigned char *input,
                                unsigned char *output );
 
@@ -297,10 +297,10 @@ int mbedtls_chachapoly_finish( mbedtls_chachapoly_context *ctx,
  * \return          A negative error code on failure.
  */
 int mbedtls_chachapoly_encrypt_and_tag( mbedtls_chachapoly_context *ctx,
-                                        size_t length,
+                                        mbedtls_size_t length,
                                         const unsigned char nonce[12],
                                         const unsigned char *aad,
-                                        size_t aad_len,
+                                        mbedtls_size_t aad_len,
                                         const unsigned char *input,
                                         unsigned char *output,
                                         unsigned char tag[16] );
@@ -331,10 +331,10 @@ int mbedtls_chachapoly_encrypt_and_tag( mbedtls_chachapoly_context *ctx,
  * \return          Another negative error code on other kinds of failure.
  */
 int mbedtls_chachapoly_auth_decrypt( mbedtls_chachapoly_context *ctx,
-                                     size_t length,
+                                     mbedtls_size_t length,
                                      const unsigned char nonce[12],
                                      const unsigned char *aad,
-                                     size_t aad_len,
+                                     mbedtls_size_t aad_len,
                                      const unsigned char tag[16],
                                      const unsigned char *input,
                                      unsigned char *output );

@@ -46,7 +46,7 @@ void mbedtls_mps_reader_no_pausing_single_step_single_round( int with_acc )
     unsigned char *tmp;
     int paused;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -89,9 +89,9 @@ void mbedtls_mps_reader_no_pausing_single_step_multiple_rounds( int with_acc )
     unsigned char acc[10];
     unsigned char *tmp;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -144,7 +144,7 @@ void mbedtls_mps_reader_no_pausing_multiple_steps_single_round( int with_acc )
     unsigned char *tmp;
     mbedtls_mps_size_t tmp_len;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -179,9 +179,9 @@ void mbedtls_mps_reader_no_pausing_multiple_steps_multiple_rounds( int with_acc 
     unsigned char *tmp;
     mbedtls_mps_size_t tmp_len;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -224,7 +224,7 @@ void mbedtls_mps_reader_pausing_needed_disabled()
     unsigned char buf[100];
     unsigned char *tmp;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -264,7 +264,7 @@ void mbedtls_mps_reader_pausing_needed_buffer_too_small()
     mbedtls_mps_reader rd;
     mbedtls_mps_size_t tmp_len;
 
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -304,7 +304,7 @@ void mbedtls_mps_reader_reclaim_overflow()
     unsigned char *tmp;
     mbedtls_mps_reader rd;
 
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -349,9 +349,9 @@ void mbedtls_mps_reader_pausing( int option )
     unsigned char acc[40];
     int paused;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -471,9 +471,9 @@ void mbedtls_mps_reader_pausing_multiple_feeds( int option )
     unsigned char acc[70];
     mbedtls_mps_reader rd;
     mbedtls_mps_size_t fetch_len;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -502,7 +502,7 @@ void mbedtls_mps_reader_pausing_multiple_feeds( int option )
             break;
 
         case 1: /* 50 x 1byte */
-            for( size_t num_feed = 0; num_feed < 49; num_feed++ )
+            for( mbedtls_size_t num_feed = 0; num_feed < 49; num_feed++ )
             {
                 TEST_ASSERT( mbedtls_mps_reader_feed( &rd, bufB + num_feed, 1 ) ==
                              MBEDTLS_ERR_MPS_READER_NEED_MORE );
@@ -511,7 +511,7 @@ void mbedtls_mps_reader_pausing_multiple_feeds( int option )
             break;
 
         case 2: /* 49 x 1byte + 51bytes */
-            for( size_t num_feed = 0; num_feed < 49; num_feed++ )
+            for( mbedtls_size_t num_feed = 0; num_feed < 49; num_feed++ )
             {
                 TEST_ASSERT( mbedtls_mps_reader_feed( &rd, bufB + num_feed, 1 ) ==
                              MBEDTLS_ERR_MPS_READER_NEED_MORE );
@@ -566,7 +566,7 @@ void mbedtls_mps_reader_reclaim_data_left( int option )
     unsigned char buf[100];
     unsigned char *tmp;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -626,7 +626,7 @@ void mbedtls_mps_reader_reclaim_data_left_retry()
     unsigned char *tmp;
     mbedtls_mps_reader rd;
 
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */
@@ -670,11 +670,11 @@ void mbedtls_mps_reader_multiple_pausing( int option )
     unsigned char acc[50];
     mbedtls_mps_size_t tmp_len;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
-    for( size_t i=0; (unsigned) i < sizeof( bufC ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufC ); i++ )
         bufC[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -816,7 +816,7 @@ void mbedtls_mps_reader_random_usage( int num_out_chunks,
     unsigned char *acc = NULL;
     unsigned char *outgoing = NULL, *incoming = NULL;
     unsigned char *cur_chunk = NULL;
-    size_t cur_out_chunk, out_pos, in_commit, in_fetch;
+    mbedtls_size_t cur_out_chunk, out_pos, in_commit, in_fetch;
     int rand_op;  /* Lower layer:
                    * - Reclaim (0)
                    * - Feed (1)
@@ -871,7 +871,7 @@ void mbedtls_mps_reader_random_usage( int num_out_chunks,
             {
                 /* Feed reader with a random chunk */
                 unsigned char *tmp = NULL;
-                size_t tmp_size;
+                mbedtls_size_t tmp_size;
                 if( cur_out_chunk == (unsigned) num_out_chunks )
                     continue;
 
@@ -989,9 +989,9 @@ void mbedtls_reader_inconsistent_usage( int option )
     unsigned char acc[40];
     mbedtls_mps_reader rd;
     int success = 0;
-    for( size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufA ); i++ )
         bufA[i] = (unsigned char) i;
-    for( size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( bufB ); i++ )
         bufB[i] = ~ ((unsigned char) i);
 
     /* Preparation (lower layer) */
@@ -1124,7 +1124,7 @@ void mbedtls_mps_reader_feed_empty()
     unsigned char buf[100];
     unsigned char *tmp;
     mbedtls_mps_reader rd;
-    for( size_t i=0; (unsigned) i < sizeof( buf ); i++ )
+    for( mbedtls_size_t i=0; (unsigned) i < sizeof( buf ); i++ )
         buf[i] = (unsigned char) i;
 
     /* Preparation (lower layer) */

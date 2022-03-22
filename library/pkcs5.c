@@ -107,8 +107,8 @@ static int pkcs5_parse_pbkdf2_params( const mbedtls_asn1_buf *params,
 }
 
 int mbedtls_pkcs5_pbes2( const mbedtls_asn1_buf *pbe_params, int mode,
-                 const unsigned char *pwd,  size_t pwdlen,
-                 const unsigned char *data, size_t datalen,
+                 const unsigned char *pwd,  mbedtls_size_t pwdlen,
+                 const unsigned char *data, mbedtls_size_t datalen,
                  unsigned char *output )
 {
     int ret, iterations = 0, keylen = 0;
@@ -117,7 +117,7 @@ int mbedtls_pkcs5_pbes2( const mbedtls_asn1_buf *pbe_params, int mode,
     mbedtls_asn1_buf salt;
     mbedtls_md_type_t md_type = MBEDTLS_MD_SHA1;
     unsigned char key[32], iv[32];
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
     const mbedtls_md_info_t *md_info;
     const mbedtls_cipher_info_t *cipher_info;
     mbedtls_md_context_t md_ctx;
@@ -217,7 +217,7 @@ exit:
 
 int mbedtls_pkcs5_pbkdf2_hmac( mbedtls_md_context_t *ctx,
                        const unsigned char *password,
-                       size_t plen, const unsigned char *salt, size_t slen,
+                       mbedtls_size_t plen, const unsigned char *salt, mbedtls_size_t slen,
                        unsigned int iteration_count,
                        uint32_t key_length, unsigned char *output )
 {
@@ -227,7 +227,7 @@ int mbedtls_pkcs5_pbkdf2_hmac( mbedtls_md_context_t *ctx,
     unsigned char md1[MBEDTLS_MD_MAX_SIZE];
     unsigned char work[MBEDTLS_MD_MAX_SIZE];
     unsigned char md_size = mbedtls_md_get_size( ctx->md_info );
-    size_t use_len;
+    mbedtls_size_t use_len;
     unsigned char *out_p = output;
     unsigned char counter[4];
 
@@ -311,7 +311,7 @@ int mbedtls_pkcs5_self_test( int verbose )
 
 #define MAX_TESTS   6
 
-static const size_t plen_test_data[MAX_TESTS] =
+static const mbedtls_size_t plen_test_data[MAX_TESTS] =
     { 8, 8, 8, 24, 9 };
 
 static const unsigned char password_test_data[MAX_TESTS][32] =
@@ -323,7 +323,7 @@ static const unsigned char password_test_data[MAX_TESTS][32] =
     "pass\0word",
 };
 
-static const size_t slen_test_data[MAX_TESTS] =
+static const mbedtls_size_t slen_test_data[MAX_TESTS] =
     { 4, 4, 4, 36, 5 };
 
 static const unsigned char salt_test_data[MAX_TESTS][40] =

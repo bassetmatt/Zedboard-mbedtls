@@ -107,10 +107,10 @@ static void mbedtls_set_alarm( int seconds );
 
 /*
  * For heap usage estimates, we need an estimate of the overhead per allocated
- * block. ptmalloc2/3 (used in gnu libc for instance) uses 2 size_t per block,
+ * block. ptmalloc2/3 (used in gnu libc for instance) uses 2 mbedtls_size_t per block,
  * so use that as our baseline.
  */
-#define MEM_BLOCK_OVERHEAD  ( 2 * sizeof( size_t ) )
+#define MEM_BLOCK_OVERHEAD  ( 2 * sizeof( mbedtls_size_t ) )
 
 /*
  * Size to use for the alloc buffer if MEMORY_BUFFER_ALLOC_C is defined.
@@ -184,8 +184,8 @@ do {                                                                    \
 #define TITLE_SPACE 16
 
 #define MEMORY_MEASURE_INIT                                             \
-    size_t max_used, max_blocks, max_bytes;                             \
-    size_t prv_used, prv_blocks;                                        \
+    mbedtls_size_t max_used, max_blocks, max_bytes;                             \
+    mbedtls_size_t prv_used, prv_blocks;                                        \
     mbedtls_memory_buffer_alloc_cur_get( &prv_used, &prv_blocks );      \
     mbedtls_memory_buffer_alloc_max_reset( );
 
@@ -456,9 +456,9 @@ static void mbedtls_set_alarm( int seconds )
 
 #endif /* _WIN32 && !EFIX64 && !EFI32 */
 
-static int myrand( void *rng_state, unsigned char *output, size_t len )
+static int myrand( void *rng_state, unsigned char *output, mbedtls_size_t len )
 {
-    size_t use_len;
+    mbedtls_size_t use_len;
     int rnd;
 
     if( rng_state != NULL )
@@ -503,7 +503,7 @@ void ecp_clear_precomputed( mbedtls_ecp_group *grp )
 #endif
     )
     {
-        size_t i;
+        mbedtls_size_t i;
         for( i = 0; i < grp->T_size; i++ )
             mbedtls_ecp_point_free( &grp->T[i] );
         mbedtls_free( grp->T );
@@ -1018,17 +1018,17 @@ int main( int argc, char *argv[] )
             MBEDTLS_DHM_RFC3526_MODP_3072_G_BIN;
 
         const unsigned char *dhm_P[] = { dhm_P_2048, dhm_P_3072 };
-        const size_t dhm_P_size[] = { sizeof( dhm_P_2048 ),
+        const mbedtls_size_t dhm_P_size[] = { sizeof( dhm_P_2048 ),
                                       sizeof( dhm_P_3072 ) };
 
         const unsigned char *dhm_G[] = { dhm_G_2048, dhm_G_3072 };
-        const size_t dhm_G_size[] = { sizeof( dhm_G_2048 ),
+        const mbedtls_size_t dhm_G_size[] = { sizeof( dhm_G_2048 ),
                                       sizeof( dhm_G_3072 ) };
 
         mbedtls_dhm_context dhm;
-        size_t olen;
-        size_t n;
-        for( i = 0; (size_t) i < sizeof( dhm_sizes ) / sizeof( dhm_sizes[0] ); i++ )
+        mbedtls_size_t olen;
+        mbedtls_size_t n;
+        for( i = 0; (mbedtls_size_t) i < sizeof( dhm_sizes ) / sizeof( dhm_sizes[0] ); i++ )
         {
             mbedtls_dhm_init( &dhm );
 
@@ -1065,7 +1065,7 @@ int main( int argc, char *argv[] )
     {
         mbedtls_ecdsa_context ecdsa;
         const mbedtls_ecp_curve_info *curve_info;
-        size_t sig_len;
+        mbedtls_size_t sig_len;
 
         memset( buf, 0x2A, sizeof( buf ) );
 
@@ -1134,7 +1134,7 @@ int main( int argc, char *argv[] )
             { MBEDTLS_ECP_DP_NONE, 0, 0, 0 }
         };
         const mbedtls_ecp_curve_info *curve_info;
-        size_t olen;
+        mbedtls_size_t olen;
         const mbedtls_ecp_curve_info *selected_montgomery_curve_list =
             montgomery_curve_list;
 
@@ -1255,7 +1255,7 @@ int main( int argc, char *argv[] )
         mbedtls_ecdh_context ecdh_srv, ecdh_cli;
         unsigned char buf_srv[BUFSIZE], buf_cli[BUFSIZE];
         const mbedtls_ecp_curve_info *curve_info;
-        size_t olen;
+        mbedtls_size_t olen;
 
         for( curve_info = curve_list;
             curve_info->grp_id != MBEDTLS_ECP_DP_NONE;

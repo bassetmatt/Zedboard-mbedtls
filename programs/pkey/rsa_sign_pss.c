@@ -67,7 +67,7 @@ int main( int argc, char *argv[] )
     unsigned char buf[MBEDTLS_MPI_MAX_SIZE];
     char filename[512];
     const char *pers = "rsa_sign_pss";
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
 
     mbedtls_entropy_init( &entropy );
     mbedtls_pk_init( &pk );

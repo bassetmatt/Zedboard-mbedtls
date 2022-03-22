@@ -76,7 +76,7 @@ static int pk_write_rsa_pubkey( unsigned char **p, unsigned char *start,
                                 mbedtls_rsa_context *rsa )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     mbedtls_mpi T;
 
     mbedtls_mpi_init( &T );
@@ -115,7 +115,7 @@ static int pk_write_ec_pubkey( unsigned char **p, unsigned char *start,
                                mbedtls_ecp_keypair *ec )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     unsigned char buf[MBEDTLS_ECP_MAX_PT_LEN];
 
     if( ( ret = mbedtls_ecp_point_write_binary( &ec->grp, &ec->Q,
@@ -125,7 +125,7 @@ static int pk_write_ec_pubkey( unsigned char **p, unsigned char *start,
         return( ret );
     }
 
-    if( *p < start || (size_t)( *p - start ) < len )
+    if( *p < start || (mbedtls_size_t)( *p - start ) < len )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
 
     *p -= len;
@@ -143,9 +143,9 @@ static int pk_write_ec_param( unsigned char **p, unsigned char *start,
                               mbedtls_ecp_keypair *ec )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     const char *oid;
-    size_t oid_len;
+    mbedtls_size_t oid_len;
 
     if( ( ret = mbedtls_oid_get_oid_by_ec_grp( ec->grp.id, &oid, &oid_len ) ) != 0 )
         return( ret );
@@ -162,7 +162,7 @@ static int pk_write_ec_private( unsigned char **p, unsigned char *start,
                                 mbedtls_ecp_keypair *ec )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t byte_length = ( ec->grp.pbits + 7 ) / 8;
+    mbedtls_size_t byte_length = ( ec->grp.pbits + 7 ) / 8;
     unsigned char tmp[MBEDTLS_ECP_MAX_BYTES];
 
     ret = mbedtls_ecp_write_key( ec, tmp, byte_length );
@@ -180,7 +180,7 @@ int mbedtls_pk_write_pubkey( unsigned char **p, unsigned char *start,
                              const mbedtls_pk_context *key )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     PK_VALIDATE_RET( p != NULL );
     PK_VALIDATE_RET( *p != NULL );
@@ -200,13 +200,13 @@ int mbedtls_pk_write_pubkey( unsigned char **p, unsigned char *start,
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
     if( mbedtls_pk_get_type( key ) == MBEDTLS_PK_OPAQUE )
     {
-        size_t buffer_size;
+        mbedtls_size_t buffer_size;
         mbedtls_svc_key_id_t* key_id = (mbedtls_svc_key_id_t*) key->pk_ctx;
 
         if ( *p < start )
             return( MBEDTLS_ERR_PK_BAD_INPUT_DATA );
 
-        buffer_size = (size_t)( *p - start );
+        buffer_size = (mbedtls_size_t)( *p - start );
         if ( psa_export_public_key( *key_id, start, buffer_size, &len )
              != PSA_SUCCESS )
         {
@@ -225,11 +225,11 @@ int mbedtls_pk_write_pubkey( unsigned char **p, unsigned char *start,
     return( (int) len );
 }
 
-int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *key, unsigned char *buf, size_t size )
+int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *key, unsigned char *buf, mbedtls_size_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *c;
-    size_t len = 0, par_len = 0, oid_len;
+    mbedtls_size_t len = 0, par_len = 0, oid_len;
     mbedtls_pk_type_t pk_type;
     const char *oid;
 
@@ -270,7 +270,7 @@ int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *key, unsigned char *b
         psa_key_type_t key_type;
         mbedtls_svc_key_id_t key_id;
         psa_ecc_family_t curve;
-        size_t bits;
+        mbedtls_size_t bits;
 
         key_id = *((mbedtls_svc_key_id_t*) key->pk_ctx );
         if( PSA_SUCCESS != psa_get_key_attributes( key_id, &attributes ) )
@@ -313,11 +313,11 @@ int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *key, unsigned char *b
     return( (int) len );
 }
 
-int mbedtls_pk_write_key_der( const mbedtls_pk_context *key, unsigned char *buf, size_t size )
+int mbedtls_pk_write_key_der( const mbedtls_pk_context *key, unsigned char *buf, mbedtls_size_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *c;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     PK_VALIDATE_RET( key != NULL );
     if( size == 0 )
@@ -409,7 +409,7 @@ int mbedtls_pk_write_key_der( const mbedtls_pk_context *key, unsigned char *buf,
     if( mbedtls_pk_get_type( key ) == MBEDTLS_PK_ECKEY )
     {
         mbedtls_ecp_keypair *ec = mbedtls_pk_ec( *key );
-        size_t pub_len = 0, par_len = 0;
+        mbedtls_size_t pub_len = 0, par_len = 0;
 
         /*
          * RFC 5915, or SEC1 Appendix C.4
@@ -480,11 +480,11 @@ int mbedtls_pk_write_key_der( const mbedtls_pk_context *key, unsigned char *buf,
     ( MBEDTLS_PK_RSA_PRV_DER_MAX_BYTES > MBEDTLS_PK_ECP_PRV_DER_MAX_BYTES ? \
       MBEDTLS_PK_RSA_PRV_DER_MAX_BYTES : MBEDTLS_PK_ECP_PRV_DER_MAX_BYTES )
 
-int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *key, unsigned char *buf, size_t size )
+int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *key, unsigned char *buf, mbedtls_size_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char output_buf[PUB_DER_MAX_BYTES];
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
 
     PK_VALIDATE_RET( key != NULL );
     PK_VALIDATE_RET( buf != NULL || size == 0 );
@@ -505,12 +505,12 @@ int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *key, unsigned char *b
     return( 0 );
 }
 
-int mbedtls_pk_write_key_pem( const mbedtls_pk_context *key, unsigned char *buf, size_t size )
+int mbedtls_pk_write_key_pem( const mbedtls_pk_context *key, unsigned char *buf, mbedtls_size_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char output_buf[PRV_DER_MAX_BYTES];
     const char *begin, *end;
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
 
     PK_VALIDATE_RET( key != NULL );
     PK_VALIDATE_RET( buf != NULL || size == 0 );

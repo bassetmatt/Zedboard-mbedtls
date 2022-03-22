@@ -69,12 +69,12 @@ struct options
     const char *output_file;    /* where to store the output              */
 } opt;
 
-int convert_pem_to_der( const unsigned char *input, size_t ilen,
-                        unsigned char *output, size_t *olen )
+int convert_pem_to_der( const unsigned char *input, mbedtls_size_t ilen,
+                        unsigned char *output, mbedtls_size_t *olen )
 {
     int ret;
     const unsigned char *s1, *s2, *end = input + ilen;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     s1 = (unsigned char *) strstr( (const char *) input, "-----BEGIN" );
     if( s1 == NULL )
@@ -116,7 +116,7 @@ int convert_pem_to_der( const unsigned char *input, size_t ilen,
 /*
  * Load all data from a file into a given buffer.
  */
-static int load_file( const char *path, unsigned char **buf, size_t *n )
+static int load_file( const char *path, unsigned char **buf, mbedtls_size_t *n )
 {
     FILE *f;
     long size;
@@ -132,7 +132,7 @@ static int load_file( const char *path, unsigned char **buf, size_t *n )
     }
     fseek( f, 0, SEEK_SET );
 
-    *n = (size_t) size;
+    *n = (mbedtls_size_t) size;
 
     if( *n + 1 == 0 ||
         ( *buf = mbedtls_calloc( 1, *n + 1 ) ) == NULL )
@@ -159,7 +159,7 @@ static int load_file( const char *path, unsigned char **buf, size_t *n )
 /*
  * Write buffer to a file
  */
-static int write_file( const char *path, unsigned char *buf, size_t n )
+static int write_file( const char *path, unsigned char *buf, mbedtls_size_t n )
 {
     FILE *f;
 
@@ -183,7 +183,7 @@ int main( int argc, char *argv[] )
     unsigned char *pem_buffer = NULL;
     unsigned char der_buffer[4096];
     char buf[1024];
-    size_t pem_size, der_size = sizeof(der_buffer);
+    mbedtls_size_t pem_size, der_size = sizeof(der_buffer);
     int i;
     char *p, *q;
 

@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
     unsigned char buf[MBEDTLS_PK_SIGNATURE_MAX_SIZE];
     char filename[512];
     const char *pers = "mbedtls_pk_sign";
-    size_t olen = 0;
+    mbedtls_size_t olen = 0;
 
     mbedtls_entropy_init( &entropy );
     mbedtls_ctr_drbg_init( &ctr_drbg );

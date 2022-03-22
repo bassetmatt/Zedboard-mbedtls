@@ -34,11 +34,11 @@
 #include <psa_crypto_storage.h>
 
 static mbedtls_svc_key_id_t key_ids_used_in_test[9];
-static size_t num_key_ids_used;
+static mbedtls_size_t num_key_ids_used;
 
 int mbedtls_test_uses_key_id( mbedtls_svc_key_id_t key_id )
 {
-    size_t i;
+    mbedtls_size_t i;
     if( MBEDTLS_SVC_KEY_ID_GET_KEY_ID( key_id ) >
         PSA_MAX_PERSISTENT_KEY_IDENTIFIER )
     {
@@ -59,7 +59,7 @@ int mbedtls_test_uses_key_id( mbedtls_svc_key_id_t key_id )
 
 void mbedtls_test_psa_purge_key_storage( void )
 {
-    size_t i;
+    mbedtls_size_t i;
     for( i = 0; i < num_key_ids_used; i++ )
         psa_destroy_persistent_key( key_ids_used_in_test[i] );
     num_key_ids_used = 0;
@@ -67,7 +67,7 @@ void mbedtls_test_psa_purge_key_storage( void )
 
 void mbedtls_test_psa_purge_key_cache( void )
 {
-    size_t i;
+    mbedtls_size_t i;
     for( i = 0; i < num_key_ids_used; i++ )
         psa_purge_key( key_ids_used_in_test[i] );
 }

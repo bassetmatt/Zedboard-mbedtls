@@ -271,10 +271,10 @@ int mbedtls_internal_sha1_process( mbedtls_sha1_context *ctx,
  */
 int mbedtls_sha1_update( mbedtls_sha1_context *ctx,
                              const unsigned char *input,
-                             size_t ilen )
+                             mbedtls_size_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t fill;
+    mbedtls_size_t fill;
     uint32_t left;
 
     SHA1_VALIDATE_RET( ctx != NULL );
@@ -386,7 +386,7 @@ int mbedtls_sha1_finish( mbedtls_sha1_context *ctx,
  * output = SHA-1( input buffer )
  */
 int mbedtls_sha1( const unsigned char *input,
-                      size_t ilen,
+                      mbedtls_size_t ilen,
                       unsigned char output[20] )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -423,7 +423,7 @@ static const unsigned char sha1_test_buf[3][57] =
     { "" }
 };
 
-static const size_t sha1_test_buflen[3] =
+static const mbedtls_size_t sha1_test_buflen[3] =
 {
     3, 56, 1000
 };

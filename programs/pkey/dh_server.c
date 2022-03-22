@@ -73,7 +73,7 @@ int main( void )
 
     int ret = 1;
     int exit_code = MBEDTLS_EXIT_FAILURE;
-    size_t n, buflen;
+    mbedtls_size_t n, buflen;
     mbedtls_net_context listen_fd, client_fd;
 
     unsigned char buf[2048];

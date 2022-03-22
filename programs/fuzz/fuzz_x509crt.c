@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include "mbedtls/x509_crt.h"
 
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+int LLVMFuzzerTestOneInput(const uint8_t *Data, mbedtls_size_t Size) {
 #ifdef MBEDTLS_X509_CRT_PARSE_C
     int ret;
     mbedtls_x509_crt crt;

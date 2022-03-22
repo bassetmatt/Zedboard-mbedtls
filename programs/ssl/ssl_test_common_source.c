@@ -27,7 +27,7 @@
 void eap_tls_key_derivation( void *p_expkey,
                              mbedtls_ssl_key_export_type secret_type,
                              const unsigned char *secret,
-                             size_t secret_len,
+                             mbedtls_size_t secret_len,
                              const unsigned char client_random[32],
                              const unsigned char server_random[32],
                              mbedtls_tls_prf_types tls_prf_type )
@@ -49,15 +49,15 @@ void eap_tls_key_derivation( void *p_expkey,
 void nss_keylog_export( void *p_expkey,
                         mbedtls_ssl_key_export_type secret_type,
                         const unsigned char *secret,
-                        size_t secret_len,
+                        mbedtls_size_t secret_len,
                         const unsigned char client_random[32],
                         const unsigned char server_random[32],
                         mbedtls_tls_prf_types tls_prf_type )
 {
     char nss_keylog_line[ 200 ];
-    size_t const client_random_len = 32;
-    size_t len = 0;
-    size_t j;
+    mbedtls_size_t const client_random_len = 32;
+    mbedtls_size_t len = 0;
+    mbedtls_size_t j;
 
     /* We're only interested in the TLS 1.2 master secret */
     if( secret_type != MBEDTLS_SSL_KEY_EXPORT_TLS12_MASTER_SECRET )
@@ -119,7 +119,7 @@ exit:
 void dtls_srtp_key_derivation( void *p_expkey,
                                mbedtls_ssl_key_export_type secret_type,
                                const unsigned char *secret,
-                               size_t secret_len,
+                               mbedtls_size_t secret_len,
                                const unsigned char client_random[32],
                                const unsigned char server_random[32],
                                mbedtls_tls_prf_types tls_prf_type )
@@ -140,7 +140,7 @@ void dtls_srtp_key_derivation( void *p_expkey,
 #endif /* MBEDTLS_SSL_DTLS_SRTP */
 
 int ssl_check_record( mbedtls_ssl_context const *ssl,
-                      unsigned char const *buf, size_t len )
+                      unsigned char const *buf, mbedtls_size_t len )
 {
     int my_ret = 0, ret_cr1, ret_cr2;
     unsigned char *tmp_buf;
@@ -201,10 +201,10 @@ cleanup:
     return( my_ret );
 }
 
-int recv_cb( void *ctx, unsigned char *buf, size_t len )
+int recv_cb( void *ctx, unsigned char *buf, mbedtls_size_t len )
 {
     io_ctx_t *io_ctx = (io_ctx_t*) ctx;
-    size_t recv_len;
+    mbedtls_size_t recv_len;
     int ret;
 
     if( opt.nbio == 2 )
@@ -213,7 +213,7 @@ int recv_cb( void *ctx, unsigned char *buf, size_t len )
         ret = mbedtls_net_recv( io_ctx->net, buf, len );
     if( ret < 0 )
         return( ret );
-    recv_len = (size_t) ret;
+    recv_len = (mbedtls_size_t) ret;
 
     if( opt.transport == MBEDTLS_SSL_TRANSPORT_DATAGRAM )
     {
@@ -227,17 +227,17 @@ int recv_cb( void *ctx, unsigned char *buf, size_t len )
     return( (int) recv_len );
 }
 
-int recv_timeout_cb( void *ctx, unsigned char *buf, size_t len,
+int recv_timeout_cb( void *ctx, unsigned char *buf, mbedtls_size_t len,
                      uint32_t timeout )
 {
     io_ctx_t *io_ctx = (io_ctx_t*) ctx;
     int ret;
-    size_t recv_len;
+    mbedtls_size_t recv_len;
 
     ret = mbedtls_net_recv_timeout( io_ctx->net, buf, len, timeout );
     if( ret < 0 )
         return( ret );
-    recv_len = (size_t) ret;
+    recv_len = (mbedtls_size_t) ret;
 
     if( opt.transport == MBEDTLS_SSL_TRANSPORT_DATAGRAM )
     {
@@ -251,7 +251,7 @@ int recv_timeout_cb( void *ctx, unsigned char *buf, size_t len,
     return( (int) recv_len );
 }
 
-int send_cb( void *ctx, unsigned char const *buf, size_t len )
+int send_cb( void *ctx, unsigned char const *buf, mbedtls_size_t len )
 {
     io_ctx_t *io_ctx = (io_ctx_t*) ctx;
 
@@ -297,7 +297,7 @@ uint16_t ssl_sig_algs_for_test[] = {
 /** Functionally equivalent to mbedtls_x509_crt_verify_info, see that function
  *  for more info.
  */
-int x509_crt_verify_info( char *buf, size_t size, const char *prefix,
+int x509_crt_verify_info( char *buf, mbedtls_size_t size, const char *prefix,
                           uint32_t flags )
 {
 #if !defined(MBEDTLS_X509_REMOVE_INFO)
@@ -306,7 +306,7 @@ int x509_crt_verify_info( char *buf, size_t size, const char *prefix,
 #else /* !MBEDTLS_X509_REMOVE_INFO */
     int ret;
     char *p = buf;
-    size_t n = size;
+    mbedtls_size_t n = size;
 
 #define X509_CRT_ERROR_INFO( err, err_str, info )                      \
     if( ( flags & err ) != 0 )                                         \

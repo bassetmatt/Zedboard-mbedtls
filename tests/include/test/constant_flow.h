@@ -53,9 +53,9 @@
 
 /* Use macros to avoid messing up with origin tracking */
 #define TEST_CF_SECRET  __msan_allocated_memory
-// void __msan_allocated_memory(const volatile void* data, size_t size);
+// void __msan_allocated_memory(const volatile void* data, mbedtls_size_t size);
 #define TEST_CF_PUBLIC  __msan_unpoison
-// void __msan_unpoison(const volatile void *a, size_t size);
+// void __msan_unpoison(const volatile void *a, mbedtls_size_t size);
 
 #elif defined(MBEDTLS_TEST_CONSTANT_FLOW_VALGRIND)
 #include <valgrind/memcheck.h>

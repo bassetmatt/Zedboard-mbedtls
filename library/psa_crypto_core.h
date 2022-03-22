@@ -35,9 +35,9 @@
  * \return 0 if the buffer contents are equal, non-zero otherwise
  */
 static inline int mbedtls_psa_safer_memcmp(
-    const uint8_t *a, const uint8_t *b, size_t n )
+    const uint8_t *a, const uint8_t *b, mbedtls_size_t n )
 {
-    size_t i;
+    mbedtls_size_t i;
     unsigned char diff = 0;
 
     for( i = 0; i < n; i++ )
@@ -76,14 +76,14 @@ typedef struct
      *   or purge or destroy a key while it is in used by the library through
      *   another thread.
      */
-    size_t lock_count;
+    mbedtls_size_t lock_count;
 
     /* Dynamically allocated key data buffer.
      * Format as specified in psa_export_key(). */
     struct key_data
     {
         uint8_t *data;
-        size_t bytes;
+        mbedtls_size_t bytes;
     } key;
 } psa_key_slot_t;
 
@@ -209,7 +209,7 @@ psa_status_t psa_wipe_key_slot( psa_key_slot_t *slot );
  *         Trying to allocate a buffer to a non-empty key slot.
  */
 psa_status_t psa_allocate_buffer_to_slot( psa_key_slot_t *slot,
-                                          size_t buffer_length );
+                                          mbedtls_size_t buffer_length );
 
 /** Wipe key data from a slot. Preserves metadata such as the policy. */
 psa_status_t psa_remove_key_data_from_memory( psa_key_slot_t *slot );
@@ -233,7 +233,7 @@ psa_status_t psa_remove_key_data_from_memory( psa_key_slot_t *slot );
  */
 psa_status_t psa_copy_key_material_into_slot( psa_key_slot_t *slot,
                                               const uint8_t *data,
-                                              size_t data_length );
+                                              mbedtls_size_t data_length );
 
 /** Convert an mbed TLS error code to a PSA error code
  *
@@ -259,7 +259,7 @@ psa_status_t mbedtls_to_psa_error( int ret );
  *          \c NULL if the PSA cipher algorithm is not supported.
  */
 const mbedtls_cipher_info_t *mbedtls_cipher_info_from_psa(
-    psa_algorithm_t alg, psa_key_type_t key_type, size_t key_bits,
+    psa_algorithm_t alg, psa_key_type_t key_type, mbedtls_size_t key_bits,
     mbedtls_cipher_id_t *cipher_id );
 
 /** Import a key in binary format.
@@ -290,9 +290,9 @@ const mbedtls_cipher_info_t *mbedtls_cipher_info_from_psa(
  */
 psa_status_t psa_import_key_into_slot(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, size_t data_length,
-    uint8_t *key_buffer, size_t key_buffer_size,
-    size_t *key_buffer_length, size_t *bits );
+    const uint8_t *data, mbedtls_size_t data_length,
+    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits );
 
 /** Export a key in binary format
  *
@@ -318,8 +318,8 @@ psa_status_t psa_import_key_into_slot(
  */
 psa_status_t psa_export_key_internal(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    uint8_t *data, size_t data_size, size_t *data_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length );
 
 /** Export a public key or the public part of a key pair in binary format.
  *
@@ -346,8 +346,8 @@ psa_status_t psa_export_key_internal(
  */
 psa_status_t psa_export_public_key_internal(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    uint8_t *data, size_t data_size, size_t *data_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length );
 
 /**
  * \brief Generate a key.
@@ -371,8 +371,8 @@ psa_status_t psa_export_public_key_internal(
  */
 psa_status_t psa_generate_key_internal( const psa_key_attributes_t *attributes,
                                         uint8_t *key_buffer,
-                                        size_t key_buffer_size,
-                                        size_t *key_buffer_length );
+                                        mbedtls_size_t key_buffer_size,
+                                        mbedtls_size_t *key_buffer_length );
 
 /** Sign a message with a private key. For hash-and-sign algorithms,
  *  this includes the hashing step.
@@ -413,9 +413,9 @@ psa_status_t psa_generate_key_internal( const psa_key_attributes_t *attributes,
  */
 psa_status_t psa_sign_message_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *input, size_t input_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *input, mbedtls_size_t input_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length );
 
 /** Verify the signature of a message with a public key, using
  *  a hash-and-sign verification algorithm.
@@ -450,9 +450,9 @@ psa_status_t psa_sign_message_builtin(
  */
 psa_status_t psa_verify_message_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *input, size_t input_length,
-    const uint8_t *signature, size_t signature_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *input, mbedtls_size_t input_length,
+    const uint8_t *signature, mbedtls_size_t signature_length );
 
 /** Sign an already-calculated hash with a private key.
  *
@@ -489,9 +489,9 @@ psa_status_t psa_verify_message_builtin(
  */
 psa_status_t psa_sign_hash_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length );
 
 /**
  * \brief Verify the signature a hash or short message using a public key.
@@ -524,9 +524,9 @@ psa_status_t psa_sign_hash_builtin(
  */
 psa_status_t psa_verify_hash_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    const uint8_t *signature, size_t signature_length );
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    const uint8_t *signature, mbedtls_size_t signature_length );
 
 /**
  * \brief Validate the key bit size for unstructured keys.
@@ -546,5 +546,5 @@ psa_status_t psa_verify_hash_builtin(
  *         the two is not supported.
  */
 psa_status_t psa_validate_unstructured_key_bit_size( psa_key_type_t type,
-                                                     size_t bits );
+                                                     mbedtls_size_t bits );
 #endif /* PSA_CRYPTO_CORE_H */

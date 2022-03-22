@@ -121,7 +121,7 @@ void mbedtls_aesni_inverse_key( unsigned char *invkey,
  */
 int mbedtls_aesni_setkey_enc( unsigned char *rk,
                               const unsigned char *key,
-                              size_t bits );
+                              mbedtls_size_t bits );
 
 #ifdef __cplusplus
 }

@@ -47,7 +47,7 @@ static int check_key_attributes_sanity( mbedtls_svc_key_id_t key )
     psa_key_lifetime_t lifetime;
     mbedtls_svc_key_id_t id;
     psa_key_type_t type;
-    size_t bits;
+    mbedtls_size_t bits;
 
     PSA_ASSERT( psa_get_key_attributes( key, &attributes ) );
     lifetime = psa_get_key_lifetime( &attributes );
@@ -121,7 +121,7 @@ static int exercise_mac_key( mbedtls_svc_key_id_t key,
     psa_mac_operation_t operation = PSA_MAC_OPERATION_INIT;
     const unsigned char input[] = "foo";
     unsigned char mac[PSA_MAC_MAX_SIZE] = {0};
-    size_t mac_length = sizeof( mac );
+    mbedtls_size_t mac_length = sizeof( mac );
 
     /* Convert wildcard algorithm to exercisable algorithm */
     if( alg & PSA_ALG_MAC_AT_LEAST_THIS_LENGTH_FLAG )
@@ -165,12 +165,12 @@ static int exercise_cipher_key( mbedtls_svc_key_id_t key,
 {
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     unsigned char iv[16] = {0};
-    size_t iv_length = sizeof( iv );
+    mbedtls_size_t iv_length = sizeof( iv );
     const unsigned char plaintext[16] = "Hello, world...";
     unsigned char ciphertext[32] = "(wabblewebblewibblewobblewubble)";
-    size_t ciphertext_length = sizeof( ciphertext );
+    mbedtls_size_t ciphertext_length = sizeof( ciphertext );
     unsigned char decrypted[sizeof( ciphertext )];
-    size_t part_length;
+    mbedtls_size_t part_length;
 
     if( usage & PSA_KEY_USAGE_ENCRYPT )
     {
@@ -237,11 +237,11 @@ static int exercise_aead_key( mbedtls_svc_key_id_t key,
                               psa_algorithm_t alg )
 {
     unsigned char nonce[16] = {0};
-    size_t nonce_length = sizeof( nonce );
+    mbedtls_size_t nonce_length = sizeof( nonce );
     unsigned char plaintext[16] = "Hello, world...";
     unsigned char ciphertext[48] = "(wabblewebblewibblewobblewubble)";
-    size_t ciphertext_length = sizeof( ciphertext );
-    size_t plaintext_length = sizeof( ciphertext );
+    mbedtls_size_t ciphertext_length = sizeof( ciphertext );
+    mbedtls_size_t plaintext_length = sizeof( ciphertext );
 
     /* Convert wildcard algorithm to exercisable algorithm */
     if( alg & PSA_ALG_AEAD_AT_LEAST_THIS_LENGTH_FLAG )
@@ -301,9 +301,9 @@ static int exercise_signature_key( mbedtls_svc_key_id_t key,
     if( usage & ( PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH ) )
     {
         unsigned char payload[PSA_HASH_MAX_SIZE] = {1};
-        size_t payload_length = 16;
+        mbedtls_size_t payload_length = 16;
         unsigned char signature[PSA_SIGNATURE_MAX_SIZE] = {0};
-        size_t signature_length = sizeof( signature );
+        mbedtls_size_t signature_length = sizeof( signature );
         psa_algorithm_t hash_alg = PSA_ALG_SIGN_GET_HASH( alg );
 
         /* If the policy allows signing with any hash, just pick one. */
@@ -348,8 +348,8 @@ static int exercise_signature_key( mbedtls_svc_key_id_t key,
     {
         unsigned char message[256] = "Hello, world...";
         unsigned char signature[PSA_SIGNATURE_MAX_SIZE] = {0};
-        size_t message_length = 16;
-        size_t signature_length = sizeof( signature );
+        mbedtls_size_t message_length = 16;
+        mbedtls_size_t signature_length = sizeof( signature );
 
         if( usage & PSA_KEY_USAGE_SIGN_MESSAGE )
         {
@@ -384,8 +384,8 @@ static int exercise_asymmetric_encryption_key( mbedtls_svc_key_id_t key,
 {
     unsigned char plaintext[256] = "Hello, world...";
     unsigned char ciphertext[256] = "(wabblewebblewibblewobblewubble)";
-    size_t ciphertext_length = sizeof( ciphertext );
-    size_t plaintext_length = 16;
+    mbedtls_size_t ciphertext_length = sizeof( ciphertext );
+    mbedtls_size_t plaintext_length = 16;
 
     if( usage & PSA_KEY_USAGE_ENCRYPT )
     {
@@ -420,9 +420,9 @@ int mbedtls_test_psa_setup_key_derivation_wrap(
     psa_key_derivation_operation_t* operation,
     mbedtls_svc_key_id_t key,
     psa_algorithm_t alg,
-    const unsigned char* input1, size_t input1_length,
-    const unsigned char* input2, size_t input2_length,
-    size_t capacity )
+    const unsigned char* input1, mbedtls_size_t input1_length,
+    const unsigned char* input2, mbedtls_size_t input2_length,
+    mbedtls_size_t capacity )
 {
     PSA_ASSERT( psa_key_derivation_setup( operation, alg ) );
     if( PSA_ALG_IS_HKDF( alg ) )
@@ -472,11 +472,11 @@ static int exercise_key_derivation_key( mbedtls_svc_key_id_t key,
 {
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     unsigned char input1[] = "Input 1";
-    size_t input1_length = sizeof( input1 );
+    mbedtls_size_t input1_length = sizeof( input1 );
     unsigned char input2[] = "Input 2";
-    size_t input2_length = sizeof( input2 );
+    mbedtls_size_t input2_length = sizeof( input2 );
     unsigned char output[1];
-    size_t capacity = sizeof( output );
+    mbedtls_size_t capacity = sizeof( output );
 
     if( usage & PSA_KEY_USAGE_DERIVE )
     {
@@ -506,9 +506,9 @@ psa_status_t mbedtls_test_psa_key_agreement_with_self(
 {
     psa_key_type_t private_key_type;
     psa_key_type_t public_key_type;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     uint8_t *public_key = NULL;
-    size_t public_key_length;
+    mbedtls_size_t public_key_length;
     /* Return GENERIC_ERROR if something other than the final call to
      * psa_key_derivation_key_agreement fails. This isn't fully satisfactory,
      * but it's good enough: callers will report it as a failed test anyway. */
@@ -546,11 +546,11 @@ psa_status_t mbedtls_test_psa_raw_key_agreement_with_self(
 {
     psa_key_type_t private_key_type;
     psa_key_type_t public_key_type;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     uint8_t *public_key = NULL;
-    size_t public_key_length;
+    mbedtls_size_t public_key_length;
     uint8_t output[1024];
-    size_t output_length;
+    mbedtls_size_t output_length;
     /* Return GENERIC_ERROR if something other than the final call to
      * psa_key_derivation_key_agreement fails. This isn't fully satisfactory,
      * but it's good enough: callers will report it as a failed test anyway. */
@@ -634,8 +634,8 @@ exit:
 }
 
 int mbedtls_test_psa_exported_key_sanity_check(
-    psa_key_type_t type, size_t bits,
-    const uint8_t *exported, size_t exported_length )
+    psa_key_type_t type, mbedtls_size_t bits,
+    const uint8_t *exported, mbedtls_size_t exported_length )
 {
     TEST_ASSERT( exported_length <= PSA_EXPORT_KEY_OUTPUT_SIZE( type, bits ) );
 
@@ -648,7 +648,7 @@ int mbedtls_test_psa_exported_key_sanity_check(
     {
         uint8_t *p = (uint8_t*) exported;
         const uint8_t *end = exported + exported_length;
-        size_t len;
+        mbedtls_size_t len;
         /*   RSAPrivateKey ::= SEQUENCE {
          *       version             INTEGER,  -- must be 0
          *       modulus             INTEGER,  -- n
@@ -708,7 +708,7 @@ int mbedtls_test_psa_exported_key_sanity_check(
     {
         uint8_t *p = (uint8_t*) exported;
         const uint8_t *end = exported + exported_length;
-        size_t len;
+        mbedtls_size_t len;
         /*   RSAPublicKey ::= SEQUENCE {
          *      modulus            INTEGER,    -- n
          *      publicExponent     INTEGER  }  -- e
@@ -798,8 +798,8 @@ static int exercise_export_key( mbedtls_svc_key_id_t key,
 {
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     uint8_t *exported = NULL;
-    size_t exported_size = 0;
-    size_t exported_length = 0;
+    mbedtls_size_t exported_size = 0;
+    mbedtls_size_t exported_length = 0;
     int ok = 0;
 
     PSA_ASSERT( psa_get_key_attributes( key, &attributes ) );
@@ -842,8 +842,8 @@ static int exercise_export_public_key( mbedtls_svc_key_id_t key )
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_type_t public_type;
     uint8_t *exported = NULL;
-    size_t exported_size = 0;
-    size_t exported_length = 0;
+    mbedtls_size_t exported_size = 0;
+    mbedtls_size_t exported_length = 0;
     int ok = 0;
 
     PSA_ASSERT( psa_get_key_attributes( key, &attributes ) );

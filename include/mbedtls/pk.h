@@ -246,14 +246,14 @@ static inline mbedtls_ecp_keypair *mbedtls_pk_ec( const mbedtls_pk_context pk )
 /**
  * \brief           Types for RSA-alt abstraction
  */
-typedef int (*mbedtls_pk_rsa_alt_decrypt_func)( void *ctx, size_t *olen,
+typedef int (*mbedtls_pk_rsa_alt_decrypt_func)( void *ctx, mbedtls_size_t *olen,
                     const unsigned char *input, unsigned char *output,
-                    size_t output_max_len );
+                    mbedtls_size_t output_max_len );
 typedef int (*mbedtls_pk_rsa_alt_sign_func)( void *ctx,
-                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
+                    int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
                     mbedtls_md_type_t md_alg, unsigned int hashlen,
                     const unsigned char *hash, unsigned char *sig );
-typedef size_t (*mbedtls_pk_rsa_alt_key_len_func)( void *ctx );
+typedef mbedtls_size_t (*mbedtls_pk_rsa_alt_key_len_func)( void *ctx );
 #endif /* MBEDTLS_PK_RSA_ALT_SUPPORT */
 
 /**
@@ -383,7 +383,7 @@ int mbedtls_pk_setup_rsa_alt( mbedtls_pk_context *ctx, void * key,
  *
  * \return          Key size in bits, or 0 on error
  */
-size_t mbedtls_pk_get_bitlen( const mbedtls_pk_context *ctx );
+mbedtls_size_t mbedtls_pk_get_bitlen( const mbedtls_pk_context *ctx );
 
 /**
  * \brief           Get the length in bytes of the underlying key
@@ -392,7 +392,7 @@ size_t mbedtls_pk_get_bitlen( const mbedtls_pk_context *ctx );
  *
  * \return          Key length in bytes, or 0 on error
  */
-static inline size_t mbedtls_pk_get_len( const mbedtls_pk_context *ctx )
+static inline mbedtls_size_t mbedtls_pk_get_len( const mbedtls_pk_context *ctx )
 {
     return( ( mbedtls_pk_get_bitlen( ctx ) + 7 ) / 8 );
 }
@@ -439,8 +439,8 @@ int mbedtls_pk_can_do( const mbedtls_pk_context *ctx, mbedtls_pk_type_t type );
  *                  to verify RSASSA_PSS signatures.
  */
 int mbedtls_pk_verify( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-               const unsigned char *hash, size_t hash_len,
-               const unsigned char *sig, size_t sig_len );
+               const unsigned char *hash, mbedtls_size_t hash_len,
+               const unsigned char *sig, mbedtls_size_t sig_len );
 
 /**
  * \brief           Restartable version of \c mbedtls_pk_verify()
@@ -464,8 +464,8 @@ int mbedtls_pk_verify( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
  */
 int mbedtls_pk_verify_restartable( mbedtls_pk_context *ctx,
                mbedtls_md_type_t md_alg,
-               const unsigned char *hash, size_t hash_len,
-               const unsigned char *sig, size_t sig_len,
+               const unsigned char *hash, mbedtls_size_t hash_len,
+               const unsigned char *sig, mbedtls_size_t sig_len,
                mbedtls_pk_restart_ctx *rs_ctx );
 
 /**
@@ -499,8 +499,8 @@ int mbedtls_pk_verify_restartable( mbedtls_pk_context *ctx,
  */
 int mbedtls_pk_verify_ext( mbedtls_pk_type_t type, const void *options,
                    mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-                   const unsigned char *hash, size_t hash_len,
-                   const unsigned char *sig, size_t sig_len );
+                   const unsigned char *hash, mbedtls_size_t hash_len,
+                   const unsigned char *sig, mbedtls_size_t sig_len );
 
 /**
  * \brief           Make signature, including padding if relevant.
@@ -531,9 +531,9 @@ int mbedtls_pk_verify_ext( mbedtls_pk_type_t type, const void *options,
  *                  For ECDSA, md_alg may never be MBEDTLS_MD_NONE.
  */
 int mbedtls_pk_sign( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
-             const unsigned char *hash, size_t hash_len,
-             unsigned char *sig, size_t sig_size, size_t *sig_len,
-             int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+             const unsigned char *hash, mbedtls_size_t hash_len,
+             unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
+             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
 
 /**
  * \brief           Restartable version of \c mbedtls_pk_sign()
@@ -566,9 +566,9 @@ int mbedtls_pk_sign( mbedtls_pk_context *ctx, mbedtls_md_type_t md_alg,
  */
 int mbedtls_pk_sign_restartable( mbedtls_pk_context *ctx,
              mbedtls_md_type_t md_alg,
-             const unsigned char *hash, size_t hash_len,
-             unsigned char *sig, size_t sig_size, size_t *sig_len,
-             int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
+             const unsigned char *hash, mbedtls_size_t hash_len,
+             unsigned char *sig, mbedtls_size_t sig_size, mbedtls_size_t *sig_len,
+             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
              mbedtls_pk_restart_ctx *rs_ctx );
 
 /**
@@ -589,9 +589,9 @@ int mbedtls_pk_sign_restartable( mbedtls_pk_context *ctx,
  * \return          0 on success, or a specific error code.
  */
 int mbedtls_pk_decrypt( mbedtls_pk_context *ctx,
-                const unsigned char *input, size_t ilen,
-                unsigned char *output, size_t *olen, size_t osize,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+                const unsigned char *input, mbedtls_size_t ilen,
+                unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
 
 /**
  * \brief           Encrypt message (including padding if relevant).
@@ -612,9 +612,9 @@ int mbedtls_pk_decrypt( mbedtls_pk_context *ctx,
  * \return          0 on success, or a specific error code.
  */
 int mbedtls_pk_encrypt( mbedtls_pk_context *ctx,
-                const unsigned char *input, size_t ilen,
-                unsigned char *output, size_t *olen, size_t osize,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+                const unsigned char *input, mbedtls_size_t ilen,
+                unsigned char *output, mbedtls_size_t *olen, mbedtls_size_t osize,
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
 
 /**
  * \brief           Check if a public-private pair of keys matches.
@@ -632,7 +632,7 @@ int mbedtls_pk_encrypt( mbedtls_pk_context *ctx,
  */
 int mbedtls_pk_check_pair( const mbedtls_pk_context *pub,
                            const mbedtls_pk_context *prv,
-                           int (*f_rng)(void *, unsigned char *, size_t),
+                           int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                            void *p_rng );
 
 /**
@@ -697,9 +697,9 @@ mbedtls_pk_type_t mbedtls_pk_get_type( const mbedtls_pk_context *ctx );
  * \return          0 if successful, or a specific PK or PEM error code
  */
 int mbedtls_pk_parse_key( mbedtls_pk_context *ctx,
-              const unsigned char *key, size_t keylen,
-              const unsigned char *pwd, size_t pwdlen,
-              int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+              const unsigned char *key, mbedtls_size_t keylen,
+              const unsigned char *pwd, mbedtls_size_t pwdlen,
+              int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
 
 /** \ingroup pk_module */
 /**
@@ -724,7 +724,7 @@ int mbedtls_pk_parse_key( mbedtls_pk_context *ctx,
  * \return          0 if successful, or a specific PK or PEM error code
  */
 int mbedtls_pk_parse_public_key( mbedtls_pk_context *ctx,
-                         const unsigned char *key, size_t keylen );
+                         const unsigned char *key, mbedtls_size_t keylen );
 
 #if defined(MBEDTLS_FS_IO)
 /** \ingroup pk_module */
@@ -752,7 +752,7 @@ int mbedtls_pk_parse_public_key( mbedtls_pk_context *ctx,
  */
 int mbedtls_pk_parse_keyfile( mbedtls_pk_context *ctx,
                   const char *path, const char *password,
-                  int (*f_rng)(void *, unsigned char *, size_t), void *p_rng );
+                  int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng );
 
 /** \ingroup pk_module */
 /**
@@ -789,7 +789,7 @@ int mbedtls_pk_parse_public_keyfile( mbedtls_pk_context *ctx, const char *path )
  * \return          length of data written if successful, or a specific
  *                  error code
  */
-int mbedtls_pk_write_key_der( const mbedtls_pk_context *ctx, unsigned char *buf, size_t size );
+int mbedtls_pk_write_key_der( const mbedtls_pk_context *ctx, unsigned char *buf, mbedtls_size_t size );
 
 /**
  * \brief           Write a public key to a SubjectPublicKeyInfo DER structure
@@ -804,7 +804,7 @@ int mbedtls_pk_write_key_der( const mbedtls_pk_context *ctx, unsigned char *buf,
  * \return          length of data written if successful, or a specific
  *                  error code
  */
-int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *ctx, unsigned char *buf, size_t size );
+int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *ctx, unsigned char *buf, mbedtls_size_t size );
 
 #if defined(MBEDTLS_PEM_WRITE_C)
 /**
@@ -817,7 +817,7 @@ int mbedtls_pk_write_pubkey_der( const mbedtls_pk_context *ctx, unsigned char *b
  *
  * \return          0 if successful, or a specific error code
  */
-int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *ctx, unsigned char *buf, size_t size );
+int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *ctx, unsigned char *buf, mbedtls_size_t size );
 
 /**
  * \brief           Write a private key to a PKCS#1 or SEC1 PEM string
@@ -829,7 +829,7 @@ int mbedtls_pk_write_pubkey_pem( const mbedtls_pk_context *ctx, unsigned char *b
  *
  * \return          0 if successful, or a specific error code
  */
-int mbedtls_pk_write_key_pem( const mbedtls_pk_context *ctx, unsigned char *buf, size_t size );
+int mbedtls_pk_write_key_pem( const mbedtls_pk_context *ctx, unsigned char *buf, mbedtls_size_t size );
 #endif /* MBEDTLS_PEM_WRITE_C */
 #endif /* MBEDTLS_PK_WRITE_C */
 
@@ -873,7 +873,7 @@ int mbedtls_pk_write_pubkey( unsigned char **p, unsigned char *start,
  * know you do.
  */
 #if defined(MBEDTLS_FS_IO)
-int mbedtls_pk_load_file( const char *path, unsigned char **buf, size_t *n );
+int mbedtls_pk_load_file( const char *path, unsigned char **buf, mbedtls_size_t *n );
 #endif
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO)

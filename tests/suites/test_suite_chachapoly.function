@@ -75,8 +75,8 @@ void chachapoly_state()
     unsigned char input[1];
     unsigned char output[1];
     unsigned char mac[16];
-    size_t input_len = sizeof( input );
-    size_t aad_len = sizeof( aad );
+    mbedtls_size_t input_len = sizeof( input );
+    mbedtls_size_t aad_len = sizeof( aad );
     mbedtls_chachapoly_context ctx;
 
     memset( key,    0x00, sizeof( key ) );

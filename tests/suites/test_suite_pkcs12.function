@@ -27,10 +27,10 @@ void pkcs12_derive_key( int md_type, int key_size_arg,
    unsigned char *output_data = NULL;
 
    unsigned char *password = NULL;
-   size_t password_len = 0;
+   mbedtls_size_t password_len = 0;
    unsigned char *salt = NULL;
-   size_t salt_len = 0;
-   size_t key_size = key_size_arg;
+   mbedtls_size_t salt_len = 0;
+   mbedtls_size_t key_size = key_size_arg;
 
    if( password_usage == USE_GIVEN_INPUT )
       password = password_arg->x;

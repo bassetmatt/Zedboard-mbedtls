@@ -61,9 +61,9 @@ void mbedtls_hmac_drbg_init( mbedtls_hmac_drbg_context *ctx )
  */
 int mbedtls_hmac_drbg_update( mbedtls_hmac_drbg_context *ctx,
                                   const unsigned char *additional,
-                                  size_t add_len )
+                                  mbedtls_size_t add_len )
 {
-    size_t md_len = mbedtls_md_get_size( ctx->md_ctx.md_info );
+    mbedtls_size_t md_len = mbedtls_md_get_size( ctx->md_ctx.md_info );
     unsigned char rounds = ( additional != NULL && add_len != 0 ) ? 2 : 1;
     unsigned char sep[1];
     unsigned char K[MBEDTLS_MD_MAX_SIZE];
@@ -109,7 +109,7 @@ exit:
  */
 int mbedtls_hmac_drbg_seed_buf( mbedtls_hmac_drbg_context *ctx,
                         const mbedtls_md_info_t * md_info,
-                        const unsigned char *data, size_t data_len )
+                        const unsigned char *data, mbedtls_size_t data_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -142,15 +142,15 @@ int mbedtls_hmac_drbg_seed_buf( mbedtls_hmac_drbg_context *ctx,
  * of SP800-90A, while roman numbers refer to section 9.2.
  */
 static int hmac_drbg_reseed_core( mbedtls_hmac_drbg_context *ctx,
-                                  const unsigned char *additional, size_t len,
+                                  const unsigned char *additional, mbedtls_size_t len,
                                   int use_nonce )
 {
     unsigned char seed[MBEDTLS_HMAC_DRBG_MAX_SEED_INPUT];
-    size_t seedlen = 0;
+    mbedtls_size_t seedlen = 0;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     {
-        size_t total_entropy_len;
+        mbedtls_size_t total_entropy_len;
 
         if( use_nonce == 0 )
             total_entropy_len = ctx->entropy_len;
@@ -221,7 +221,7 @@ exit:
  * HMAC_DRBG reseeding: 10.1.2.4 + 9.2
  */
 int mbedtls_hmac_drbg_reseed( mbedtls_hmac_drbg_context *ctx,
-                      const unsigned char *additional, size_t len )
+                      const unsigned char *additional, mbedtls_size_t len )
 {
     return( hmac_drbg_reseed_core( ctx, additional, len, 0 ) );
 }
@@ -234,13 +234,13 @@ int mbedtls_hmac_drbg_reseed( mbedtls_hmac_drbg_context *ctx,
  */
 int mbedtls_hmac_drbg_seed( mbedtls_hmac_drbg_context *ctx,
                     const mbedtls_md_info_t * md_info,
-                    int (*f_entropy)(void *, unsigned char *, size_t),
+                    int (*f_entropy)(void *, unsigned char *, mbedtls_size_t),
                     void *p_entropy,
                     const unsigned char *custom,
-                    size_t len )
+                    mbedtls_size_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t md_size;
+    mbedtls_size_t md_size;
 
     if( ( ret = mbedtls_md_setup( &ctx->md_ctx, md_info, 1 ) ) != 0 )
         return( ret );
@@ -299,7 +299,7 @@ void mbedtls_hmac_drbg_set_prediction_resistance( mbedtls_hmac_drbg_context *ctx
 /*
  * Set entropy length grabbed for seeding
  */
-void mbedtls_hmac_drbg_set_entropy_len( mbedtls_hmac_drbg_context *ctx, size_t len )
+void mbedtls_hmac_drbg_set_entropy_len( mbedtls_hmac_drbg_context *ctx, mbedtls_size_t len )
 {
     ctx->entropy_len = len;
 }
@@ -317,13 +317,13 @@ void mbedtls_hmac_drbg_set_reseed_interval( mbedtls_hmac_drbg_context *ctx, int 
  * 10.1.2.5 (arabic) + 9.3 (Roman)
  */
 int mbedtls_hmac_drbg_random_with_add( void *p_rng,
-                               unsigned char *output, size_t out_len,
-                               const unsigned char *additional, size_t add_len )
+                               unsigned char *output, mbedtls_size_t out_len,
+                               const unsigned char *additional, mbedtls_size_t add_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_hmac_drbg_context *ctx = (mbedtls_hmac_drbg_context *) p_rng;
-    size_t md_len = mbedtls_md_get_size( ctx->md_ctx.md_info );
-    size_t left = out_len;
+    mbedtls_size_t md_len = mbedtls_md_get_size( ctx->md_ctx.md_info );
+    mbedtls_size_t left = out_len;
     unsigned char *out = output;
 
     /* II. Check request length */
@@ -356,7 +356,7 @@ int mbedtls_hmac_drbg_random_with_add( void *p_rng,
     /* 3, 4, 5. Generate bytes */
     while( left != 0 )
     {
-        size_t use_len = left > md_len ? md_len : left;
+        mbedtls_size_t use_len = left > md_len ? md_len : left;
 
         if( ( ret = mbedtls_md_hmac_reset( &ctx->md_ctx ) ) != 0 )
             goto exit;
@@ -387,7 +387,7 @@ exit:
 /*
  * HMAC_DRBG random function
  */
-int mbedtls_hmac_drbg_random( void *p_rng, unsigned char *output, size_t out_len )
+int mbedtls_hmac_drbg_random( void *p_rng, unsigned char *output, mbedtls_size_t out_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_hmac_drbg_context *ctx = (mbedtls_hmac_drbg_context *) p_rng;
@@ -458,7 +458,7 @@ int mbedtls_hmac_drbg_update_seed_file( mbedtls_hmac_drbg_context *ctx, const ch
 {
     int ret = 0;
     FILE *f = NULL;
-    size_t n;
+    mbedtls_size_t n;
     unsigned char buf[ MBEDTLS_HMAC_DRBG_MAX_INPUT ];
     unsigned char c;
 
@@ -537,9 +537,9 @@ static const unsigned char result_nopr[OUTPUT_LEN] = {
     0xe8, 0x5f, 0x13, 0x0f, 0xc8, 0xa4, 0x59, 0xb7 };
 
 /* "Entropy" from buffer */
-static size_t test_offset;
+static mbedtls_size_t test_offset;
 static int hmac_drbg_self_test_entropy( void *data,
-                                        unsigned char *buf, size_t len )
+                                        unsigned char *buf, mbedtls_size_t len )
 {
     const unsigned char *p = data;
     memcpy( buf, p + test_offset, len );

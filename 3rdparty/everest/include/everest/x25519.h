@@ -78,9 +78,9 @@ void mbedtls_x25519_free( mbedtls_x25519_context *ctx );
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_x25519_make_params( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_make_params( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng );
 
 /**
@@ -137,9 +137,9 @@ int mbedtls_x25519_get_params( mbedtls_x25519_context *ctx, const mbedtls_ecp_ke
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng );
 
 /**
@@ -160,9 +160,9 @@ int mbedtls_x25519_calc_secret( mbedtls_x25519_context *ctx, size_t *olen,
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, size_t *olen,
-                        unsigned char *buf, size_t blen,
-                        int( *f_rng )(void *, unsigned char *, size_t),
+int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, mbedtls_size_t *olen,
+                        unsigned char *buf, mbedtls_size_t blen,
+                        int( *f_rng )(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng );
 
 /**
@@ -181,7 +181,7 @@ int mbedtls_x25519_make_public( mbedtls_x25519_context *ctx, size_t *olen,
  * \return      An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
 int mbedtls_x25519_read_public( mbedtls_x25519_context *ctx,
-                        const unsigned char *buf, size_t blen );
+                        const unsigned char *buf, mbedtls_size_t blen );
 
 #ifdef __cplusplus
 }

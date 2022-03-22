@@ -78,12 +78,12 @@
  */
 psa_status_t mbedtls_psa_aead_encrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, size_t nonce_length,
-    const uint8_t *additional_data, size_t additional_data_length,
-    const uint8_t *plaintext, size_t plaintext_length,
-    uint8_t *ciphertext, size_t ciphertext_size, size_t *ciphertext_length );
+    const uint8_t *nonce, mbedtls_size_t nonce_length,
+    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
+    const uint8_t *plaintext, mbedtls_size_t plaintext_length,
+    uint8_t *ciphertext, mbedtls_size_t ciphertext_size, mbedtls_size_t *ciphertext_length );
 
 /**
  * \brief Process an authenticated decryption operation.
@@ -141,12 +141,12 @@ psa_status_t mbedtls_psa_aead_encrypt(
  */
 psa_status_t mbedtls_psa_aead_decrypt(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *nonce, size_t nonce_length,
-    const uint8_t *additional_data, size_t additional_data_length,
-    const uint8_t *ciphertext, size_t ciphertext_length,
-    uint8_t *plaintext, size_t plaintext_size, size_t *plaintext_length );
+    const uint8_t *nonce, mbedtls_size_t nonce_length,
+    const uint8_t *additional_data, mbedtls_size_t additional_data_length,
+    const uint8_t *ciphertext, mbedtls_size_t ciphertext_length,
+    uint8_t *plaintext, mbedtls_size_t plaintext_size, mbedtls_size_t *plaintext_length );
 
 /** Set the key for a multipart authenticated encryption operation.
  *
@@ -188,7 +188,7 @@ psa_status_t mbedtls_psa_aead_encrypt_setup(
     mbedtls_psa_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg );
 
 /** Set the key for a multipart authenticated decryption operation.
@@ -231,7 +231,7 @@ psa_status_t mbedtls_psa_aead_decrypt_setup(
     mbedtls_psa_aead_operation_t *operation,
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg );
 
 /** Set the nonce for an authenticated encryption or decryption operation.
@@ -265,7 +265,7 @@ psa_status_t mbedtls_psa_aead_decrypt_setup(
 psa_status_t mbedtls_psa_aead_set_nonce(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *nonce,
-    size_t nonce_length );
+    mbedtls_size_t nonce_length );
 
 /** Declare the lengths of the message and additional data for AEAD.
  *
@@ -305,8 +305,8 @@ psa_status_t mbedtls_psa_aead_set_nonce(
  */
 psa_status_t mbedtls_psa_aead_set_lengths(
     mbedtls_psa_aead_operation_t *operation,
-    size_t ad_length,
-    size_t plaintext_length );
+    mbedtls_size_t ad_length,
+    mbedtls_size_t plaintext_length );
 
 /** Pass additional data to an active AEAD operation.
  *
@@ -343,7 +343,7 @@ psa_status_t mbedtls_psa_aead_set_lengths(
 psa_status_t mbedtls_psa_aead_update_ad(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *input,
-    size_t input_length );
+    mbedtls_size_t input_length );
 
 /** Encrypt or decrypt a message fragment in an active AEAD operation.
  *
@@ -403,10 +403,10 @@ psa_status_t mbedtls_psa_aead_update_ad(
 psa_status_t mbedtls_psa_aead_update(
     mbedtls_psa_aead_operation_t *operation,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *output,
-    size_t output_size,
-    size_t *output_length );
+    mbedtls_size_t output_size,
+    mbedtls_size_t *output_length );
 
 /** Finish encrypting a message in an AEAD operation.
  *
@@ -475,11 +475,11 @@ psa_status_t mbedtls_psa_aead_update(
 psa_status_t mbedtls_psa_aead_finish(
     mbedtls_psa_aead_operation_t *operation,
     uint8_t *ciphertext,
-    size_t ciphertext_size,
-    size_t *ciphertext_length,
+    mbedtls_size_t ciphertext_size,
+    mbedtls_size_t *ciphertext_length,
     uint8_t *tag,
-    size_t tag_size,
-    size_t *tag_length );
+    mbedtls_size_t tag_size,
+    mbedtls_size_t *tag_length );
 
 /** Abort an AEAD operation.
  *

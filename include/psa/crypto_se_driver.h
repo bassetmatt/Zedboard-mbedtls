@@ -105,7 +105,7 @@ typedef struct {
      * This is always equal to the value of the `persistent_data_size` field
      * of the ::psa_drv_se_t structure when the driver is registered.
      */
-    const size_t MBEDTLS_PRIVATE(persistent_data_size);
+    const mbedtls_size_t MBEDTLS_PRIVATE(persistent_data_size);
 
     /** Driver transient data.
      *
@@ -199,7 +199,7 @@ typedef psa_status_t (*psa_drv_se_mac_setup_t)(psa_drv_se_context_t *drv_context
  */
 typedef psa_status_t (*psa_drv_se_mac_update_t)(void *op_context,
                                                 const uint8_t *p_input,
-                                                size_t input_length);
+                                                mbedtls_size_t input_length);
 
 /** \brief a function that completes a previously started secure element MAC
  * operation by returning the resulting MAC.
@@ -219,8 +219,8 @@ typedef psa_status_t (*psa_drv_se_mac_update_t)(void *op_context,
  */
 typedef psa_status_t (*psa_drv_se_mac_finish_t)(void *op_context,
                                                 uint8_t *p_mac,
-                                                size_t mac_size,
-                                                size_t *p_mac_length);
+                                                mbedtls_size_t mac_size,
+                                                mbedtls_size_t *p_mac_length);
 
 /** \brief A function that completes a previously started secure element MAC
  * operation by comparing the resulting MAC against a provided value
@@ -240,7 +240,7 @@ typedef psa_status_t (*psa_drv_se_mac_finish_t)(void *op_context,
  */
 typedef psa_status_t (*psa_drv_se_mac_finish_verify_t)(void *op_context,
                                                        const uint8_t *p_mac,
-                                                       size_t mac_length);
+                                                       mbedtls_size_t mac_length);
 
 /** \brief A function that aborts a previous started secure element MAC
  * operation
@@ -270,12 +270,12 @@ typedef psa_status_t (*psa_drv_se_mac_abort_t)(void *op_context);
  */
 typedef psa_status_t (*psa_drv_se_mac_generate_t)(psa_drv_se_context_t *drv_context,
                                                   const uint8_t *p_input,
-                                                  size_t input_length,
+                                                  mbedtls_size_t input_length,
                                                   psa_key_slot_number_t key_slot,
                                                   psa_algorithm_t alg,
                                                   uint8_t *p_mac,
-                                                  size_t mac_size,
-                                                  size_t *p_mac_length);
+                                                  mbedtls_size_t mac_size,
+                                                  mbedtls_size_t *p_mac_length);
 
 /** \brief A function that performs a secure element MAC operation in one
  * command and compares the resulting MAC against a provided value
@@ -299,11 +299,11 @@ typedef psa_status_t (*psa_drv_se_mac_generate_t)(psa_drv_se_context_t *drv_cont
  */
 typedef psa_status_t (*psa_drv_se_mac_verify_t)(psa_drv_se_context_t *drv_context,
                                                 const uint8_t *p_input,
-                                                size_t input_length,
+                                                mbedtls_size_t input_length,
                                                 psa_key_slot_number_t key_slot,
                                                 psa_algorithm_t alg,
                                                 const uint8_t *p_mac,
-                                                size_t mac_length);
+                                                mbedtls_size_t mac_length);
 
 /** \brief A struct containing all of the function pointers needed to
  * perform secure element MAC operations
@@ -324,7 +324,7 @@ typedef struct {
     /**The size in bytes of the hardware-specific secure element MAC context
      * structure
     */
-    size_t                    MBEDTLS_PRIVATE(context_size);
+    mbedtls_size_t                    MBEDTLS_PRIVATE(context_size);
     /** Function that performs a MAC setup operation
      */
     psa_drv_se_mac_setup_t          MBEDTLS_PRIVATE(p_setup);
@@ -411,7 +411,7 @@ typedef psa_status_t (*psa_drv_se_cipher_setup_t)(psa_drv_se_context_t *drv_cont
  */
 typedef psa_status_t (*psa_drv_se_cipher_set_iv_t)(void *op_context,
                                                    const uint8_t *p_iv,
-                                                   size_t iv_length);
+                                                   mbedtls_size_t iv_length);
 
 /** \brief A function that continues a previously started secure element cipher
  * operation
@@ -433,10 +433,10 @@ typedef psa_status_t (*psa_drv_se_cipher_set_iv_t)(void *op_context,
  */
 typedef psa_status_t (*psa_drv_se_cipher_update_t)(void *op_context,
                                                    const uint8_t *p_input,
-                                                   size_t input_size,
+                                                   mbedtls_size_t input_size,
                                                    uint8_t *p_output,
-                                                   size_t output_size,
-                                                   size_t *p_output_length);
+                                                   mbedtls_size_t output_size,
+                                                   mbedtls_size_t *p_output_length);
 
 /** \brief A function that completes a previously started secure element cipher
  * operation
@@ -454,8 +454,8 @@ typedef psa_status_t (*psa_drv_se_cipher_update_t)(void *op_context,
  */
 typedef psa_status_t (*psa_drv_se_cipher_finish_t)(void *op_context,
                                                    uint8_t *p_output,
-                                                   size_t output_size,
-                                                   size_t *p_output_length);
+                                                   mbedtls_size_t output_size,
+                                                   mbedtls_size_t *p_output_length);
 
 /** \brief A function that aborts a previously started secure element cipher
  * operation
@@ -493,9 +493,9 @@ typedef psa_status_t (*psa_drv_se_cipher_ecb_t)(psa_drv_se_context_t *drv_contex
                                                 psa_algorithm_t algorithm,
                                                 psa_encrypt_or_decrypt_t direction,
                                                 const uint8_t *p_input,
-                                                size_t input_size,
+                                                mbedtls_size_t input_size,
                                                 uint8_t *p_output,
-                                                size_t output_size);
+                                                mbedtls_size_t output_size);
 
 /**
  * \brief A struct containing all of the function pointers needed to implement
@@ -511,7 +511,7 @@ typedef struct {
     /** The size in bytes of the hardware-specific secure element cipher
      * context structure
      */
-    size_t               MBEDTLS_PRIVATE(context_size);
+    mbedtls_size_t               MBEDTLS_PRIVATE(context_size);
     /** Function that performs a cipher setup operation */
     psa_drv_se_cipher_setup_t  MBEDTLS_PRIVATE(p_setup);
     /** Function that sets a cipher IV (if necessary) */
@@ -560,10 +560,10 @@ typedef psa_status_t (*psa_drv_se_asymmetric_sign_t)(psa_drv_se_context_t *drv_c
                                                      psa_key_slot_number_t key_slot,
                                                      psa_algorithm_t alg,
                                                      const uint8_t *p_hash,
-                                                     size_t hash_length,
+                                                     mbedtls_size_t hash_length,
                                                      uint8_t *p_signature,
-                                                     size_t signature_size,
-                                                     size_t *p_signature_length);
+                                                     mbedtls_size_t signature_size,
+                                                     mbedtls_size_t *p_signature_length);
 
 /**
  * \brief A function that verifies the signature a hash or short message using
@@ -586,9 +586,9 @@ typedef psa_status_t (*psa_drv_se_asymmetric_verify_t)(psa_drv_se_context_t *drv
                                                        psa_key_slot_number_t key_slot,
                                                        psa_algorithm_t alg,
                                                        const uint8_t *p_hash,
-                                                       size_t hash_length,
+                                                       mbedtls_size_t hash_length,
                                                        const uint8_t *p_signature,
-                                                       size_t signature_length);
+                                                       mbedtls_size_t signature_length);
 
 /**
  * \brief A function that encrypts a short message with an asymmetric public
@@ -624,12 +624,12 @@ typedef psa_status_t (*psa_drv_se_asymmetric_encrypt_t)(psa_drv_se_context_t *dr
                                                         psa_key_slot_number_t key_slot,
                                                         psa_algorithm_t alg,
                                                         const uint8_t *p_input,
-                                                        size_t input_length,
+                                                        mbedtls_size_t input_length,
                                                         const uint8_t *p_salt,
-                                                        size_t salt_length,
+                                                        mbedtls_size_t salt_length,
                                                         uint8_t *p_output,
-                                                        size_t output_size,
-                                                        size_t *p_output_length);
+                                                        mbedtls_size_t output_size,
+                                                        mbedtls_size_t *p_output_length);
 
 /**
  * \brief A function that decrypts a short message with an asymmetric private
@@ -664,12 +664,12 @@ typedef psa_status_t (*psa_drv_se_asymmetric_decrypt_t)(psa_drv_se_context_t *dr
                                                         psa_key_slot_number_t key_slot,
                                                         psa_algorithm_t alg,
                                                         const uint8_t *p_input,
-                                                        size_t input_length,
+                                                        mbedtls_size_t input_length,
                                                         const uint8_t *p_salt,
-                                                        size_t salt_length,
+                                                        mbedtls_size_t salt_length,
                                                         uint8_t *p_output,
-                                                        size_t output_size,
-                                                        size_t *p_output_length);
+                                                        mbedtls_size_t output_size,
+                                                        mbedtls_size_t *p_output_length);
 
 /**
  * \brief A struct containing all of the function pointers needed to implement
@@ -737,14 +737,14 @@ typedef psa_status_t (*psa_drv_se_aead_encrypt_t)(psa_drv_se_context_t *drv_cont
                                                   psa_key_slot_number_t key_slot,
                                                   psa_algorithm_t algorithm,
                                                   const uint8_t *p_nonce,
-                                                  size_t nonce_length,
+                                                  mbedtls_size_t nonce_length,
                                                   const uint8_t *p_additional_data,
-                                                  size_t additional_data_length,
+                                                  mbedtls_size_t additional_data_length,
                                                   const uint8_t *p_plaintext,
-                                                  size_t plaintext_length,
+                                                  mbedtls_size_t plaintext_length,
                                                   uint8_t *p_ciphertext,
-                                                  size_t ciphertext_size,
-                                                  size_t *p_ciphertext_length);
+                                                  mbedtls_size_t ciphertext_size,
+                                                  mbedtls_size_t *p_ciphertext_length);
 
 /** A function that peforms a secure element authenticated decryption operation
  *
@@ -779,14 +779,14 @@ typedef psa_status_t (*psa_drv_se_aead_decrypt_t)(psa_drv_se_context_t *drv_cont
                                                   psa_key_slot_number_t key_slot,
                                                   psa_algorithm_t algorithm,
                                                   const uint8_t *p_nonce,
-                                                  size_t nonce_length,
+                                                  mbedtls_size_t nonce_length,
                                                   const uint8_t *p_additional_data,
-                                                  size_t additional_data_length,
+                                                  mbedtls_size_t additional_data_length,
                                                   const uint8_t *p_ciphertext,
-                                                  size_t ciphertext_length,
+                                                  mbedtls_size_t ciphertext_length,
                                                   uint8_t *p_plaintext,
-                                                  size_t plaintext_size,
-                                                  size_t *p_plaintext_length);
+                                                  mbedtls_size_t plaintext_size,
+                                                  mbedtls_size_t *p_plaintext_length);
 
 /**
  * \brief A struct containing all of the function pointers needed to implement
@@ -995,8 +995,8 @@ typedef psa_status_t (*psa_drv_se_import_key_t)(
     psa_key_slot_number_t key_slot,
     const psa_key_attributes_t *attributes,
     const uint8_t *data,
-    size_t data_length,
-    size_t *bits);
+    mbedtls_size_t data_length,
+    mbedtls_size_t *bits);
 
 /**
  * \brief A function that destroys a secure element key and restore the slot to
@@ -1055,8 +1055,8 @@ typedef psa_status_t (*psa_drv_se_destroy_key_t)(
 typedef psa_status_t (*psa_drv_se_export_key_t)(psa_drv_se_context_t *drv_context,
                                                 psa_key_slot_number_t key,
                                                 uint8_t *p_data,
-                                                size_t data_size,
-                                                size_t *p_data_length);
+                                                mbedtls_size_t data_size,
+                                                mbedtls_size_t *p_data_length);
 
 /**
  * \brief A function that generates a symmetric or asymmetric key on a secure
@@ -1108,7 +1108,7 @@ typedef psa_status_t (*psa_drv_se_generate_key_t)(
     psa_drv_se_context_t *drv_context,
     psa_key_slot_number_t key_slot,
     const psa_key_attributes_t *attributes,
-    uint8_t *pubkey, size_t pubkey_size, size_t *pubkey_length);
+    uint8_t *pubkey, mbedtls_size_t pubkey_size, mbedtls_size_t *pubkey_length);
 
 /**
  * \brief A struct containing all of the function pointers needed to for secure
@@ -1222,7 +1222,7 @@ typedef psa_status_t (*psa_drv_se_key_derivation_setup_t)(psa_drv_se_context_t *
 typedef psa_status_t (*psa_drv_se_key_derivation_collateral_t)(void *op_context,
                                                                uint32_t collateral_id,
                                                                const uint8_t *p_collateral,
-                                                               size_t collateral_size);
+                                                               mbedtls_size_t collateral_size);
 
 /** \brief A function that performs the final secure element key derivation
  * step and place the generated key material in a slot
@@ -1250,8 +1250,8 @@ typedef psa_status_t (*psa_drv_se_key_derivation_derive_t)(void *op_context,
  */
 typedef psa_status_t (*psa_drv_se_key_derivation_export_t)(void *op_context,
                                                            uint8_t *p_output,
-                                                           size_t output_size,
-                                                           size_t *p_output_length);
+                                                           mbedtls_size_t output_size,
+                                                           mbedtls_size_t *p_output_length);
 
 /**
  * \brief A struct containing all of the function pointers needed to for secure
@@ -1264,7 +1264,7 @@ typedef psa_status_t (*psa_drv_se_key_derivation_export_t)(void *op_context,
  */
 typedef struct {
     /** The driver-specific size of the key derivation context */
-    size_t                           MBEDTLS_PRIVATE(context_size);
+    mbedtls_size_t                           MBEDTLS_PRIVATE(context_size);
     /** Function that performs a key derivation setup */
     psa_drv_se_key_derivation_setup_t      MBEDTLS_PRIVATE(p_setup);
     /** Function that sets key derivation collateral */
@@ -1304,7 +1304,7 @@ typedef struct {
      * for more information about why and how a driver can use
      * persistent data.
      */
-    size_t MBEDTLS_PRIVATE(persistent_data_size);
+    mbedtls_size_t MBEDTLS_PRIVATE(persistent_data_size);
 
     /** The driver initialization function.
      *

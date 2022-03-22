@@ -230,7 +230,7 @@ static int do_handshake( mbedtls_ssl_context *ssl )
     return( 0 );
 }
 
-static int write_ssl_data( mbedtls_ssl_context *ssl, unsigned char *buf, size_t len )
+static int write_ssl_data( mbedtls_ssl_context *ssl, unsigned char *buf, mbedtls_size_t len )
 {
     int ret;
 
@@ -247,12 +247,12 @@ static int write_ssl_data( mbedtls_ssl_context *ssl, unsigned char *buf, size_t 
     return( 0 );
 }
 
-static int write_ssl_and_get_response( mbedtls_ssl_context *ssl, unsigned char *buf, size_t len )
+static int write_ssl_and_get_response( mbedtls_ssl_context *ssl, unsigned char *buf, mbedtls_size_t len )
 {
     int ret;
     unsigned char data[128];
     char code[4];
-    size_t i, idx = 0;
+    mbedtls_size_t i, idx = 0;
 
     mbedtls_printf("\n%s", buf);
     while( len && ( ret = mbedtls_ssl_write( ssl, buf, len ) ) <= 0 )
@@ -305,12 +305,12 @@ static int write_ssl_and_get_response( mbedtls_ssl_context *ssl, unsigned char *
     while( 1 );
 }
 
-static int write_and_get_response( mbedtls_net_context *sock_fd, unsigned char *buf, size_t len )
+static int write_and_get_response( mbedtls_net_context *sock_fd, unsigned char *buf, mbedtls_size_t len )
 {
     int ret;
     unsigned char data[128];
     char code[4];
-    size_t i, idx = 0;
+    mbedtls_size_t i, idx = 0;
 
     mbedtls_printf("\n%s", buf);
     if( len && ( ret = mbedtls_net_send( sock_fd, buf, len ) ) <= 0 )
@@ -381,7 +381,7 @@ int main( int argc, char *argv[] )
     mbedtls_x509_crt clicert;
     mbedtls_pk_context pkey;
     int i;
-    size_t n;
+    mbedtls_size_t n;
     char *p, *q;
     const int *list;
 

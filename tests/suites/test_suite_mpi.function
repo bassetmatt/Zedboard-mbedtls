@@ -21,8 +21,8 @@ static int sign_is_valid( const mbedtls_mpi *X )
 typedef struct mbedtls_test_mpi_random
 {
     data_t *data;
-    size_t  pos;
-    size_t  chunk_len;
+    mbedtls_size_t  pos;
+    mbedtls_size_t  chunk_len;
 } mbedtls_test_mpi_random;
 
 /*
@@ -33,7 +33,7 @@ typedef struct mbedtls_test_mpi_random
  */
 int mbedtls_test_mpi_miller_rabin_determinizer( void* state,
                                                 unsigned char* buf,
-                                                size_t len )
+                                                mbedtls_size_t len )
 {
     mbedtls_test_mpi_random *random = (mbedtls_test_mpi_random*) state;
 
@@ -62,10 +62,10 @@ int mbedtls_test_mpi_miller_rabin_determinizer( void* state,
 }
 
 /* Random generator that is told how many bytes to return. */
-static int f_rng_bytes_left( void *state, unsigned char *buf, size_t len )
+static int f_rng_bytes_left( void *state, unsigned char *buf, mbedtls_size_t len )
 {
-    size_t *bytes_left = state;
-    size_t i;
+    mbedtls_size_t *bytes_left = state;
+    mbedtls_size_t i;
     for( i = 0; i < len; i++ )
     {
         if( *bytes_left == 0 )
@@ -90,7 +90,7 @@ static int f_rng_bytes_left( void *state, unsigned char *buf, size_t len )
 static int is_significantly_above_a_power_of_2( data_t *bytes )
 {
     const uint8_t *p = bytes->x;
-    size_t len = bytes->len;
+    mbedtls_size_t len = bytes->len;
     unsigned x;
 
     /* Skip leading null bytes */
@@ -153,7 +153,7 @@ void mpi_read_write_string( int radix_X, char * input_X, int radix_A,
 {
     mbedtls_mpi X;
     char str[1000];
-    size_t len;
+    mbedtls_size_t len;
 
     mbedtls_mpi_init( &X );
 
@@ -181,7 +181,7 @@ void mbedtls_mpi_read_binary( data_t * buf, int radix_A, char * input_A )
 {
     mbedtls_mpi X;
     char str[1000];
-    size_t len;
+    mbedtls_size_t len;
 
     mbedtls_mpi_init( &X );
 
@@ -201,7 +201,7 @@ void mbedtls_mpi_read_binary_le( data_t * buf, int radix_A, char * input_A )
 {
     mbedtls_mpi X;
     char str[1000];
-    size_t len;
+    mbedtls_size_t len;
 
     mbedtls_mpi_init( &X );
 
@@ -223,7 +223,7 @@ void mbedtls_mpi_write_binary( int radix_X, char * input_X,
 {
     mbedtls_mpi X;
     unsigned char buf[1000];
-    size_t buflen;
+    mbedtls_size_t buflen;
 
     memset( buf, 0x00, 1000 );
 
@@ -232,8 +232,8 @@ void mbedtls_mpi_write_binary( int radix_X, char * input_X,
     TEST_ASSERT( mbedtls_test_read_mpi( &X, radix_X, input_X ) == 0 );
 
     buflen = mbedtls_mpi_size( &X );
-    if( buflen > (size_t) output_size )
-        buflen = (size_t) output_size;
+    if( buflen > (mbedtls_size_t) output_size )
+        buflen = (mbedtls_size_t) output_size;
 
     TEST_ASSERT( mbedtls_mpi_write_binary( &X, buf, buflen ) == result );
     if( result == 0)
@@ -255,7 +255,7 @@ void mbedtls_mpi_write_binary_le( int radix_X, char * input_X,
 {
     mbedtls_mpi X;
     unsigned char buf[1000];
-    size_t buflen;
+    mbedtls_size_t buflen;
 
     memset( buf, 0x00, 1000 );
 
@@ -264,8 +264,8 @@ void mbedtls_mpi_write_binary_le( int radix_X, char * input_X,
     TEST_ASSERT( mbedtls_test_read_mpi( &X, radix_X, input_X ) == 0 );
 
     buflen = mbedtls_mpi_size( &X );
-    if( buflen > (size_t) output_size )
-        buflen = (size_t) output_size;
+    if( buflen > (mbedtls_size_t) output_size )
+        buflen = (mbedtls_size_t) output_size;
 
     TEST_ASSERT( mbedtls_mpi_write_binary_le( &X, buf, buflen ) == result );
     if( result == 0)
@@ -286,7 +286,7 @@ void mbedtls_mpi_read_file( int radix_X, char * input_file,
 {
     mbedtls_mpi X;
     unsigned char buf[1000];
-    size_t buflen;
+    mbedtls_size_t buflen;
     FILE *file;
     int ret;
 
@@ -389,7 +389,7 @@ void mbedtls_mpi_lsb( int radix_X, char * input_X, int nr_bits )
     mbedtls_mpi_init( &X );
 
     TEST_ASSERT( mbedtls_test_read_mpi( &X, radix_X, input_X ) == 0 );
-    TEST_ASSERT( mbedtls_mpi_lsb( &X ) == (size_t) nr_bits );
+    TEST_ASSERT( mbedtls_mpi_lsb( &X ) == (mbedtls_size_t) nr_bits );
 
 exit:
     mbedtls_mpi_free( &X );
@@ -403,7 +403,7 @@ void mbedtls_mpi_bitlen( int radix_X, char * input_X, int nr_bits )
     mbedtls_mpi_init( &X );
 
     TEST_ASSERT( mbedtls_test_read_mpi( &X, radix_X, input_X ) == 0 );
-    TEST_ASSERT( mbedtls_mpi_bitlen( &X ) == (size_t) nr_bits );
+    TEST_ASSERT( mbedtls_mpi_bitlen( &X ) == (mbedtls_size_t) nr_bits );
 
 exit:
     mbedtls_mpi_free( &X );
@@ -632,12 +632,12 @@ void mbedtls_mpi_shrink( int before, int used, int min, int after )
     TEST_ASSERT( mbedtls_mpi_grow( &X, before ) == 0 );
     if( used > 0 )
     {
-        size_t used_bit_count = used * 8 * sizeof( mbedtls_mpi_uint );
+        mbedtls_size_t used_bit_count = used * 8 * sizeof( mbedtls_mpi_uint );
         TEST_ASSERT( mbedtls_mpi_set_bit( &X, used_bit_count - 1, 1 ) == 0 );
     }
-    TEST_EQUAL( X.n, (size_t) before );
+    TEST_EQUAL( X.n, (mbedtls_size_t) before );
     TEST_ASSERT( mbedtls_mpi_shrink( &X, min ) == 0 );
-    TEST_EQUAL( X.n, (size_t) after );
+    TEST_EQUAL( X.n, (mbedtls_size_t) after );
 
 exit:
     mbedtls_mpi_free( &X );
@@ -1155,10 +1155,10 @@ void mbedtls_mpi_gen_prime( int bits, int flags, int ref_ret )
 
     if( ref_ret == 0 )
     {
-        size_t actual_bits = mbedtls_mpi_bitlen( &X );
+        mbedtls_size_t actual_bits = mbedtls_mpi_bitlen( &X );
 
-        TEST_ASSERT( actual_bits >= (size_t) bits );
-        TEST_ASSERT( actual_bits <= (size_t) bits + 1 );
+        TEST_ASSERT( actual_bits >= (mbedtls_size_t) bits );
+        TEST_ASSERT( actual_bits <= (mbedtls_size_t) bits + 1 );
         TEST_ASSERT( sign_is_valid( &X ) );
 
         TEST_ASSERT( mbedtls_mpi_is_prime_ext( &X, 40,
@@ -1221,7 +1221,7 @@ void mpi_fill_random( int wanted_bytes, int rng_bytes,
 {
     mbedtls_mpi X;
     int ret;
-    size_t bytes_left = rng_bytes;
+    mbedtls_size_t bytes_left = rng_bytes;
     mbedtls_mpi_init( &X );
 
     if( before != 0 )
@@ -1243,11 +1243,11 @@ void mpi_fill_random( int wanted_bytes, int rng_bytes,
          * as a big-endian representation of the number. We know when
          * our RNG function returns null bytes, so we know how many
          * leading zero bytes the number has. */
-        size_t leading_zeros = 0;
+        mbedtls_size_t leading_zeros = 0;
         if( wanted_bytes > 0 && rng_bytes % 256 == 0 )
             leading_zeros = 1;
         TEST_ASSERT( mbedtls_mpi_size( &X ) + leading_zeros ==
-                     (size_t) wanted_bytes );
+                     (mbedtls_size_t) wanted_bytes );
         TEST_ASSERT( (int) bytes_left == rng_bytes - wanted_bytes );
         TEST_ASSERT( sign_is_valid( &X ) );
     }
@@ -1267,16 +1267,16 @@ void mpi_random_many( int min, data_t *bound_bytes, int iterations )
      */
 
     mbedtls_mpi upper_bound;
-    size_t n_bits;
+    mbedtls_size_t n_bits;
     mbedtls_mpi result;
-    size_t b;
+    mbedtls_size_t b;
     /* If upper_bound is small, stats[b] is the number of times the value b
      * has been generated. Otherwise stats[b] is the number of times a
      * value with bit b set has been generated. */
-    size_t *stats = NULL;
-    size_t stats_len;
+    mbedtls_size_t *stats = NULL;
+    mbedtls_size_t stats_len;
     int full_stats;
-    size_t i;
+    mbedtls_size_t i;
 
     mbedtls_mpi_init( &upper_bound );
     mbedtls_mpi_init( &result );
@@ -1301,7 +1301,7 @@ void mpi_random_many( int min, data_t *bound_bytes, int iterations )
     }
     ASSERT_ALLOC( stats, stats_len );
 
-    for( i = 0; i < (size_t) iterations; i++ )
+    for( i = 0; i < (mbedtls_size_t) iterations; i++ )
     {
         mbedtls_test_set_step( i );
         TEST_EQUAL( 0, mbedtls_mpi_random( &result, min, &upper_bound,
@@ -1355,7 +1355,7 @@ void mpi_random_many( int min, data_t *bound_bytes, int iterations )
             {
                 TEST_ASSERT( stats[b] > 0 );
             }
-            TEST_ASSERT( stats[b] < (size_t) iterations );
+            TEST_ASSERT( stats[b] < (mbedtls_size_t) iterations );
         }
     }
 

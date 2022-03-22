@@ -69,10 +69,10 @@ const unsigned char msg2_part2[] = { 0x06, 0x06 };
 const unsigned char key_bytes[32] = { 0 };
 
 /* Print the contents of a buffer in hex */
-void print_buf( const char *title, unsigned char *buf, size_t len )
+void print_buf( const char *title, unsigned char *buf, mbedtls_size_t len )
 {
     printf( "%s:", title );
-    for( size_t i = 0; i < len; i++ )
+    for( mbedtls_size_t i = 0; i < len; i++ )
         printf( " %02x", buf[i] );
     printf( "\n" );
 }

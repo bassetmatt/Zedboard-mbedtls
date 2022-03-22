@@ -157,7 +157,7 @@ $dispatch_code
  *               DISPATCH_TEST_FN_NOT_FOUND if not found
  *               DISPATCH_UNSUPPORTED_SUITE if not compile time enabled.
  */
-int dispatch_test( size_t func_idx, void ** params )
+int dispatch_test( mbedtls_size_t func_idx, void ** params )
 {
     int ret = DISPATCH_TEST_SUCCESS;
     TestWrapper_t fp = NULL;
@@ -199,7 +199,7 @@ int dispatch_test( size_t func_idx, void ** params )
  *               DISPATCH_TEST_FN_NOT_FOUND if not found
  *               DISPATCH_UNSUPPORTED_SUITE if not compile time enabled.
  */
-int check_test( size_t func_idx )
+int check_test( mbedtls_size_t func_idx )
 {
     int ret = DISPATCH_TEST_SUCCESS;
     TestWrapper_t fp = NULL;

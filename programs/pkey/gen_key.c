@@ -50,10 +50,10 @@
 #define DEV_RANDOM_THRESHOLD        32
 
 int dev_random_entropy_poll( void *data, unsigned char *output,
-                             size_t len, size_t *olen )
+                             mbedtls_size_t len, mbedtls_size_t *olen )
 {
     FILE *file;
-    size_t ret, left = len;
+    mbedtls_size_t ret, left = len;
     unsigned char *p = output;
     ((void) data);
 
@@ -151,7 +151,7 @@ static int write_private_key( mbedtls_pk_context *key, const char *output_file )
     FILE *f;
     unsigned char output_buf[16000];
     unsigned char *c = output_buf;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     memset(output_buf, 0, 16000);
     if( opt.format == FORMAT_PEM )

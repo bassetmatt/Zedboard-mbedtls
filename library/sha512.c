@@ -298,10 +298,10 @@ int mbedtls_internal_sha512_process( mbedtls_sha512_context *ctx,
  */
 int mbedtls_sha512_update( mbedtls_sha512_context *ctx,
                                const unsigned char *input,
-                               size_t ilen )
+                               mbedtls_size_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t fill;
+    mbedtls_size_t fill;
     unsigned int left;
 
     SHA512_VALIDATE_RET( ctx != NULL );
@@ -421,7 +421,7 @@ int mbedtls_sha512_finish( mbedtls_sha512_context *ctx,
  * output = SHA-512( input buffer )
  */
 int mbedtls_sha512( const unsigned char *input,
-                    size_t ilen,
+                    mbedtls_size_t ilen,
                     unsigned char *output,
                     int is384 )
 {
@@ -465,7 +465,7 @@ static const unsigned char sha512_test_buf[3][113] =
     { "" }
 };
 
-static const size_t sha512_test_buflen[3] =
+static const mbedtls_size_t sha512_test_buflen[3] =
 {
     3, 112, 1000
 };

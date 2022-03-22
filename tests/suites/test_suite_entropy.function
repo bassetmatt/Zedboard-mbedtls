@@ -14,8 +14,8 @@ typedef enum
 typedef struct
 {
     entropy_dummy_instruction instruction;
-    size_t length; /* Length to return for DUMMY_CONSTANT_LENGTH */
-    size_t calls; /* Incremented at each call */
+    mbedtls_size_t length; /* Length to return for DUMMY_CONSTANT_LENGTH */
+    mbedtls_size_t calls; /* Incremented at each call */
 } entropy_dummy_context;
 
 /*
@@ -25,7 +25,7 @@ typedef struct
  * Otherwise, write the length indicated by data or error if negative
  */
 static int entropy_dummy_source( void *arg, unsigned char *output,
-                                 size_t len, size_t *olen )
+                                 mbedtls_size_t len, mbedtls_size_t *olen )
 {
     entropy_dummy_context *context = arg;
     ++context->calls;
@@ -68,7 +68,7 @@ static void entropy_clear_sources( mbedtls_entropy_context *ctx )
  */
 static unsigned char buffer_seed[MBEDTLS_ENTROPY_BLOCK_SIZE];
 
-int buffer_nv_seed_read( unsigned char *buf, size_t buf_len )
+int buffer_nv_seed_read( unsigned char *buf, mbedtls_size_t buf_len )
 {
     if( buf_len != MBEDTLS_ENTROPY_BLOCK_SIZE )
         return( -1 );
@@ -77,7 +77,7 @@ int buffer_nv_seed_read( unsigned char *buf, size_t buf_len )
     return( 0 );
 }
 
-int buffer_nv_seed_write( unsigned char *buf, size_t buf_len )
+int buffer_nv_seed_write( unsigned char *buf, mbedtls_size_t buf_len )
 {
     if( buf_len != MBEDTLS_ENTROPY_BLOCK_SIZE )
         return( -1 );
@@ -89,7 +89,7 @@ int buffer_nv_seed_write( unsigned char *buf, size_t buf_len )
 /*
  * NV seed read/write helpers that fill the base seedfile
  */
-static int write_nv_seed( unsigned char *buf, size_t buf_len )
+static int write_nv_seed( unsigned char *buf, mbedtls_size_t buf_len )
 {
     FILE *f;
 
@@ -108,7 +108,7 @@ static int write_nv_seed( unsigned char *buf, size_t buf_len )
     return( 0 );
 }
 
-int read_nv_seed( unsigned char *buf, size_t buf_len )
+int read_nv_seed( unsigned char *buf, mbedtls_size_t buf_len )
 {
     FILE *f;
 
@@ -206,7 +206,7 @@ exit:
 void entropy_too_many_sources(  )
 {
     mbedtls_entropy_context ctx;
-    size_t i;
+    mbedtls_size_t i;
     entropy_dummy_context dummy = {DUMMY_REQUESTED_LENGTH, 0, 0};
 
     mbedtls_entropy_init( &ctx );
@@ -234,7 +234,7 @@ void entropy_func_len( int len, int ret )
     mbedtls_entropy_context ctx;
     unsigned char buf[MBEDTLS_ENTROPY_BLOCK_SIZE + 10] = { 0 };
     unsigned char acc[MBEDTLS_ENTROPY_BLOCK_SIZE + 10] = { 0 };
-    size_t i, j;
+    mbedtls_size_t i, j;
 
     mbedtls_entropy_init( &ctx );
 
@@ -249,7 +249,7 @@ void entropy_func_len( int len, int ret )
     }
 
     if( ret == 0 )
-        for( j = 0; j < (size_t) len; j++ )
+        for( j = 0; j < (mbedtls_size_t) len; j++ )
             TEST_ASSERT( acc[j] != 0 );
 
     for( j = len; j < sizeof( buf ); j++ )
@@ -324,7 +324,7 @@ void entropy_threshold( int threshold, int chunk_size, int result )
          * updates: before and after updating the NV seed. */
         result *= 2;
 #endif
-        TEST_ASSERT( weak.calls == (size_t) result );
+        TEST_ASSERT( weak.calls == (mbedtls_size_t) result );
     }
     else
     {
@@ -372,7 +372,7 @@ void entropy_calls( int strength1, int strength2,
          * updates: before and after updating the NV seed. */
         result *= 2;
 #endif
-        TEST_ASSERT( dummy1.calls == (size_t) result );
+        TEST_ASSERT( dummy1.calls == (mbedtls_size_t) result );
     }
     else
     {
@@ -439,9 +439,9 @@ void entropy_nv_seed( data_t * read_seed )
 #endif
     mbedtls_md_context_t accumulator;
     mbedtls_entropy_context ctx;
-    int (*original_mbedtls_nv_seed_read)( unsigned char *buf, size_t buf_len ) =
+    int (*original_mbedtls_nv_seed_read)( unsigned char *buf, mbedtls_size_t buf_len ) =
         mbedtls_nv_seed_read;
-    int (*original_mbedtls_nv_seed_write)( unsigned char *buf, size_t buf_len ) =
+    int (*original_mbedtls_nv_seed_write)( unsigned char *buf, mbedtls_size_t buf_len ) =
         mbedtls_nv_seed_write;
 
     unsigned char header[2];

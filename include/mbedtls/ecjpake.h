@@ -125,7 +125,7 @@ int mbedtls_ecjpake_setup( mbedtls_ecjpake_context *ctx,
                            mbedtls_md_type_t hash,
                            mbedtls_ecp_group_id curve,
                            const unsigned char *secret,
-                           size_t len );
+                           mbedtls_size_t len );
 
 /**
  * \brief               Set the point format for future reads and writes.
@@ -173,8 +173,8 @@ int mbedtls_ecjpake_check( const mbedtls_ecjpake_context *ctx );
  * \return          A negative error code on failure.
  */
 int mbedtls_ecjpake_write_round_one( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, size_t len, size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, size_t),
+                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
+                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                             void *p_rng );
 
 /**
@@ -193,7 +193,7 @@ int mbedtls_ecjpake_write_round_one( mbedtls_ecjpake_context *ctx,
  */
 int mbedtls_ecjpake_read_round_one( mbedtls_ecjpake_context *ctx,
                                     const unsigned char *buf,
-                                    size_t len );
+                                    mbedtls_size_t len );
 
 /**
  * \brief           Generate and write the second round message
@@ -214,8 +214,8 @@ int mbedtls_ecjpake_read_round_one( mbedtls_ecjpake_context *ctx,
  * \return          A negative error code on failure.
  */
 int mbedtls_ecjpake_write_round_two( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, size_t len, size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, size_t),
+                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
+                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                             void *p_rng );
 
 /**
@@ -233,7 +233,7 @@ int mbedtls_ecjpake_write_round_two( mbedtls_ecjpake_context *ctx,
  */
 int mbedtls_ecjpake_read_round_two( mbedtls_ecjpake_context *ctx,
                                     const unsigned char *buf,
-                                    size_t len );
+                                    mbedtls_size_t len );
 
 /**
  * \brief           Derive the shared secret
@@ -254,8 +254,8 @@ int mbedtls_ecjpake_read_round_two( mbedtls_ecjpake_context *ctx,
  * \return          A negative error code on failure.
  */
 int mbedtls_ecjpake_derive_secret( mbedtls_ecjpake_context *ctx,
-                            unsigned char *buf, size_t len, size_t *olen,
-                            int (*f_rng)(void *, unsigned char *, size_t),
+                            unsigned char *buf, mbedtls_size_t len, mbedtls_size_t *olen,
+                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                             void *p_rng );
 
 /**

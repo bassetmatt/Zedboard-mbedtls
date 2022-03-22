@@ -23,7 +23,7 @@ void sha256_invalid_param( )
 {
     mbedtls_sha256_context ctx;
     unsigned char buf[64] = { 0 };
-    size_t const buflen = sizeof( buf );
+    mbedtls_size_t const buflen = sizeof( buf );
     int valid_type = 0;
     int invalid_type = 42;
 
@@ -72,7 +72,7 @@ void sha512_invalid_param( )
 {
     mbedtls_sha512_context ctx;
     unsigned char buf[64] = { 0 };
-    size_t const buflen = sizeof( buf );
+    mbedtls_size_t const buflen = sizeof( buf );
     int valid_type = 0;
     int invalid_type = 42;
 

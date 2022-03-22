@@ -150,7 +150,7 @@ int mbedtls_ecp_restart_is_enabled( void )
 struct mbedtls_ecp_restart_mul
 {
     mbedtls_ecp_point R;    /* current intermediate result                  */
-    size_t i;               /* current index in various loops, 0 outside    */
+    mbedtls_size_t i;               /* current index in various loops, 0 outside    */
     mbedtls_ecp_point *T;   /* table for precomputed points                 */
     unsigned char T_size;   /* number of points in table T                  */
     enum {                  /* what were we doing last time we returned?    */
@@ -342,13 +342,13 @@ int mbedtls_ecp_check_budget( const mbedtls_ecp_group *grp,
 
 #endif /* MBEDTLS_ECP_RESTARTABLE */
 
-static void mpi_init_many( mbedtls_mpi *arr, size_t size )
+static void mpi_init_many( mbedtls_mpi *arr, mbedtls_size_t size )
 {
     while( size-- )
         mbedtls_mpi_init( arr++ );
 }
 
-static void mpi_free_many( mbedtls_mpi *arr, size_t size )
+static void mpi_free_many( mbedtls_mpi *arr, mbedtls_size_t size )
 {
     while( size-- )
         mbedtls_mpi_free( arr++ );
@@ -432,7 +432,7 @@ const mbedtls_ecp_group_id *mbedtls_ecp_grp_id_list( void )
 
     if( ! init_done )
     {
-        size_t i = 0;
+        mbedtls_size_t i = 0;
         const mbedtls_ecp_curve_info *curve_info;
 
         for( curve_info = mbedtls_ecp_curve_list();
@@ -598,7 +598,7 @@ static int ecp_group_is_static_comb_table( const mbedtls_ecp_group *grp ) {
  */
 void mbedtls_ecp_group_free( mbedtls_ecp_group *grp )
 {
-    size_t i;
+    mbedtls_size_t i;
 
     if( grp == NULL )
         return;
@@ -732,11 +732,11 @@ cleanup:
  */
 int mbedtls_ecp_point_write_binary( const mbedtls_ecp_group *grp,
                                     const mbedtls_ecp_point *P,
-                                    int format, size_t *olen,
-                                    unsigned char *buf, size_t buflen )
+                                    int format, mbedtls_size_t *olen,
+                                    unsigned char *buf, mbedtls_size_t buflen )
 {
     int ret = MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE;
-    size_t plen;
+    mbedtls_size_t plen;
     ECP_VALIDATE_RET( grp  != NULL );
     ECP_VALIDATE_RET( P    != NULL );
     ECP_VALIDATE_RET( olen != NULL );
@@ -807,10 +807,10 @@ cleanup:
  */
 int mbedtls_ecp_point_read_binary( const mbedtls_ecp_group *grp,
                                    mbedtls_ecp_point *pt,
-                                   const unsigned char *buf, size_t ilen )
+                                   const unsigned char *buf, mbedtls_size_t ilen )
 {
     int ret = MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE;
-    size_t plen;
+    mbedtls_size_t plen;
     ECP_VALIDATE_RET( grp != NULL );
     ECP_VALIDATE_RET( pt  != NULL );
     ECP_VALIDATE_RET( buf != NULL );
@@ -872,7 +872,7 @@ cleanup:
  */
 int mbedtls_ecp_tls_read_point( const mbedtls_ecp_group *grp,
                                 mbedtls_ecp_point *pt,
-                                const unsigned char **buf, size_t buf_len )
+                                const unsigned char **buf, mbedtls_size_t buf_len )
 {
     unsigned char data_len;
     const unsigned char *buf_start;
@@ -907,8 +907,8 @@ int mbedtls_ecp_tls_read_point( const mbedtls_ecp_group *grp,
  *      } ECPoint;
  */
 int mbedtls_ecp_tls_write_point( const mbedtls_ecp_group *grp, const mbedtls_ecp_point *pt,
-                         int format, size_t *olen,
-                         unsigned char *buf, size_t blen )
+                         int format, mbedtls_size_t *olen,
+                         unsigned char *buf, mbedtls_size_t blen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     ECP_VALIDATE_RET( grp  != NULL );
@@ -941,7 +941,7 @@ int mbedtls_ecp_tls_write_point( const mbedtls_ecp_group *grp, const mbedtls_ecp
  * Set a group from an ECParameters record (RFC 4492)
  */
 int mbedtls_ecp_tls_read_group( mbedtls_ecp_group *grp,
-                                const unsigned char **buf, size_t len )
+                                const unsigned char **buf, mbedtls_size_t len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_group_id grp_id;
@@ -960,7 +960,7 @@ int mbedtls_ecp_tls_read_group( mbedtls_ecp_group *grp,
  * mbedtls_ecp_group_id.
  */
 int mbedtls_ecp_tls_read_group_id( mbedtls_ecp_group_id *grp,
-                                   const unsigned char **buf, size_t len )
+                                   const unsigned char **buf, mbedtls_size_t len )
 {
     uint16_t tls_id;
     const mbedtls_ecp_curve_info *curve_info;
@@ -998,8 +998,8 @@ int mbedtls_ecp_tls_read_group_id( mbedtls_ecp_group_id *grp,
 /*
  * Write the ECParameters record corresponding to a group (RFC 4492)
  */
-int mbedtls_ecp_tls_write_group( const mbedtls_ecp_group *grp, size_t *olen,
-                         unsigned char *buf, size_t blen )
+int mbedtls_ecp_tls_write_group( const mbedtls_ecp_group *grp, mbedtls_size_t *olen,
+                         unsigned char *buf, mbedtls_size_t blen )
 {
     const mbedtls_ecp_curve_info *curve_info;
     ECP_VALIDATE_RET( grp  != NULL );
@@ -1187,7 +1187,7 @@ cleanup:
        defined(MBEDTLS_ECP_ADD_MIXED_ALT) )
 static inline int mbedtls_mpi_shift_l_mod( const mbedtls_ecp_group *grp,
                                            mbedtls_mpi *X,
-                                           size_t count )
+                                           mbedtls_size_t count )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     MBEDTLS_MPI_CHK( mbedtls_mpi_shift_l( X, count ) );
@@ -1320,7 +1320,7 @@ cleanup:
  * Cost: 1N(t) := 1I + (6t - 3)M + 1S
  */
 static int ecp_normalize_jac_many( const mbedtls_ecp_group *grp,
-                                   mbedtls_ecp_point *T[], size_t T_size )
+                                   mbedtls_ecp_point *T[], mbedtls_size_t T_size )
 {
     if( T_size < 2 )
         return( ecp_normalize_jac( grp, *T ) );
@@ -1334,7 +1334,7 @@ static int ecp_normalize_jac_many( const mbedtls_ecp_group *grp,
     return( MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE );
 #else
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_mpi *c, t;
 
     if( ( c = mbedtls_calloc( T_size, sizeof( mbedtls_mpi ) ) ) == NULL )
@@ -1644,7 +1644,7 @@ cleanup:
  * This countermeasure was first suggested in [2].
  */
 static int ecp_randomize_jac( const mbedtls_ecp_group *grp, mbedtls_ecp_point *pt,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
 #if defined(MBEDTLS_ECP_RANDOMIZE_JAC_ALT)
     if( mbedtls_internal_ecp_grp_capable( grp ) )
@@ -1744,10 +1744,10 @@ cleanup:
  * - m is the MPI, expected to be odd and such that bitlength(m) <= w * d
  *   (the result will be incorrect if these assumptions are not satisfied)
  */
-static void ecp_comb_recode_core( unsigned char x[], size_t d,
+static void ecp_comb_recode_core( unsigned char x[], mbedtls_size_t d,
                                   unsigned char w, const mbedtls_mpi *m )
 {
-    size_t i, j;
+    mbedtls_size_t i, j;
     unsigned char c, cc, adjust;
 
     memset( x, 0, d+1 );
@@ -1810,12 +1810,12 @@ static void ecp_comb_recode_core( unsigned char x[], size_t d,
  */
 static int ecp_precompute_comb( const mbedtls_ecp_group *grp,
                                 mbedtls_ecp_point T[], const mbedtls_ecp_point *P,
-                                unsigned char w, size_t d,
+                                unsigned char w, mbedtls_size_t d,
                                 mbedtls_ecp_restart_ctx *rs_ctx )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char i;
-    size_t j = 0;
+    mbedtls_size_t j = 0;
     const unsigned char T_size = 1U << ( w - 1 );
     mbedtls_ecp_point *cur, *TT[COMB_MAX_PRE - 1];
 
@@ -1997,15 +1997,15 @@ cleanup:
  */
 static int ecp_mul_comb_core( const mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
                               const mbedtls_ecp_point T[], unsigned char T_size,
-                              const unsigned char x[], size_t d,
-                              int (*f_rng)(void *, unsigned char *, size_t),
+                              const unsigned char x[], mbedtls_size_t d,
+                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                               void *p_rng,
                               mbedtls_ecp_restart_ctx *rs_ctx )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_point Txi;
     mbedtls_mpi tmp[4];
-    size_t i;
+    mbedtls_size_t i;
 
     mbedtls_ecp_point_init( &Txi );
     mpi_init_many( tmp, sizeof( tmp ) / sizeof( mbedtls_mpi ) );
@@ -2080,7 +2080,7 @@ cleanup:
 static int ecp_comb_recode_scalar( const mbedtls_ecp_group *grp,
                                    const mbedtls_mpi *m,
                                    unsigned char k[COMB_MAX_D + 1],
-                                   size_t d,
+                                   mbedtls_size_t d,
                                    unsigned char w,
                                    unsigned char *parity_trick )
 {
@@ -2125,8 +2125,8 @@ static int ecp_mul_comb_after_precomp( const mbedtls_ecp_group *grp,
                                 const mbedtls_ecp_point *T,
                                 unsigned char T_size,
                                 unsigned char w,
-                                size_t d,
-                                int (*f_rng)(void *, unsigned char *, size_t),
+                                mbedtls_size_t d,
+                                int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                                 void *p_rng,
                                 mbedtls_ecp_restart_ctx *rs_ctx )
 {
@@ -2240,13 +2240,13 @@ static unsigned char ecp_pick_window_size( const mbedtls_ecp_group *grp,
  */
 static int ecp_mul_comb( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
                          const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-                         int (*f_rng)(void *, unsigned char *, size_t),
+                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                          void *p_rng,
                          mbedtls_ecp_restart_ctx *rs_ctx )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char w, p_eq_g, i;
-    size_t d;
+    mbedtls_size_t d;
     unsigned char T_size = 0, T_ok = 0;
     mbedtls_ecp_point *T = NULL;
 
@@ -2403,7 +2403,7 @@ cleanup:
  * Cost: 2M
  */
 static int ecp_randomize_mxz( const mbedtls_ecp_group *grp, mbedtls_ecp_point *P,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
 #if defined(MBEDTLS_ECP_RANDOMIZE_MXZ_ALT)
     if( mbedtls_internal_ecp_grp_capable( grp ) )
@@ -2494,11 +2494,11 @@ cleanup:
  */
 static int ecp_mul_mxz( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
                         const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-                        int (*f_rng)(void *, unsigned char *, size_t),
+                        int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                         void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i;
+    mbedtls_size_t i;
     unsigned char b;
     mbedtls_ecp_point RP;
     mbedtls_mpi PX;
@@ -2575,7 +2575,7 @@ cleanup:
  */
 static int ecp_mul_restartable_internal( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
              const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-             int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
+             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
              mbedtls_ecp_restart_ctx *rs_ctx )
 {
     int ret = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
@@ -2639,7 +2639,7 @@ cleanup:
  */
 int mbedtls_ecp_mul_restartable( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
              const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-             int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
+             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng,
              mbedtls_ecp_restart_ctx *rs_ctx )
 {
     ECP_VALIDATE_RET( grp != NULL );
@@ -2658,7 +2658,7 @@ int mbedtls_ecp_mul_restartable( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
  */
 int mbedtls_ecp_mul( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
              const mbedtls_mpi *m, const mbedtls_ecp_point *P,
-             int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+             int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     ECP_VALIDATE_RET( grp != NULL );
     ECP_VALIDATE_RET( R   != NULL );
@@ -3056,13 +3056,13 @@ int mbedtls_ecp_check_privkey( const mbedtls_ecp_group *grp,
 
 #if defined(MBEDTLS_ECP_MONTGOMERY_ENABLED)
 MBEDTLS_STATIC_TESTABLE
-int mbedtls_ecp_gen_privkey_mx( size_t high_bit,
+int mbedtls_ecp_gen_privkey_mx( mbedtls_size_t high_bit,
                                 mbedtls_mpi *d,
-                                int (*f_rng)(void *, unsigned char *, size_t),
+                                int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                                 void *p_rng )
 {
     int ret = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
-    size_t n_random_bytes = high_bit / 8 + 1;
+    mbedtls_size_t n_random_bytes = high_bit / 8 + 1;
 
     /* [Curve25519] page 5 */
     /* Generate a (high_bit+1)-bit random number by generating just enough
@@ -3091,7 +3091,7 @@ cleanup:
 #if defined(MBEDTLS_ECP_SHORT_WEIERSTRASS_ENABLED)
 static int mbedtls_ecp_gen_privkey_sw(
     const mbedtls_mpi *N, mbedtls_mpi *d,
-    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+    int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = mbedtls_mpi_random( d, 1, N, f_rng, p_rng );
     switch( ret )
@@ -3109,7 +3109,7 @@ static int mbedtls_ecp_gen_privkey_sw(
  */
 int mbedtls_ecp_gen_privkey( const mbedtls_ecp_group *grp,
                      mbedtls_mpi *d,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     ECP_VALIDATE_RET( grp   != NULL );
@@ -3135,7 +3135,7 @@ int mbedtls_ecp_gen_privkey( const mbedtls_ecp_group *grp,
 int mbedtls_ecp_gen_keypair_base( mbedtls_ecp_group *grp,
                      const mbedtls_ecp_point *G,
                      mbedtls_mpi *d, mbedtls_ecp_point *Q,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -3157,7 +3157,7 @@ cleanup:
  */
 int mbedtls_ecp_gen_keypair( mbedtls_ecp_group *grp,
                              mbedtls_mpi *d, mbedtls_ecp_point *Q,
-                             int (*f_rng)(void *, unsigned char *, size_t),
+                             int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                              void *p_rng )
 {
     ECP_VALIDATE_RET( grp   != NULL );
@@ -3172,7 +3172,7 @@ int mbedtls_ecp_gen_keypair( mbedtls_ecp_group *grp,
  * Generate a keypair, prettier wrapper
  */
 int mbedtls_ecp_gen_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     ECP_VALIDATE_RET( key   != NULL );
@@ -3190,7 +3190,7 @@ int mbedtls_ecp_gen_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
  * Read a private key.
  */
 int mbedtls_ecp_read_key( mbedtls_ecp_group_id grp_id, mbedtls_ecp_keypair *key,
-                          const unsigned char *buf, size_t buflen )
+                          const unsigned char *buf, mbedtls_size_t buflen )
 {
     int ret = 0;
 
@@ -3273,7 +3273,7 @@ cleanup:
  * Write a private key.
  */
 int mbedtls_ecp_write_key( mbedtls_ecp_keypair *key,
-                           unsigned char *buf, size_t buflen )
+                           unsigned char *buf, mbedtls_size_t buflen )
 {
     int ret = MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE;
 
@@ -3315,7 +3315,7 @@ cleanup:
  */
 int mbedtls_ecp_check_pub_priv(
         const mbedtls_ecp_keypair *pub, const mbedtls_ecp_keypair *prv,
-        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_point Q;
@@ -3365,13 +3365,13 @@ cleanup:
  * except we only use the low byte as the output. See
  * https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
  */
-static int self_test_rng( void *ctx, unsigned char *out, size_t len )
+static int self_test_rng( void *ctx, unsigned char *out, mbedtls_size_t len )
 {
     static uint32_t state = 42;
 
     (void) ctx;
 
-    for( size_t i = 0; i < len; i++ )
+    for( mbedtls_size_t i = 0; i < len; i++ )
     {
         state = state * 1664525u + 1013904223u;
         out[i] = (unsigned char) state;
@@ -3424,10 +3424,10 @@ static int self_test_point( int verbose,
                             mbedtls_mpi *m,
                             const mbedtls_ecp_point *P,
                             const char *const *exponents,
-                            size_t n_exponents )
+                            mbedtls_size_t n_exponents )
 {
     int ret = 0;
-    size_t i = 0;
+    mbedtls_size_t i = 0;
     unsigned long add_c_prev, dbl_c_prev, mul_c_prev;
     add_count = 0;
     dbl_count = 0;

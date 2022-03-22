@@ -72,7 +72,7 @@ with other function calls.
 
 This example shows how to import a key:
 ```C
-void import_a_key(const uint8_t *key, size_t key_len)
+void import_a_key(const uint8_t *key, mbedtls_size_t key_len)
 {
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -125,7 +125,7 @@ Mbed Crypto supports encrypting, decrypting, signing and verifying messages usin
 
 This example shows how to sign a hash that has already been calculated:
 ```C
-void sign_a_message_using_rsa(const uint8_t *key, size_t key_len)
+void sign_a_message_using_rsa(const uint8_t *key, mbedtls_size_t key_len)
 {
     psa_status_t status;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -134,7 +134,7 @@ void sign_a_message_using_rsa(const uint8_t *key, size_t key_len)
                         0x7f, 0x42, 0xc2, 0x57, 0x0a, 0x88, 0x40, 0x95,
                         0xa9, 0xe8, 0xcc, 0xac, 0xd0, 0xf6, 0x54, 0x5c};
     uint8_t signature[PSA_SIGNATURE_MAX_SIZE] = {0};
-    size_t signature_length;
+    mbedtls_size_t signature_length;
     psa_key_id_t key_id;
 
     printf("Sign a message...\t");
@@ -200,7 +200,7 @@ Mbed Crypto supports encrypting and decrypting messages using various symmetric 
 
 This example shows how to encrypt data using an AES (Advanced Encryption Standard) key in CBC (Cipher Block Chaining) mode with no padding (assuming all prerequisites have been fulfilled):
 ```c
-void encrypt_with_symmetric_ciphers(const uint8_t *key, size_t key_len)
+void encrypt_with_symmetric_ciphers(const uint8_t *key, mbedtls_size_t key_len)
 {
     enum {
         block_size = PSA_BLOCK_CIPHER_BLOCK_LENGTH(PSA_KEY_TYPE_AES),
@@ -210,9 +210,9 @@ void encrypt_with_symmetric_ciphers(const uint8_t *key, size_t key_len)
     psa_algorithm_t alg = PSA_ALG_CBC_NO_PADDING;
     uint8_t plaintext[block_size] = SOME_PLAINTEXT;
     uint8_t iv[block_size];
-    size_t iv_len;
+    mbedtls_size_t iv_len;
     uint8_t output[block_size];
-    size_t output_len;
+    mbedtls_size_t output_len;
     psa_key_id_t key_id;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
 
@@ -285,7 +285,7 @@ void encrypt_with_symmetric_ciphers(const uint8_t *key, size_t key_len)
 This example shows how to decrypt encrypted data using an AES key in CBC mode with no padding
 (assuming all prerequisites have been fulfilled):
 ```c
-void decrypt_with_symmetric_ciphers(const uint8_t *key, size_t key_len)
+void decrypt_with_symmetric_ciphers(const uint8_t *key, mbedtls_size_t key_len)
 {
     enum {
         block_size = PSA_BLOCK_CIPHER_BLOCK_LENGTH(PSA_KEY_TYPE_AES),
@@ -297,7 +297,7 @@ void decrypt_with_symmetric_ciphers(const uint8_t *key, size_t key_len)
     uint8_t ciphertext[block_size] = SOME_CIPHERTEXT;
     uint8_t iv[block_size] = ENCRYPTED_WITH_IV;
     uint8_t output[block_size];
-    size_t output_len;
+    mbedtls_size_t output_len;
     psa_key_id_t key_id;
 
     printf("Decrypt with cipher...\t");
@@ -396,7 +396,7 @@ This example shows how to calculate the SHA-256 hash of a message:
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
     unsigned char input[] = { 'a', 'b', 'c' };
     unsigned char actual_hash[PSA_HASH_MAX_SIZE];
-    size_t actual_hash_len;
+    mbedtls_size_t actual_hash_len;
 
     printf("Hash a message...\t");
     fflush(stdout);
@@ -445,7 +445,7 @@ This example shows how to verify the SHA-256 hash of a message:
         0x5d, 0xae, 0x22, 0x23, 0xb0, 0x03, 0x61, 0xa3, 0x96, 0x17, 0x7a, 0x9c,
         0xb4, 0x10, 0xff, 0x61, 0xf2, 0x00, 0x15, 0xad
     };
-    size_t expected_hash_len = PSA_HASH_LENGTH(alg);
+    mbedtls_size_t expected_hash_len = PSA_HASH_LENGTH(alg);
 
     printf("Verify a hash...\t");
     fflush(stdout);
@@ -590,8 +590,8 @@ derived from the key, salt and info provided:
     psa_algorithm_t alg = PSA_ALG_HKDF(PSA_ALG_SHA_256);
     psa_key_derivation_operation_t operation =
         PSA_KEY_DERIVATION_OPERATION_INIT;
-    size_t derived_bits = 128;
-    size_t capacity = PSA_BITS_TO_BYTES(derived_bits);
+    mbedtls_size_t derived_bits = 128;
+    mbedtls_size_t capacity = PSA_BITS_TO_BYTES(derived_bits);
     psa_key_id_t base_key;
     psa_key_id_t derived_key;
 
@@ -698,9 +698,9 @@ This example shows how to authenticate and encrypt a message:
         0x63, 0x28, 0x75, 0xDB, 0x7F, 0x6C, 0x92, 0x43,
         0xD2, 0xD7, 0xC2 };
     uint8_t *output_data = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
-    size_t tag_length = 16;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
+    mbedtls_size_t tag_length = 16;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key_id;
 
@@ -770,8 +770,8 @@ This example shows how to authenticate and decrypt a message:
         0x0F, 0xC8, 0x48, 0xAF, 0xCD, 0x89, 0x54, 0xF4, 0xF6, 0x3F, 0x28, 0x9A,
         0xA1, 0xDD, 0xB2, 0xB8, 0x09, 0xCD, 0x7C, 0xE1, 0x46, 0xE9, 0x98 };
     uint8_t *output_data = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key_id;
 
@@ -845,7 +845,7 @@ Mbed Crypto provides a simple way to generate a key or key pair.
         key_bits = 256,
     };
     psa_status_t status;
-    size_t exported_length = 0;
+    mbedtls_size_t exported_length = 0;
     static uint8_t exported[PSA_KEY_EXPORT_ECC_PUBLIC_KEY_MAX_SIZE(key_bits)];
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_id_t key_id;

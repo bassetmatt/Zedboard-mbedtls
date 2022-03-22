@@ -97,14 +97,14 @@ static const char tls13_label_prefix[6] = "tls13 ";
                      MBEDTLS_SSL_TLS1_3_KEY_SCHEDULE_MAX_CONTEXT_LEN )
 
 static void ssl_tls13_hkdf_encode_label(
-                            size_t desired_length,
-                            const unsigned char *label, size_t label_len,
-                            const unsigned char *ctx, size_t ctx_len,
-                            unsigned char *dst, size_t *dst_len )
+                            mbedtls_size_t desired_length,
+                            const unsigned char *label, mbedtls_size_t label_len,
+                            const unsigned char *ctx, mbedtls_size_t ctx_len,
+                            unsigned char *dst, mbedtls_size_t *dst_len )
 {
-    size_t total_label_len =
+    mbedtls_size_t total_label_len =
         sizeof(tls13_label_prefix) + label_len;
-    size_t total_hkdf_lbl_len =
+    mbedtls_size_t total_hkdf_lbl_len =
         SSL_TLS1_3_KEY_SCHEDULE_HKDF_LABEL_LEN( total_label_len, ctx_len );
 
     unsigned char *p = dst;
@@ -140,15 +140,15 @@ static void ssl_tls13_hkdf_encode_label(
 
 MBEDTLS_STATIC_TESTABLE
 psa_status_t mbedtls_psa_hkdf_expand( psa_algorithm_t alg,
-                                      const unsigned char *prk, size_t prk_len,
-                                      const unsigned char *info, size_t info_len,
-                                      unsigned char *okm, size_t okm_len )
+                                      const unsigned char *prk, mbedtls_size_t prk_len,
+                                      const unsigned char *info, mbedtls_size_t info_len,
+                                      unsigned char *okm, mbedtls_size_t okm_len )
 {
-    size_t hash_len;
-    size_t where = 0;
-    size_t n;
-    size_t t_len = 0;
-    size_t i;
+    mbedtls_size_t hash_len;
+    mbedtls_size_t where = 0;
+    mbedtls_size_t n;
+    mbedtls_size_t t_len = 0;
+    mbedtls_size_t i;
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_mac_operation_t operation = PSA_MAC_OPERATION_INIT;
@@ -208,9 +208,9 @@ psa_status_t mbedtls_psa_hkdf_expand( psa_algorithm_t alg,
      */
     for( i = 1; i <= n; i++ )
     {
-        size_t num_to_copy;
+        mbedtls_size_t num_to_copy;
         unsigned char c = i & 0xff;
-        size_t len;
+        mbedtls_size_t len;
 
         status = psa_mac_sign_setup( &operation, key, alg );
         if( status != PSA_SUCCESS )
@@ -263,14 +263,14 @@ cleanup:
 
 int mbedtls_ssl_tls13_hkdf_expand_label(
                      mbedtls_md_type_t hash_alg,
-                     const unsigned char *secret, size_t secret_len,
-                     const unsigned char *label, size_t label_len,
-                     const unsigned char *ctx, size_t ctx_len,
-                     unsigned char *buf, size_t buf_len )
+                     const unsigned char *secret, mbedtls_size_t secret_len,
+                     const unsigned char *label, mbedtls_size_t label_len,
+                     const unsigned char *ctx, mbedtls_size_t ctx_len,
+                     unsigned char *buf, mbedtls_size_t buf_len )
 {
     const mbedtls_md_info_t *md_info;
     unsigned char hkdf_label[ SSL_TLS1_3_KEY_SCHEDULE_MAX_HKDF_LABEL_LEN ];
-    size_t hkdf_label_len;
+    mbedtls_size_t hkdf_label_len;
 
     if( label_len > MBEDTLS_SSL_TLS1_3_KEY_SCHEDULE_MAX_LABEL_LEN )
     {
@@ -327,8 +327,8 @@ int mbedtls_ssl_tls13_hkdf_expand_label(
 int mbedtls_ssl_tls13_make_traffic_keys(
                      mbedtls_md_type_t hash_alg,
                      const unsigned char *client_secret,
-                     const unsigned char *server_secret, size_t secret_len,
-                     size_t key_len, size_t iv_len,
+                     const unsigned char *server_secret, mbedtls_size_t secret_len,
+                     mbedtls_size_t key_len, mbedtls_size_t iv_len,
                      mbedtls_ssl_key_set *keys )
 {
     int ret = 0;
@@ -373,11 +373,11 @@ int mbedtls_ssl_tls13_make_traffic_keys(
 
 int mbedtls_ssl_tls13_derive_secret(
                    mbedtls_md_type_t hash_alg,
-                   const unsigned char *secret, size_t secret_len,
-                   const unsigned char *label, size_t label_len,
-                   const unsigned char *ctx, size_t ctx_len,
+                   const unsigned char *secret, mbedtls_size_t secret_len,
+                   const unsigned char *label, mbedtls_size_t label_len,
+                   const unsigned char *ctx, mbedtls_size_t ctx_len,
                    int ctx_hashed,
-                   unsigned char *dstbuf, size_t dstbuf_len )
+                   unsigned char *dstbuf, mbedtls_size_t dstbuf_len )
 {
     int ret;
     unsigned char hashed_context[ MBEDTLS_MD_MAX_SIZE ];
@@ -418,11 +418,11 @@ int mbedtls_ssl_tls13_derive_secret(
 int mbedtls_ssl_tls13_evolve_secret(
                    mbedtls_md_type_t hash_alg,
                    const unsigned char *secret_old,
-                   const unsigned char *input, size_t input_len,
+                   const unsigned char *input, mbedtls_size_t input_len,
                    unsigned char *secret_new )
 {
     int ret = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
-    size_t hlen, ilen;
+    mbedtls_size_t hlen, ilen;
     unsigned char tmp_secret[ MBEDTLS_MD_MAX_SIZE ] = { 0 };
     unsigned char tmp_input [ MBEDTLS_ECP_MAX_BYTES ] = { 0 };
 
@@ -480,12 +480,12 @@ int mbedtls_ssl_tls13_evolve_secret(
 int mbedtls_ssl_tls13_derive_early_secrets(
           mbedtls_md_type_t md_type,
           unsigned char const *early_secret,
-          unsigned char const *transcript, size_t transcript_len,
+          unsigned char const *transcript, mbedtls_size_t transcript_len,
           mbedtls_ssl_tls13_early_secrets *derived )
 {
     int ret;
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
     /* We should never call this function with an unknown hash,
      * but add an assertion anyway. */
@@ -534,12 +534,12 @@ int mbedtls_ssl_tls13_derive_early_secrets(
 int mbedtls_ssl_tls13_derive_handshake_secrets(
           mbedtls_md_type_t md_type,
           unsigned char const *handshake_secret,
-          unsigned char const *transcript, size_t transcript_len,
+          unsigned char const *transcript, mbedtls_size_t transcript_len,
           mbedtls_ssl_tls13_handshake_secrets *derived )
 {
     int ret;
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
     /* We should never call this function with an unknown hash,
      * but add an assertion anyway. */
@@ -596,12 +596,12 @@ int mbedtls_ssl_tls13_derive_handshake_secrets(
 int mbedtls_ssl_tls13_derive_application_secrets(
           mbedtls_md_type_t md_type,
           unsigned char const *application_secret,
-          unsigned char const *transcript, size_t transcript_len,
+          unsigned char const *transcript, mbedtls_size_t transcript_len,
           mbedtls_ssl_tls13_application_secrets *derived )
 {
     int ret;
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
     /* We should never call this function with an unknown hash,
      * but add an assertion anyway. */
@@ -666,12 +666,12 @@ int mbedtls_ssl_tls13_derive_application_secrets(
 int mbedtls_ssl_tls13_derive_resumption_master_secret(
           mbedtls_md_type_t md_type,
           unsigned char const *application_secret,
-          unsigned char const *transcript, size_t transcript_len,
+          unsigned char const *transcript, mbedtls_size_t transcript_len,
           mbedtls_ssl_tls13_application_secrets *derived )
 {
     int ret;
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
     /* We should never call this function with an unknown hash,
      * but add an assertion anyway. */
@@ -699,7 +699,7 @@ int mbedtls_ssl_tls13_key_schedule_stage_application( mbedtls_ssl_context *ssl )
     mbedtls_md_type_t const md_type = handshake->ciphersuite_info->mac;
 #if defined(MBEDTLS_DEBUG_C)
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 #endif /* MBEDTLS_DEBUG_C */
 
     /*
@@ -727,7 +727,7 @@ static int ssl_tls13_calc_finished_core( mbedtls_md_type_t md_type,
                                          unsigned char *dst )
 {
     const mbedtls_md_info_t* const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
     unsigned char finished_key[MBEDTLS_MD_MAX_SIZE];
     int ret;
 
@@ -773,24 +773,24 @@ exit:
 
 int mbedtls_ssl_tls13_calculate_verify_data( mbedtls_ssl_context* ssl,
                                              unsigned char* dst,
-                                             size_t dst_len,
-                                             size_t *actual_len,
+                                             mbedtls_size_t dst_len,
+                                             mbedtls_size_t *actual_len,
                                              int from )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     unsigned char transcript[MBEDTLS_TLS1_3_MD_MAX_SIZE];
-    size_t transcript_len;
+    mbedtls_size_t transcript_len;
 
     unsigned char *base_key = NULL;
-    size_t base_key_len = 0;
+    mbedtls_size_t base_key_len = 0;
     mbedtls_ssl_tls13_handshake_secrets *tls13_hs_secrets =
                                             &ssl->handshake->tls13_hs_secrets;
 
     mbedtls_md_type_t const md_type = ssl->handshake->ciphersuite_info->mac;
     const mbedtls_md_info_t* const md_info =
                                    mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
     MBEDTLS_SSL_DEBUG_MSG( 2, ( "=> mbedtls_ssl_tls13_calculate_verify_data" ) );
 
@@ -838,7 +838,7 @@ exit:
 
 int mbedtls_ssl_tls13_create_psk_binder( mbedtls_ssl_context *ssl,
                                const mbedtls_md_type_t md_type,
-                               unsigned char const *psk, size_t psk_len,
+                               unsigned char const *psk, mbedtls_size_t psk_len,
                                int psk_type,
                                unsigned char const *transcript,
                                unsigned char *result )
@@ -847,7 +847,7 @@ int mbedtls_ssl_tls13_create_psk_binder( mbedtls_ssl_context *ssl,
     unsigned char binder_key[MBEDTLS_MD_MAX_SIZE];
     unsigned char early_secret[MBEDTLS_MD_MAX_SIZE];
     mbedtls_md_info_t const *md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 
 #if !defined(MBEDTLS_DEBUG_C)
     ssl = NULL; /* make sure we don't use it except for debug */
@@ -943,7 +943,7 @@ int mbedtls_ssl_tls13_populate_transform( mbedtls_ssl_transform *transform,
     psa_key_type_t key_type;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_algorithm_t alg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     psa_status_t status = PSA_SUCCESS;
 #endif
 
@@ -1135,13 +1135,13 @@ int mbedtls_ssl_tls13_generate_handshake_keys( mbedtls_ssl_context *ssl,
 
     mbedtls_md_type_t md_type;
     mbedtls_md_info_t const *md_info;
-    size_t md_size;
+    mbedtls_size_t md_size;
 
     unsigned char transcript[MBEDTLS_TLS1_3_MD_MAX_SIZE];
-    size_t transcript_len;
+    mbedtls_size_t transcript_len;
 
     mbedtls_cipher_info_t const *cipher_info;
-    size_t key_len, iv_len;
+    mbedtls_size_t key_len, iv_len;
 
     mbedtls_ssl_handshake_params *handshake = ssl->handshake;
     const mbedtls_ssl_ciphersuite_t *ciphersuite_info = handshake->ciphersuite_info;
@@ -1251,7 +1251,7 @@ int mbedtls_ssl_tls13_key_schedule_stage_handshake( mbedtls_ssl_context *ssl )
     mbedtls_md_type_t const md_type = handshake->ciphersuite_info->mac;
 #if defined(MBEDTLS_DEBUG_C)
     mbedtls_md_info_t const * const md_info = mbedtls_md_info_from_type( md_type );
-    size_t const md_size = mbedtls_md_get_size( md_info );
+    mbedtls_size_t const md_size = mbedtls_md_get_size( md_info );
 #endif /* MBEDTLS_DEBUG_C */
 
 #if defined(MBEDTLS_KEY_EXCHANGE_SOME_ECDHE_ENABLED)
@@ -1337,16 +1337,16 @@ int mbedtls_ssl_tls13_generate_application_keys(
 
     /* Holding the transcript up to and including the ServerFinished */
     unsigned char transcript[MBEDTLS_TLS1_3_MD_MAX_SIZE];
-    size_t transcript_len;
+    mbedtls_size_t transcript_len;
 
     /* Variables relating to the hash for the chosen ciphersuite. */
     mbedtls_md_type_t md_type;
     mbedtls_md_info_t const *md_info;
-    size_t md_size;
+    mbedtls_size_t md_size;
 
     /* Variables relating to the cipher for the chosen ciphersuite. */
     mbedtls_cipher_info_t const *cipher_info;
-    size_t key_len, iv_len;
+    mbedtls_size_t key_len, iv_len;
 
     MBEDTLS_SSL_DEBUG_MSG( 2, ( "=> derive application traffic keys" ) );
 

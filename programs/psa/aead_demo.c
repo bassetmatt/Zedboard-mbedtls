@@ -94,10 +94,10 @@ const unsigned char msg2_part2[] = { 0x15, 0x16, 0x17 };
 const unsigned char key_bytes[32] = { 0x2a };
 
 /* Print the contents of a buffer in hex */
-void print_buf( const char *title, uint8_t *buf, size_t len )
+void print_buf( const char *title, uint8_t *buf, mbedtls_size_t len )
 {
     printf( "%s:", title );
-    for( size_t i = 0; i < len; i++ )
+    for( mbedtls_size_t i = 0; i < len; i++ )
         printf( " %02x", buf[i] );
     printf( "\n" );
 }
@@ -133,7 +133,7 @@ static psa_status_t aead_prepare( const char *info,
     psa_status_t status;
 
     /* Convert arg to alg + key_bits + key_type */
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     psa_key_type_t key_type;
     if( strcmp( info, "aes128-gcm" ) == 0 ) {
         *alg = PSA_ALG_GCM;
@@ -181,9 +181,9 @@ static void aead_info( psa_key_id_t key, psa_algorithm_t alg )
     psa_key_attributes_t attr = PSA_KEY_ATTRIBUTES_INIT;
     (void) psa_get_key_attributes( key, &attr );
     psa_key_type_t key_type = psa_get_key_type( &attr );
-    size_t key_bits = psa_get_key_bits( &attr );
+    mbedtls_size_t key_bits = psa_get_key_bits( &attr );
     psa_algorithm_t base_alg = PSA_ALG_AEAD_WITH_DEFAULT_LENGTH_TAG( alg );
-    size_t tag_len = PSA_AEAD_TAG_LENGTH( key_type, key_bits, alg );
+    mbedtls_size_t tag_len = PSA_AEAD_TAG_LENGTH( key_type, key_bits, alg );
 
     const char *type_str = key_type == PSA_KEY_TYPE_AES ? "AES"
                          : key_type == PSA_KEY_TYPE_CHACHA20 ? "Chacha"
@@ -200,13 +200,13 @@ static void aead_info( psa_key_id_t key, psa_algorithm_t alg )
  * Encrypt a 2-part message.
  */
 static int aead_encrypt( psa_key_id_t key, psa_algorithm_t alg,
-        const unsigned char *iv, size_t iv_len,
-        const unsigned char *ad, size_t ad_len,
-        const unsigned char *part1, size_t part1_len,
-        const unsigned char *part2, size_t part2_len )
+        const unsigned char *iv, mbedtls_size_t iv_len,
+        const unsigned char *ad, mbedtls_size_t ad_len,
+        const unsigned char *part1, mbedtls_size_t part1_len,
+        const unsigned char *part2, mbedtls_size_t part2_len )
 {
     psa_status_t status;
-    size_t olen, olen_tag;
+    mbedtls_size_t olen, olen_tag;
     unsigned char out[PSA_AEAD_ENCRYPT_OUTPUT_MAX_SIZE(MSG_MAX_SIZE)];
     unsigned char *p = out, *end = out + sizeof( out );
     unsigned char tag[PSA_AEAD_TAG_MAX_SIZE];

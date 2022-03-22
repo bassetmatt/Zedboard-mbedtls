@@ -70,7 +70,7 @@
  * A terminating null byte is always appended. It is included in the announced
  * length only if the data looks like it is PEM encoded.
  */
-int mbedtls_pk_load_file( const char *path, unsigned char **buf, size_t *n )
+int mbedtls_pk_load_file( const char *path, unsigned char **buf, mbedtls_size_t *n )
 {
     FILE *f;
     long size;
@@ -90,7 +90,7 @@ int mbedtls_pk_load_file( const char *path, unsigned char **buf, size_t *n )
     }
     fseek( f, 0, SEEK_SET );
 
-    *n = (size_t) size;
+    *n = (mbedtls_size_t) size;
 
     if( *n + 1 == 0 ||
         ( *buf = mbedtls_calloc( 1, *n + 1 ) ) == NULL )
@@ -124,10 +124,10 @@ int mbedtls_pk_load_file( const char *path, unsigned char **buf, size_t *n )
  */
 int mbedtls_pk_parse_keyfile( mbedtls_pk_context *ctx,
         const char *path, const char *pwd,
-        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t n;
+    mbedtls_size_t n;
     unsigned char *buf;
 
     PK_VALIDATE_RET( ctx != NULL );
@@ -154,7 +154,7 @@ int mbedtls_pk_parse_keyfile( mbedtls_pk_context *ctx,
 int mbedtls_pk_parse_public_keyfile( mbedtls_pk_context *ctx, const char *path )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t n;
+    mbedtls_size_t n;
     unsigned char *buf;
 
     PK_VALIDATE_RET( ctx != NULL );
@@ -243,7 +243,7 @@ static int pk_group_from_specified( const mbedtls_asn1_buf *params, mbedtls_ecp_
     unsigned char *p = params->p;
     const unsigned char * const end = params->p + params->len;
     const unsigned char *end_field, *end_curve;
-    size_t len;
+    mbedtls_size_t len;
     int ver;
 
     /* SpecifiedECDomainVersion ::= INTEGER { 1, 2, 3 } */
@@ -525,7 +525,7 @@ static int pk_get_rsapubkey( unsigned char **p,
                              mbedtls_rsa_context *rsa )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
 
     if( ( ret = mbedtls_asn1_get_tag( p, end, &len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE ) ) != 0 )
@@ -612,7 +612,7 @@ int mbedtls_pk_parse_subpubkey( unsigned char **p, const unsigned char *end,
                         mbedtls_pk_context *pk )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_asn1_buf alg_params;
     mbedtls_pk_type_t pk_alg = MBEDTLS_PK_NONE;
     const mbedtls_pk_info_t *pk_info;
@@ -704,10 +704,10 @@ static int asn1_get_nonzero_mpi( unsigned char **p,
  */
 static int pk_parse_key_pkcs1_der( mbedtls_rsa_context *rsa,
                                    const unsigned char *key,
-                                   size_t keylen )
+                                   mbedtls_size_t keylen )
 {
     int ret, version;
-    size_t len;
+    mbedtls_size_t len;
     unsigned char *p, *end;
 
     mbedtls_mpi T;
@@ -860,12 +860,12 @@ cleanup:
  * Parse a SEC1 encoded private EC key
  */
 static int pk_parse_key_sec1_der( mbedtls_ecp_keypair *eck,
-        const unsigned char *key, size_t keylen,
-        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+        const unsigned char *key, mbedtls_size_t keylen,
+        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     int version, pubkey_done;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_asn1_buf params;
     unsigned char *p = (unsigned char *) key;
     unsigned char *end = p + keylen;
@@ -999,11 +999,11 @@ static int pk_parse_key_sec1_der( mbedtls_ecp_keypair *eck,
  */
 static int pk_parse_key_pkcs8_unencrypted_der(
         mbedtls_pk_context *pk,
-        const unsigned char* key, size_t keylen,
-        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+        const unsigned char* key, mbedtls_size_t keylen,
+        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret, version;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_asn1_buf params;
     unsigned char *p = (unsigned char *) key;
     unsigned char *end = p + keylen;
@@ -1101,12 +1101,12 @@ static int pk_parse_key_pkcs8_unencrypted_der(
 #if defined(MBEDTLS_PKCS12_C) || defined(MBEDTLS_PKCS5_C)
 static int pk_parse_key_pkcs8_encrypted_der(
         mbedtls_pk_context *pk,
-        unsigned char *key, size_t keylen,
-        const unsigned char *pwd, size_t pwdlen,
-        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+        unsigned char *key, mbedtls_size_t keylen,
+        const unsigned char *pwd, mbedtls_size_t pwdlen,
+        int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret, decrypted = 0;
-    size_t len;
+    mbedtls_size_t len;
     unsigned char *buf;
     unsigned char *p, *end;
     mbedtls_asn1_buf pbe_alg_oid, pbe_params;
@@ -1203,14 +1203,14 @@ static int pk_parse_key_pkcs8_encrypted_der(
  * Parse a private key
  */
 int mbedtls_pk_parse_key( mbedtls_pk_context *pk,
-                  const unsigned char *key, size_t keylen,
-                  const unsigned char *pwd, size_t pwdlen,
-                  int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                  const unsigned char *key, mbedtls_size_t keylen,
+                  const unsigned char *pwd, mbedtls_size_t pwdlen,
+                  int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const mbedtls_pk_info_t *pk_info;
 #if defined(MBEDTLS_PEM_PARSE_C)
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_pem_context pem;
 #endif
 
@@ -1421,7 +1421,7 @@ int mbedtls_pk_parse_key( mbedtls_pk_context *pk,
  * Parse a public key
  */
 int mbedtls_pk_parse_public_key( mbedtls_pk_context *ctx,
-                         const unsigned char *key, size_t keylen )
+                         const unsigned char *key, mbedtls_size_t keylen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *p;
@@ -1429,7 +1429,7 @@ int mbedtls_pk_parse_public_key( mbedtls_pk_context *ctx,
     const mbedtls_pk_info_t *pk_info;
 #endif
 #if defined(MBEDTLS_PEM_PARSE_C)
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_pem_context pem;
 #endif
 

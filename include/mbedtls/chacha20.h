@@ -51,7 +51,7 @@ typedef struct mbedtls_chacha20_context
 {
     uint32_t MBEDTLS_PRIVATE(state)[16];          /*! The state (before round operations). */
     uint8_t  MBEDTLS_PRIVATE(keystream8)[64];     /*! Leftover keystream bytes. */
-    size_t MBEDTLS_PRIVATE(keystream_bytes_used); /*! Number of keystream bytes already used. */
+    mbedtls_size_t MBEDTLS_PRIVATE(keystream_bytes_used); /*! Number of keystream bytes already used. */
 }
 mbedtls_chacha20_context;
 
@@ -159,7 +159,7 @@ int mbedtls_chacha20_starts( mbedtls_chacha20_context* ctx,
  * \return          A negative error code on failure.
  */
 int mbedtls_chacha20_update( mbedtls_chacha20_context *ctx,
-                             size_t size,
+                             mbedtls_size_t size,
                              const unsigned char *input,
                              unsigned char *output );
 
@@ -194,7 +194,7 @@ int mbedtls_chacha20_update( mbedtls_chacha20_context *ctx,
 int mbedtls_chacha20_crypt( const unsigned char key[32],
                             const unsigned char nonce[12],
                             uint32_t counter,
-                            size_t size,
+                            mbedtls_size_t size,
                             const unsigned char* input,
                             unsigned char* output );
 

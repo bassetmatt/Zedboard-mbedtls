@@ -18,7 +18,7 @@ void attributes_set_get( int owner_id_arg, int id_arg, int lifetime_arg,
     psa_key_usage_t usage_flags = usage_flags_arg;
     psa_algorithm_t alg = alg_arg;
     psa_key_type_t type = type_arg;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
 
     TEST_EQUAL(
         MBEDTLS_SVC_KEY_ID_GET_KEY_ID( psa_get_key_id( &attributes ) ), 0 );

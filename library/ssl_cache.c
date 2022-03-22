@@ -52,7 +52,7 @@ void mbedtls_ssl_cache_init( mbedtls_ssl_cache_context *cache )
 
 static int ssl_cache_find_entry( mbedtls_ssl_cache_context *cache,
                                  unsigned char const *session_id,
-                                 size_t session_id_len,
+                                 mbedtls_size_t session_id_len,
                                  mbedtls_ssl_cache_entry **dst )
 {
     int ret = 1;
@@ -91,7 +91,7 @@ static int ssl_cache_find_entry( mbedtls_ssl_cache_context *cache,
 
 int mbedtls_ssl_cache_get( void *data,
                            unsigned char const *session_id,
-                           size_t session_id_len,
+                           mbedtls_size_t session_id_len,
                            mbedtls_ssl_session *session )
 {
     int ret = 1;
@@ -126,7 +126,7 @@ exit:
 
 static int ssl_cache_pick_writing_slot( mbedtls_ssl_cache_context *cache,
                                         unsigned char const *session_id,
-                                        size_t session_id_len,
+                                        mbedtls_size_t session_id_len,
                                         mbedtls_ssl_cache_entry **dst )
 {
 #if defined(MBEDTLS_HAVE_TIME)
@@ -246,14 +246,14 @@ found:
 
 int mbedtls_ssl_cache_set( void *data,
                            unsigned char const *session_id,
-                           size_t session_id_len,
+                           mbedtls_size_t session_id_len,
                            const mbedtls_ssl_session *session )
 {
     int ret = 1;
     mbedtls_ssl_cache_context *cache = (mbedtls_ssl_cache_context *) data;
     mbedtls_ssl_cache_entry *cur;
 
-    size_t session_serialized_len;
+    mbedtls_size_t session_serialized_len;
     unsigned char *session_serialized = NULL;
 
 #if defined(MBEDTLS_THREADING_C)

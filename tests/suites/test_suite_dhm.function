@@ -23,10 +23,10 @@ exit:
  * DHM context by the caller). */
 static int check_dhm_param_output( const mbedtls_mpi *expected,
                                    const unsigned char *buffer,
-                                   size_t size,
-                                   size_t *offset )
+                                   mbedtls_size_t size,
+                                   mbedtls_size_t *offset )
 {
-    size_t n;
+    mbedtls_size_t n;
     mbedtls_mpi actual;
     int ok = 0;
     mbedtls_mpi_init( &actual );
@@ -53,10 +53,10 @@ exit:
 /* Sanity checks on Diffie-Hellman parameters: syntax, range, and comparison
  * against the context. */
 static int check_dhm_params( const mbedtls_dhm_context *ctx,
-                             size_t x_size,
-                             const unsigned char *ske, size_t ske_len )
+                             mbedtls_size_t x_size,
+                             const unsigned char *ske, mbedtls_size_t ske_len )
 {
-    size_t offset = 0;
+    mbedtls_size_t offset = 0;
 
     /* Check that ctx->X and ctx->GX are within range. */
     TEST_ASSERT( mbedtls_mpi_cmp_int( &ctx->X, 1 ) > 0 );
@@ -98,10 +98,10 @@ void dhm_do_dhm( int radix_P, char *input_P, int x_size,
     unsigned char pub_cli[1000];
     unsigned char sec_srv[1000];
     unsigned char sec_cli[1000];
-    size_t ske_len = 0;
-    size_t pub_cli_len = 0;
-    size_t sec_srv_len;
-    size_t sec_cli_len;
+    mbedtls_size_t ske_len = 0;
+    mbedtls_size_t pub_cli_len = 0;
+    mbedtls_size_t sec_srv_len;
+    mbedtls_size_t sec_cli_len;
     int i;
     mbedtls_test_rnd_pseudo_info rnd_info;
 
@@ -268,7 +268,7 @@ void dhm_file( char * filename, char * p, char * g, int len )
 
     TEST_ASSERT( mbedtls_dhm_parse_dhmfile( &ctx, filename ) == 0 );
 
-    TEST_EQUAL( mbedtls_dhm_get_len( &ctx ), (size_t) len );
+    TEST_EQUAL( mbedtls_dhm_get_len( &ctx ), (mbedtls_size_t) len );
     TEST_EQUAL( mbedtls_dhm_get_bitlen( &ctx ), mbedtls_mpi_bitlen( &P ) );
     TEST_ASSERT( check_get_value( &ctx, MBEDTLS_DHM_PARAM_P, &P ) );
     TEST_ASSERT( check_get_value( &ctx, MBEDTLS_DHM_PARAM_G, &G ) );

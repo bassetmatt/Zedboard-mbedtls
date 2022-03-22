@@ -33,7 +33,7 @@
 typedef struct {
    const char *name; /* String representation of AttributeType, e.g.
                       * "CN" or "emailAddress". */
-   size_t name_len;  /* Length of 'name', without trailing 0 byte. */
+   mbedtls_size_t name_len;  /* Length of 'name', without trailing 0 byte. */
    const char *oid;  /* String representation of OID of AttributeType,
                       * as per RFC 5280, Appendix A.1. */
    int default_tag;  /* The default character encoding used for the
@@ -105,7 +105,7 @@ static const x509_attr_descriptor_t x509_attrs[] =
     { NULL, 0, NULL, MBEDTLS_ASN1_NULL }
 };
 
-static const x509_attr_descriptor_t *x509_attr_descr_from_name( const char *name, size_t name_len )
+static const x509_attr_descriptor_t *x509_attr_descr_from_name( const char *name, mbedtls_size_t name_len )
 {
     const x509_attr_descriptor_t *cur;
 
@@ -205,8 +205,8 @@ exit:
 /* The first byte of the value in the mbedtls_asn1_named_data structure is reserved
  * to store the critical boolean for us
  */
-int mbedtls_x509_set_extension( mbedtls_asn1_named_data **head, const char *oid, size_t oid_len,
-                        int critical, const unsigned char *val, size_t val_len )
+int mbedtls_x509_set_extension( mbedtls_asn1_named_data **head, const char *oid, mbedtls_size_t oid_len,
+                        int critical, const unsigned char *val, mbedtls_size_t val_len )
 {
     mbedtls_asn1_named_data *cur;
 
@@ -237,11 +237,11 @@ int mbedtls_x509_set_extension( mbedtls_asn1_named_data **head, const char *oid,
 static int x509_write_name( unsigned char **p, unsigned char *start, mbedtls_asn1_named_data* cur_name)
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     const char *oid             = (const char*)cur_name->oid.p;
-    size_t oid_len              = cur_name->oid.len;
+    mbedtls_size_t oid_len              = cur_name->oid.len;
     const unsigned char *name   = cur_name->val.p;
-    size_t name_len             = cur_name->val.len;
+    mbedtls_size_t name_len             = cur_name->val.len;
 
     // Write correct string tag and value
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_tagged_string( p, start,
@@ -270,7 +270,7 @@ int mbedtls_x509_write_names( unsigned char **p, unsigned char *start,
                               mbedtls_asn1_named_data *first )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     mbedtls_asn1_named_data *cur = first;
 
     while( cur != NULL )
@@ -287,13 +287,13 @@ int mbedtls_x509_write_names( unsigned char **p, unsigned char *start,
 }
 
 int mbedtls_x509_write_sig( unsigned char **p, unsigned char *start,
-                    const char *oid, size_t oid_len,
-                    unsigned char *sig, size_t size )
+                    const char *oid, mbedtls_size_t oid_len,
+                    unsigned char *sig, mbedtls_size_t size )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
-    if( *p < start || (size_t)( *p - start ) < size )
+    if( *p < start || (mbedtls_size_t)( *p - start ) < size )
         return( MBEDTLS_ERR_ASN1_BUF_TOO_SMALL );
 
     len = size;
@@ -321,7 +321,7 @@ static int x509_write_extension( unsigned char **p, unsigned char *start,
                                  mbedtls_asn1_named_data *ext )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     MBEDTLS_ASN1_CHK_ADD( len, mbedtls_asn1_write_raw_buffer( p, start, ext->val.p + 1,
                                               ext->val.len - 1 ) );
@@ -359,7 +359,7 @@ int mbedtls_x509_write_extensions( unsigned char **p, unsigned char *start,
                            mbedtls_asn1_named_data *first )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len = 0;
+    mbedtls_size_t len = 0;
     mbedtls_asn1_named_data *cur_ext = first;
 
     while( cur_ext != NULL )

@@ -59,7 +59,7 @@ struct mbedtls_cmac_context_t
     unsigned char       MBEDTLS_PRIVATE(unprocessed_block)[MBEDTLS_CIPHER_BLKSIZE_MAX];
 
     /** The length of data pending processing. */
-    size_t              MBEDTLS_PRIVATE(unprocessed_len);
+    mbedtls_size_t              MBEDTLS_PRIVATE(unprocessed_len);
 };
 
 #else  /* !MBEDTLS_CMAC_ALT */
@@ -97,7 +97,7 @@ struct mbedtls_cmac_context_t
  * \return              A cipher-specific error code on failure.
  */
 int mbedtls_cipher_cmac_starts( mbedtls_cipher_context_t *ctx,
-                                const unsigned char *key, size_t keybits );
+                                const unsigned char *key, mbedtls_size_t keybits );
 
 /**
  * \brief               This function feeds an input buffer into an ongoing CMAC
@@ -122,7 +122,7 @@ int mbedtls_cipher_cmac_starts( mbedtls_cipher_context_t *ctx,
  *                     if parameter verification fails.
  */
 int mbedtls_cipher_cmac_update( mbedtls_cipher_context_t *ctx,
-                                const unsigned char *input, size_t ilen );
+                                const unsigned char *input, mbedtls_size_t ilen );
 
 /**
  * \brief               This function finishes an ongoing CMAC operation, and
@@ -189,8 +189,8 @@ int mbedtls_cipher_cmac_reset( mbedtls_cipher_context_t *ctx );
  *                      if parameter verification fails.
  */
 int mbedtls_cipher_cmac( const mbedtls_cipher_info_t *cipher_info,
-                         const unsigned char *key, size_t keylen,
-                         const unsigned char *input, size_t ilen,
+                         const unsigned char *key, mbedtls_size_t keylen,
+                         const unsigned char *input, mbedtls_size_t ilen,
                          unsigned char *output );
 
 #if defined(MBEDTLS_AES_C)
@@ -211,8 +211,8 @@ int mbedtls_cipher_cmac( const mbedtls_cipher_info_t *cipher_info,
  *
  * \return          \c 0 on success.
  */
-int mbedtls_aes_cmac_prf_128( const unsigned char *key, size_t key_len,
-                              const unsigned char *input, size_t in_len,
+int mbedtls_aes_cmac_prf_128( const unsigned char *key, mbedtls_size_t key_len,
+                              const unsigned char *input, mbedtls_size_t in_len,
                               unsigned char output[16] );
 #endif /* MBEDTLS_AES_C */
 

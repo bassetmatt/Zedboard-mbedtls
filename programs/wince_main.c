@@ -31,7 +31,7 @@ int _tmain( int argc, _TCHAR* targv[] )
     argv = ( char ** ) calloc( argc, sizeof( char * ) );
 
     for ( i = 0; i < argc; i++ ) {
-        size_t len;
+        mbedtls_size_t len;
         len = _tcslen( targv[i] ) + 1;
         argv[i] = ( char * ) calloc( len, sizeof( char ) );
         wcstombs( argv[i], targv[i], len );

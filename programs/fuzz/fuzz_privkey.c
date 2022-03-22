@@ -15,7 +15,7 @@
 const char *pers = "fuzz_privkey";
 #endif // MBEDTLS_PK_PARSE_C && MBEDTLS_CTR_DRBG_C
 
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+int LLVMFuzzerTestOneInput(const uint8_t *Data, mbedtls_size_t Size) {
 #if defined(MBEDTLS_PK_PARSE_C) && defined(MBEDTLS_CTR_DRBG_C)
     int ret;
     mbedtls_pk_context pk;

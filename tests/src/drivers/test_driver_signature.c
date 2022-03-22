@@ -54,13 +54,13 @@ mbedtls_test_driver_signature_hooks_t
 psa_status_t sign_hash(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *hash,
-    size_t hash_length,
+    mbedtls_size_t hash_length,
     uint8_t *signature,
-    size_t signature_size,
-    size_t *signature_length )
+    mbedtls_size_t signature_size,
+    mbedtls_size_t *signature_length )
 {
     if( attributes->core.type == PSA_KEY_TYPE_RSA_KEY_PAIR )
     {
@@ -131,12 +131,12 @@ psa_status_t sign_hash(
 psa_status_t verify_hash(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *hash,
-    size_t hash_length,
+    mbedtls_size_t hash_length,
     const uint8_t *signature,
-    size_t signature_length )
+    mbedtls_size_t signature_length )
 {
     if( PSA_KEY_TYPE_IS_RSA( attributes->core.type ) )
     {
@@ -206,16 +206,16 @@ psa_status_t verify_hash(
 psa_status_t mbedtls_test_transparent_signature_sign_message(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *signature,
-    size_t signature_size,
-    size_t *signature_length )
+    mbedtls_size_t signature_size,
+    mbedtls_size_t *signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    size_t hash_length;
+    mbedtls_size_t hash_length;
     uint8_t hash[PSA_HASH_MAX_SIZE];
 
     ++mbedtls_test_driver_signature_sign_hooks.hits;
@@ -260,13 +260,13 @@ psa_status_t mbedtls_test_transparent_signature_sign_message(
 psa_status_t mbedtls_test_opaque_signature_sign_message(
     const psa_key_attributes_t *attributes,
     const uint8_t *key,
-    size_t key_length,
+    mbedtls_size_t key_length,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *signature,
-    size_t signature_size,
-    size_t *signature_length )
+    mbedtls_size_t signature_size,
+    mbedtls_size_t *signature_length )
 {
     (void) attributes;
     (void) key;
@@ -284,15 +284,15 @@ psa_status_t mbedtls_test_opaque_signature_sign_message(
 psa_status_t mbedtls_test_transparent_signature_verify_message(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     const uint8_t *signature,
-    size_t signature_length )
+    mbedtls_size_t signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
-    size_t hash_length;
+    mbedtls_size_t hash_length;
     uint8_t hash[PSA_HASH_MAX_SIZE];
 
     ++mbedtls_test_driver_signature_verify_hooks.hits;
@@ -325,12 +325,12 @@ psa_status_t mbedtls_test_transparent_signature_verify_message(
 psa_status_t mbedtls_test_opaque_signature_verify_message(
     const psa_key_attributes_t *attributes,
     const uint8_t *key,
-    size_t key_length,
+    mbedtls_size_t key_length,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     const uint8_t *signature,
-    size_t signature_length )
+    mbedtls_size_t signature_length )
 {
     (void) attributes;
     (void) key;
@@ -346,10 +346,10 @@ psa_status_t mbedtls_test_opaque_signature_verify_message(
 
 psa_status_t mbedtls_test_transparent_signature_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *hash, size_t hash_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length )
+    const uint8_t *hash, mbedtls_size_t hash_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length )
 {
     ++mbedtls_test_driver_signature_sign_hooks.hits;
 
@@ -373,10 +373,10 @@ psa_status_t mbedtls_test_transparent_signature_sign_hash(
 
 psa_status_t mbedtls_test_opaque_signature_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key, size_t key_length,
+    const uint8_t *key, mbedtls_size_t key_length,
     psa_algorithm_t alg,
-    const uint8_t *hash, size_t hash_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length )
+    const uint8_t *hash, mbedtls_size_t hash_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length )
 {
     (void) attributes;
     (void) key;
@@ -393,10 +393,10 @@ psa_status_t mbedtls_test_opaque_signature_sign_hash(
 
 psa_status_t mbedtls_test_transparent_signature_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
-    const uint8_t *hash, size_t hash_length,
-    const uint8_t *signature, size_t signature_length )
+    const uint8_t *hash, mbedtls_size_t hash_length,
+    const uint8_t *signature, mbedtls_size_t signature_length )
 {
     ++mbedtls_test_driver_signature_verify_hooks.hits;
 
@@ -410,10 +410,10 @@ psa_status_t mbedtls_test_transparent_signature_verify_hash(
 
 psa_status_t mbedtls_test_opaque_signature_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key, size_t key_length,
+    const uint8_t *key, mbedtls_size_t key_length,
     psa_algorithm_t alg,
-    const uint8_t *hash, size_t hash_length,
-    const uint8_t *signature, size_t signature_length )
+    const uint8_t *hash, mbedtls_size_t hash_length,
+    const uint8_t *signature, mbedtls_size_t signature_length )
 {
     (void) attributes;
     (void) key;

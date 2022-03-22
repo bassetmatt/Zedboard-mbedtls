@@ -30,17 +30,17 @@
 
 typedef struct
 {
-    size_t threshold; /* Minimum bytes to make mbedtls_entropy_func happy */
-    size_t max_steps;
-    size_t *length_sequence;
-    size_t step;
+    mbedtls_size_t threshold; /* Minimum bytes to make mbedtls_entropy_func happy */
+    mbedtls_size_t max_steps;
+    mbedtls_size_t *length_sequence;
+    mbedtls_size_t step;
 } fake_entropy_state_t;
 static int fake_entropy_source( void *state_arg,
-                                unsigned char *output, size_t len,
-                                size_t *olen )
+                                unsigned char *output, mbedtls_size_t len,
+                                mbedtls_size_t *olen )
 {
     fake_entropy_state_t *state = state_arg;
-    size_t i;
+    mbedtls_size_t i;
 
     if( state->step >= state->max_steps )
         return( MBEDTLS_ERR_ENTROPY_SOURCE_FAILED );
@@ -229,7 +229,7 @@ void fake_entropy_source( int threshold,
 {
     psa_status_t expected_init_status = expected_init_status_arg;
     uint8_t random[10] = { 0 };
-    size_t lengths[4];
+    mbedtls_size_t lengths[4];
 
     fake_entropy_state.threshold = threshold;
     fake_entropy_state.step = 0;
@@ -266,7 +266,7 @@ void entropy_from_nv_seed( int seed_size_arg,
     psa_status_t expected_init_status = expected_init_status_arg;
     uint8_t random[10] = { 0 };
     uint8_t *seed = NULL;
-    size_t seed_size = seed_size_arg;
+    mbedtls_size_t seed_size = seed_size_arg;
 
     ASSERT_ALLOC( seed, seed_size );
     TEST_ASSERT( mbedtls_nv_seed_write( seed, seed_size ) >= 0 );

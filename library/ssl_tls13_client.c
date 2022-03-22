@@ -46,7 +46,7 @@
 static int ssl_tls13_write_supported_versions_ext( mbedtls_ssl_context *ssl,
                                                    unsigned char *buf,
                                                    unsigned char *end,
-                                                   size_t *out_len )
+                                                   mbedtls_size_t *out_len )
 {
     unsigned char *p = buf;
 
@@ -125,10 +125,10 @@ static int ssl_tls13_parse_supported_versions_ext( mbedtls_ssl_context *ssl,
 static int ssl_tls13_write_alpn_ext( mbedtls_ssl_context *ssl,
                                unsigned char *buf,
                                const unsigned char *end,
-                               size_t *olen )
+                               mbedtls_size_t *olen )
 {
     unsigned char *p = buf;
-    size_t alpnlen = 0;
+    mbedtls_size_t alpnlen = 0;
     const char **cur;
 
     *olen = 0;
@@ -180,9 +180,9 @@ static int ssl_tls13_write_alpn_ext( mbedtls_ssl_context *ssl,
 }
 
 static int ssl_tls13_parse_alpn_ext( mbedtls_ssl_context *ssl,
-                               const unsigned char *buf, size_t len )
+                               const unsigned char *buf, mbedtls_size_t len )
 {
-    size_t list_len, name_len;
+    mbedtls_size_t list_len, name_len;
     const unsigned char *p = buf;
     const unsigned char *end = buf + len;
 
@@ -258,14 +258,14 @@ static int ssl_tls13_generate_and_write_ecdh_key_exchange(
                 uint16_t named_group,
                 unsigned char *buf,
                 unsigned char *end,
-                size_t *out_len )
+                mbedtls_size_t *out_len )
 {
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
     int ret = MBEDTLS_ERR_SSL_FEATURE_UNAVAILABLE;
     psa_key_attributes_t key_attributes;
-    size_t own_pubkey_len;
+    mbedtls_size_t own_pubkey_len;
     mbedtls_ssl_handshake_params *handshake = ssl->handshake;
-    size_t ecdh_bits = 0;
+    mbedtls_size_t ecdh_bits = 0;
 
     MBEDTLS_SSL_DEBUG_MSG( 1, ( "Perform PSA-based ECDH computation." ) );
 
@@ -297,7 +297,7 @@ static int ssl_tls13_generate_and_write_ecdh_key_exchange(
 
     /* Export the public part of the ECDH private key from PSA. */
     status = psa_export_public_key( handshake->ecdh_psa_privkey,
-                                    buf, (size_t)( end - buf ),
+                                    buf, (mbedtls_size_t)( end - buf ),
                                     &own_pubkey_len );
     if( status != PSA_SUCCESS )
     {
@@ -307,7 +307,7 @@ static int ssl_tls13_generate_and_write_ecdh_key_exchange(
 
     }
 
-    if( own_pubkey_len > (size_t)( end - buf ) )
+    if( own_pubkey_len > (mbedtls_size_t)( end - buf ) )
     {
             MBEDTLS_SSL_DEBUG_MSG( 1, ( "No space in the buffer for ECDH public key." ) );
         return( MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL );
@@ -371,11 +371,11 @@ static int ssl_tls13_get_default_group_id( mbedtls_ssl_context *ssl,
 static int ssl_tls13_write_key_share_ext( mbedtls_ssl_context *ssl,
                                           unsigned char *buf,
                                           unsigned char *end,
-                                          size_t *out_len )
+                                          mbedtls_size_t *out_len )
 {
     unsigned char *p = buf;
     unsigned char *client_shares; /* Start of client_shares */
-    size_t client_shares_len;     /* Length of client_shares */
+    mbedtls_size_t client_shares_len;     /* Length of client_shares */
     uint16_t group_id;
     int ret = MBEDTLS_ERR_SSL_FEATURE_UNAVAILABLE;
 
@@ -415,7 +415,7 @@ static int ssl_tls13_write_key_share_ext( mbedtls_ssl_context *ssl,
         /* Pointer to group */
         unsigned char *group = p;
         /* Length of key_exchange */
-        size_t key_exchange_len = 0;
+        mbedtls_size_t key_exchange_len = 0;
 
         /* Check there is space for header of KeyShareEntry
          * - group                  (2 bytes)
@@ -476,7 +476,7 @@ cleanup:
 
 static int ssl_tls13_read_public_ecdhe_share( mbedtls_ssl_context *ssl,
                                               const unsigned char *buf,
-                                              size_t buf_len )
+                                              mbedtls_size_t buf_len )
 {
     uint8_t *p = (uint8_t*)buf;
     mbedtls_ssl_handshake_params *handshake = ssl->handshake;
@@ -659,7 +659,7 @@ static int ssl_tls13_parse_cookie_ext( mbedtls_ssl_context *ssl,
                                        const unsigned char *buf,
                                        const unsigned char *end )
 {
-    size_t cookie_len;
+    mbedtls_size_t cookie_len;
     const unsigned char *p = buf;
     mbedtls_ssl_handshake_params *handshake = ssl->handshake;
 
@@ -695,12 +695,12 @@ static int ssl_tls13_write_client_hello_cipher_suites(
             mbedtls_ssl_context *ssl,
             unsigned char *buf,
             unsigned char *end,
-            size_t *out_len )
+            mbedtls_size_t *out_len )
 {
     unsigned char *p = buf;
     const int *ciphersuite_list;
     unsigned char *cipher_suites; /* Start of the cipher_suites list */
-    size_t cipher_suites_len;
+    mbedtls_size_t cipher_suites_len;
 
     *out_len = 0 ;
 
@@ -720,7 +720,7 @@ static int ssl_tls13_write_client_hello_cipher_suites(
 
     /* Write cipher_suites */
     cipher_suites = p;
-    for ( size_t i = 0; ciphersuite_list[i] != 0; i++ )
+    for ( mbedtls_size_t i = 0; ciphersuite_list[i] != 0; i++ )
     {
         int cipher_suite = ciphersuite_list[i];
         const mbedtls_ssl_ciphersuite_t *ciphersuite_info;
@@ -770,13 +770,13 @@ static int ssl_tls13_write_client_hello_cipher_suites(
 static int ssl_tls13_write_client_hello_body( mbedtls_ssl_context *ssl,
                                               unsigned char *buf,
                                               unsigned char *end,
-                                              size_t *out_len )
+                                              mbedtls_size_t *out_len )
 {
 
     int ret;
     unsigned char *p_extensions_len; /* Pointer to extensions length */
-    size_t output_len;               /* Length of buffer used by function */
-    size_t extensions_len;           /* Length of the list of extensions*/
+    mbedtls_size_t output_len;               /* Length of buffer used by function */
+    mbedtls_size_t extensions_len;           /* Length of the list of extensions*/
 
     /* Buffer management */
     unsigned char *p = buf;
@@ -972,7 +972,7 @@ static int ssl_tls13_write_client_hello( mbedtls_ssl_context *ssl )
 {
     int ret = 0;
     unsigned char *buf;
-    size_t buf_len, msg_len;
+    mbedtls_size_t buf_len, msg_len;
 
     MBEDTLS_SSL_DEBUG_MSG( 2, ( "=> write client hello" ) );
 
@@ -1054,7 +1054,7 @@ static int ssl_server_hello_is_hrr( mbedtls_ssl_context *ssl,
  */
 static int ssl_tls13_server_hello_coordinate( mbedtls_ssl_context *ssl,
                                               unsigned char **buf,
-                                              size_t *buf_len )
+                                              mbedtls_size_t *buf_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -1113,7 +1113,7 @@ static int ssl_tls13_check_server_hello_session_id_echo( mbedtls_ssl_context *ss
                                                          const unsigned char *end )
 {
     const unsigned char *p = *buf;
-    size_t legacy_session_id_echo_len;
+    mbedtls_size_t legacy_session_id_echo_len;
 
     MBEDTLS_SSL_CHK_BUF_READ_PTR( p, end, 1 );
     legacy_session_id_echo_len = *p++ ;
@@ -1150,7 +1150,7 @@ static int ssl_tls13_cipher_suite_is_offered( mbedtls_ssl_context *ssl,
     const int *ciphersuite_list = ssl->conf->ciphersuite_list;
 
     /* Check whether we have offered this ciphersuite */
-    for ( size_t i = 0; ciphersuite_list[i] != 0; i++ )
+    for ( mbedtls_size_t i = 0; ciphersuite_list[i] != 0; i++ )
     {
         if( ciphersuite_list[i] == cipher_suite )
         {
@@ -1179,7 +1179,7 @@ static int ssl_tls13_parse_server_hello( mbedtls_ssl_context *ssl,
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
     mbedtls_ssl_handshake_params *handshake = ssl->handshake;
-    size_t extensions_len;
+    mbedtls_size_t extensions_len;
     const unsigned char *extensions_end;
     uint16_t cipher_suite;
     const mbedtls_ssl_ciphersuite_t *ciphersuite_info;
@@ -1330,7 +1330,7 @@ static int ssl_tls13_parse_server_hello( mbedtls_ssl_context *ssl,
     while( p < extensions_end )
     {
         unsigned int extension_type;
-        size_t extension_data_len;
+        mbedtls_size_t extension_data_len;
         const unsigned char *extension_data_end;
 
         MBEDTLS_SSL_CHK_BUF_READ_PTR( p, extensions_end, 4 );
@@ -1599,7 +1599,7 @@ static int ssl_tls13_process_server_hello( mbedtls_ssl_context *ssl )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *buf = NULL;
-    size_t buf_len = 0;
+    mbedtls_size_t buf_len = 0;
     int is_hrr = 0;
 
     MBEDTLS_SSL_DEBUG_MSG( 2, ( "=> %s", __func__ ) );
@@ -1667,7 +1667,7 @@ static int ssl_tls13_process_encrypted_extensions( mbedtls_ssl_context *ssl )
 {
     int ret;
     unsigned char *buf;
-    size_t buf_len;
+    mbedtls_size_t buf_len;
 
     MBEDTLS_SSL_DEBUG_MSG( 2, ( "=> parse encrypted extensions" ) );
 
@@ -1701,7 +1701,7 @@ static int ssl_tls13_parse_encrypted_extensions( mbedtls_ssl_context *ssl,
                                                  const unsigned char *end )
 {
     int ret = 0;
-    size_t extensions_len;
+    mbedtls_size_t extensions_len;
     const unsigned char *p = buf;
     const unsigned char *extensions_end;
 
@@ -1716,7 +1716,7 @@ static int ssl_tls13_parse_encrypted_extensions( mbedtls_ssl_context *ssl,
     while( p < extensions_end )
     {
         unsigned int extension_type;
-        size_t extension_data_len;
+        mbedtls_size_t extension_data_len;
 
         /*
          * struct {
@@ -1746,7 +1746,7 @@ static int ssl_tls13_parse_encrypted_extensions( mbedtls_ssl_context *ssl,
             case MBEDTLS_TLS_EXT_ALPN:
                 MBEDTLS_SSL_DEBUG_MSG( 3, ( "found alpn extension" ) );
 
-                if( ( ret = ssl_tls13_parse_alpn_ext( ssl, p, (size_t)extension_data_len ) ) != 0 )
+                if( ( ret = ssl_tls13_parse_alpn_ext( ssl, p, (mbedtls_size_t)extension_data_len ) ) != 0 )
                 {
                     return( ret );
                 }
@@ -1846,8 +1846,8 @@ static int ssl_tls13_parse_certificate_request( mbedtls_ssl_context *ssl,
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
-    size_t certificate_request_context_len = 0;
-    size_t extensions_len = 0;
+    mbedtls_size_t certificate_request_context_len = 0;
+    mbedtls_size_t extensions_len = 0;
     const unsigned char *extensions_end;
     unsigned char sig_alg_ext_found = 0;
 
@@ -1856,7 +1856,7 @@ static int ssl_tls13_parse_certificate_request( mbedtls_ssl_context *ssl,
      * ...
      */
     MBEDTLS_SSL_CHK_BUF_READ_PTR( p, end, 1 );
-    certificate_request_context_len = (size_t) p[0];
+    certificate_request_context_len = (mbedtls_size_t) p[0];
     p += 1;
 
     if( certificate_request_context_len > 0 )
@@ -1892,7 +1892,7 @@ static int ssl_tls13_parse_certificate_request( mbedtls_ssl_context *ssl,
     while( p < extensions_end )
     {
         unsigned int extension_type;
-        size_t extension_data_len;
+        mbedtls_size_t extension_data_len;
 
         MBEDTLS_SSL_CHK_BUF_READ_PTR( p, extensions_end, 4 );
         extension_type = MBEDTLS_GET_UINT16_BE( p, 0 );
@@ -1967,7 +1967,7 @@ static int ssl_tls13_process_certificate_request( mbedtls_ssl_context *ssl )
     if( ret == SSL_CERTIFICATE_REQUEST_EXPECT_REQUEST )
     {
         unsigned char *buf;
-        size_t buf_len;
+        mbedtls_size_t buf_len;
 
         MBEDTLS_SSL_PROC_CHK( mbedtls_ssl_tls13_fetch_handshake_msg( ssl,
                                             MBEDTLS_SSL_HS_CERTIFICATE_REQUEST,

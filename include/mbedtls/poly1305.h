@@ -53,7 +53,7 @@ typedef struct mbedtls_poly1305_context
     uint32_t MBEDTLS_PRIVATE(s)[4];      /** The value for 's' (high 128 bits of the key). */
     uint32_t MBEDTLS_PRIVATE(acc)[5];    /** The accumulator number. */
     uint8_t MBEDTLS_PRIVATE(queue)[16];  /** The current partial block of data. */
-    size_t MBEDTLS_PRIVATE(queue_len);   /** The number of bytes stored in 'queue'. */
+    mbedtls_size_t MBEDTLS_PRIVATE(queue_len);   /** The number of bytes stored in 'queue'. */
 }
 mbedtls_poly1305_context;
 
@@ -124,7 +124,7 @@ int mbedtls_poly1305_starts( mbedtls_poly1305_context *ctx,
  */
 int mbedtls_poly1305_update( mbedtls_poly1305_context *ctx,
                              const unsigned char *input,
-                             size_t ilen );
+                             mbedtls_size_t ilen );
 
 /**
  * \brief           This function generates the Poly1305 Message
@@ -161,7 +161,7 @@ int mbedtls_poly1305_finish( mbedtls_poly1305_context *ctx,
  */
 int mbedtls_poly1305_mac( const unsigned char key[32],
                           const unsigned char *input,
-                          size_t ilen,
+                          mbedtls_size_t ilen,
                           unsigned char mac[16] );
 
 #if defined(MBEDTLS_SELF_TEST)

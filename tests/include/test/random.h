@@ -33,9 +33,9 @@
 typedef struct
 {
     unsigned char *buf; /* Pointer to a buffer of length bytes. */
-    size_t length;
+    mbedtls_size_t length;
     /* If fallback_f_rng is NULL, fail after delivering length bytes. */
-    int ( *fallback_f_rng )( void*, unsigned char *, size_t );
+    int ( *fallback_f_rng )( void*, unsigned char *, mbedtls_size_t );
     void *fallback_p_rng;
 } mbedtls_test_rnd_buf_info;
 
@@ -63,7 +63,7 @@ typedef struct
  */
 int mbedtls_test_rnd_std_rand( void *rng_state,
                                unsigned char *output,
-                               size_t len );
+                               mbedtls_size_t len );
 
 /**
  * This function only returns zeros.
@@ -72,7 +72,7 @@ int mbedtls_test_rnd_std_rand( void *rng_state,
  */
 int mbedtls_test_rnd_zero_rand( void *rng_state,
                                 unsigned char *output,
-                                size_t len );
+                                mbedtls_size_t len );
 
 /**
  * This function returns random data based on a buffer it receives.
@@ -88,7 +88,7 @@ int mbedtls_test_rnd_zero_rand( void *rng_state,
  */
 int mbedtls_test_rnd_buffer_rand( void *rng_state,
                                   unsigned char *output,
-                                  size_t len );
+                                  mbedtls_size_t len );
 
 /**
  * This function returns random based on a pseudo random function.
@@ -100,6 +100,6 @@ int mbedtls_test_rnd_buffer_rand( void *rng_state,
  */
 int mbedtls_test_rnd_pseudo_rand( void *rng_state,
                                   unsigned char *output,
-                                  size_t len );
+                                  mbedtls_size_t len );
 
 #endif /* TEST_RANDOM_H */

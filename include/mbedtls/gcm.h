@@ -164,14 +164,14 @@ int mbedtls_gcm_setkey( mbedtls_gcm_context *ctx,
  */
 int mbedtls_gcm_crypt_and_tag( mbedtls_gcm_context *ctx,
                        int mode,
-                       size_t length,
+                       mbedtls_size_t length,
                        const unsigned char *iv,
-                       size_t iv_len,
+                       mbedtls_size_t iv_len,
                        const unsigned char *add,
-                       size_t add_len,
+                       mbedtls_size_t add_len,
                        const unsigned char *input,
                        unsigned char *output,
-                       size_t tag_len,
+                       mbedtls_size_t tag_len,
                        unsigned char *tag );
 
 /**
@@ -208,13 +208,13 @@ int mbedtls_gcm_crypt_and_tag( mbedtls_gcm_context *ctx,
  *                  failed.
  */
 int mbedtls_gcm_auth_decrypt( mbedtls_gcm_context *ctx,
-                      size_t length,
+                      mbedtls_size_t length,
                       const unsigned char *iv,
-                      size_t iv_len,
+                      mbedtls_size_t iv_len,
                       const unsigned char *add,
-                      size_t add_len,
+                      mbedtls_size_t add_len,
                       const unsigned char *tag,
-                      size_t tag_len,
+                      mbedtls_size_t tag_len,
                       const unsigned char *input,
                       unsigned char *output );
 
@@ -234,7 +234,7 @@ int mbedtls_gcm_auth_decrypt( mbedtls_gcm_context *ctx,
 int mbedtls_gcm_starts( mbedtls_gcm_context *ctx,
                         int mode,
                         const unsigned char *iv,
-                        size_t iv_len );
+                        mbedtls_size_t iv_len );
 
 /**
  * \brief           This function feeds an input buffer as associated data
@@ -258,7 +258,7 @@ int mbedtls_gcm_starts( mbedtls_gcm_context *ctx,
  */
 int mbedtls_gcm_update_ad( mbedtls_gcm_context *ctx,
                            const unsigned char *add,
-                           size_t add_len );
+                           mbedtls_size_t add_len );
 
 /**
  * \brief           This function feeds an input buffer into an ongoing GCM
@@ -312,9 +312,9 @@ int mbedtls_gcm_update_ad( mbedtls_gcm_context *ctx,
  *                 or \p output_size too small.
  */
 int mbedtls_gcm_update( mbedtls_gcm_context *ctx,
-                        const unsigned char *input, size_t input_length,
-                        unsigned char *output, size_t output_size,
-                        size_t *output_length );
+                        const unsigned char *input, mbedtls_size_t input_length,
+                        unsigned char *output, mbedtls_size_t output_size,
+                        mbedtls_size_t *output_length );
 
 /**
  * \brief           This function finishes the GCM operation and generates
@@ -350,9 +350,9 @@ int mbedtls_gcm_update( mbedtls_gcm_context *ctx,
  *                  or \p output_size too small.
  */
 int mbedtls_gcm_finish( mbedtls_gcm_context *ctx,
-                        unsigned char *output, size_t output_size,
-                        size_t *output_length,
-                        unsigned char *tag, size_t tag_len );
+                        unsigned char *output, mbedtls_size_t output_size,
+                        mbedtls_size_t *output_length,
+                        unsigned char *tag, mbedtls_size_t tag_len );
 
 /**
  * \brief           This function clears a GCM context and the underlying

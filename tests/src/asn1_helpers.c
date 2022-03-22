@@ -28,19 +28,19 @@
 #include <mbedtls/asn1.h>
 
 int mbedtls_test_asn1_skip_integer( unsigned char **p, const unsigned char *end,
-                                    size_t min_bits, size_t max_bits,
+                                    mbedtls_size_t min_bits, mbedtls_size_t max_bits,
                                     int must_be_odd )
 {
-    size_t len;
-    size_t actual_bits;
+    mbedtls_size_t len;
+    mbedtls_size_t actual_bits;
     unsigned char msb;
     TEST_EQUAL( mbedtls_asn1_get_tag( p, end, &len,
                                       MBEDTLS_ASN1_INTEGER ),
                 0 );
 
     /* Check if the retrieved length doesn't extend the actual buffer's size.
-     * It is assumed here, that end >= p, which validates casting to size_t. */
-    TEST_ASSERT( len <= (size_t)( end - *p) );
+     * It is assumed here, that end >= p, which validates casting to mbedtls_size_t. */
+    TEST_ASSERT( len <= (mbedtls_size_t)( end - *p) );
 
     /* Tolerate a slight departure from DER encoding:
      * - 0 may be represented by an empty string or a 1-byte string.

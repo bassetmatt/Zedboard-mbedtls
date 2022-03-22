@@ -2690,7 +2690,7 @@ Bugfix
 Security
    * Add checks to prevent signature forgeries for very large messages while
      using RSA through the PK module in 64-bit systems. The issue was caused by
-     some data loss when casting a size_t to an unsigned int value in the
+     some data loss when casting a mbedtls_size_t to an unsigned int value in the
      functions rsa_verify_wrap(), rsa_sign_wrap(), rsa_alt_sign_wrap() and
      mbedtls_pk_sign(). Found by Jean-Philippe Aumasson.
    * Fixed potential livelock during the parsing of a CRL in PEM format in
@@ -3355,7 +3355,7 @@ Changes
    * Move from SHA-1 to SHA-256 in example programs using signatures
      (suggested by Thorsten Mühlfelder).
    * Remove some unneeded inclusions of header files from the standard library
-     "minimize" others (eg use stddef.h if only size_t is needed).
+     "minimize" others (eg use stddef.h if only mbedtls_size_t is needed).
    * Change #include lines in test files to use double quotes instead of angle
      brackets for uniformity with the rest of the code.
    * Remove dependency on sscanf() in X.509 parsing modules.
@@ -4423,7 +4423,7 @@ Features
    * Added ssl_mail_client and ssl_fork_server as example programs.
 
 Changes
-   * Major argument / variable rewrite. Introduced use of size_t
+   * Major argument / variable rewrite. Introduced use of mbedtls_size_t
      instead of int for buffer lengths and loop variables for
      better unsigned / signed use. Renamed internal bigint types
      t_int and t_dbl to t_uint and t_udbl in the process

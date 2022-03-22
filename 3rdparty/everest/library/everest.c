@@ -50,9 +50,9 @@ void mbedtls_everest_free( mbedtls_ecdh_context_everest *ctx )
     mbedtls_x25519_free( &ctx->ctx );
 }
 
-int mbedtls_everest_make_params( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_make_params( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng )
 {
     mbedtls_x25519_context *x25519_ctx = &ctx->ctx;
@@ -78,9 +78,9 @@ int mbedtls_everest_get_params( mbedtls_ecdh_context_everest *ctx,
     return mbedtls_x25519_get_params( x25519_ctx, key, s );
 }
 
-int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng )
 {
     mbedtls_x25519_context *x25519_ctx = &ctx->ctx;
@@ -88,15 +88,15 @@ int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, size_t *olen
 }
 
 int mbedtls_everest_read_public( mbedtls_ecdh_context_everest *ctx,
-                                 const unsigned char *buf, size_t blen )
+                                 const unsigned char *buf, mbedtls_size_t blen )
 {
     mbedtls_x25519_context *x25519_ctx = &ctx->ctx;
     return mbedtls_x25519_read_public ( x25519_ctx, buf, blen );
 }
 
-int mbedtls_everest_calc_secret( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_calc_secret( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng )
 {
     mbedtls_x25519_context *x25519_ctx = &ctx->ctx;

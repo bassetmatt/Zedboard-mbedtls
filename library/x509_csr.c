@@ -83,10 +83,10 @@ static int x509_csr_get_version( unsigned char **p,
  * Parse a CSR in DER format
  */
 int mbedtls_x509_csr_parse_der( mbedtls_x509_csr *csr,
-                        const unsigned char *buf, size_t buflen )
+                        const unsigned char *buf, mbedtls_size_t buflen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
     unsigned char *p, *end;
     mbedtls_x509_buf sig_params;
 
@@ -128,7 +128,7 @@ int mbedtls_x509_csr_parse_der( mbedtls_x509_csr *csr,
         return( MBEDTLS_ERR_X509_INVALID_FORMAT );
     }
 
-    if( len != (size_t) ( end - p ) )
+    if( len != (mbedtls_size_t) ( end - p ) )
     {
         mbedtls_x509_csr_free( csr );
         return( MBEDTLS_ERROR_ADD( MBEDTLS_ERR_X509_INVALID_FORMAT,
@@ -254,11 +254,11 @@ int mbedtls_x509_csr_parse_der( mbedtls_x509_csr *csr,
 /*
  * Parse a CSR, allowing for PEM or raw DER encoding
  */
-int mbedtls_x509_csr_parse( mbedtls_x509_csr *csr, const unsigned char *buf, size_t buflen )
+int mbedtls_x509_csr_parse( mbedtls_x509_csr *csr, const unsigned char *buf, mbedtls_size_t buflen )
 {
 #if defined(MBEDTLS_PEM_PARSE_C)
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t use_len;
+    mbedtls_size_t use_len;
     mbedtls_pem_context pem;
 #endif
 
@@ -308,7 +308,7 @@ int mbedtls_x509_csr_parse( mbedtls_x509_csr *csr, const unsigned char *buf, siz
 int mbedtls_x509_csr_parse_file( mbedtls_x509_csr *csr, const char *path )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t n;
+    mbedtls_size_t n;
     unsigned char *buf;
 
     if( ( ret = mbedtls_pk_load_file( path, &buf, &n ) ) != 0 )
@@ -329,11 +329,11 @@ int mbedtls_x509_csr_parse_file( mbedtls_x509_csr *csr, const char *path )
 /*
  * Return an informational string about the CSR.
  */
-int mbedtls_x509_csr_info( char *buf, size_t size, const char *prefix,
+int mbedtls_x509_csr_info( char *buf, mbedtls_size_t size, const char *prefix,
                    const mbedtls_x509_csr *csr )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t n;
+    mbedtls_size_t n;
     char *p;
     char key_size_str[BEFORE_COLON];
 

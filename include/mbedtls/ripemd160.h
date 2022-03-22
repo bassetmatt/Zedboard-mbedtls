@@ -94,7 +94,7 @@ int mbedtls_ripemd160_starts( mbedtls_ripemd160_context *ctx );
  */
 int mbedtls_ripemd160_update( mbedtls_ripemd160_context *ctx,
                               const unsigned char *input,
-                              size_t ilen );
+                              mbedtls_size_t ilen );
 
 /**
  * \brief          RIPEMD-160 final digest
@@ -128,7 +128,7 @@ int mbedtls_internal_ripemd160_process( mbedtls_ripemd160_context *ctx,
  * \return         0 if successful
  */
 int mbedtls_ripemd160( const unsigned char *input,
-                       size_t ilen,
+                       mbedtls_size_t ilen,
                        unsigned char output[20] );
 
 #if defined(MBEDTLS_SELF_TEST)

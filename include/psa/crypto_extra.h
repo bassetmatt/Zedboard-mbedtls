@@ -225,22 +225,22 @@ void mbedtls_psa_crypto_free( void );
 typedef struct mbedtls_psa_stats_s
 {
     /** Number of slots containing key material for a volatile key. */
-    size_t MBEDTLS_PRIVATE(volatile_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(volatile_slots);
     /** Number of slots containing key material for a key which is in
      * internal persistent storage. */
-    size_t MBEDTLS_PRIVATE(persistent_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(persistent_slots);
     /** Number of slots containing a reference to a key in a
      * secure element. */
-    size_t MBEDTLS_PRIVATE(external_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(external_slots);
     /** Number of slots which are occupied, but do not contain
      * key material yet. */
-    size_t MBEDTLS_PRIVATE(half_filled_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(half_filled_slots);
     /** Number of slots that contain cache data. */
-    size_t MBEDTLS_PRIVATE(cache_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(cache_slots);
     /** Number of slots that are not used for anything. */
-    size_t MBEDTLS_PRIVATE(empty_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(empty_slots);
     /** Number of slots that are locked. */
-    size_t MBEDTLS_PRIVATE(locked_slots);
+    mbedtls_size_t MBEDTLS_PRIVATE(locked_slots);
     /** Largest key id value among open keys in internal persistent storage. */
     psa_key_id_t MBEDTLS_PRIVATE(max_open_internal_key_id);
     /** Largest key id value among open keys in secure elements. */
@@ -326,7 +326,7 @@ void mbedtls_psa_get_stats( mbedtls_psa_stats_t *stats );
  *         possible to call this function.
  */
 psa_status_t mbedtls_psa_inject_entropy(const uint8_t *seed,
-                                        size_t seed_size);
+                                        mbedtls_size_t seed_size);
 
 /** \addtogroup crypto_types
  * @{
@@ -499,7 +499,7 @@ psa_status_t mbedtls_psa_inject_entropy(const uint8_t *seed,
 psa_status_t psa_set_key_domain_parameters(psa_key_attributes_t *attributes,
                                            psa_key_type_t type,
                                            const uint8_t *data,
-                                           size_t data_length);
+                                           mbedtls_size_t data_length);
 
 /**
  * \brief Get domain parameters for a key.
@@ -527,8 +527,8 @@ psa_status_t psa_set_key_domain_parameters(psa_key_attributes_t *attributes,
 psa_status_t psa_get_key_domain_parameters(
     const psa_key_attributes_t *attributes,
     uint8_t *data,
-    size_t data_size,
-    size_t *data_length);
+    mbedtls_size_t data_size,
+    mbedtls_size_t *data_length);
 
 /** Safe output buffer size for psa_get_key_domain_parameters().
  *
@@ -588,7 +588,7 @@ psa_status_t psa_get_key_domain_parameters(
  * \return              \c 0 on failure (\p grpid is not recognized).
  */
 static inline psa_ecc_family_t mbedtls_ecc_group_to_psa( mbedtls_ecp_group_id grpid,
-                                                        size_t *bits )
+                                                        mbedtls_size_t *bits )
 {
     switch( grpid )
     {
@@ -657,7 +657,7 @@ static inline psa_ecc_family_t mbedtls_ecc_group_to_psa( mbedtls_ecp_group_id gr
  *                      correct for \p curve.
  */
 mbedtls_ecp_group_id mbedtls_ecc_group_of_psa( psa_ecc_family_t curve,
-                                               size_t bits,
+                                               mbedtls_size_t bits,
                                                int bits_is_sloppy );
 #endif /* MBEDTLS_ECP_C */
 
@@ -709,7 +709,7 @@ mbedtls_ecp_group_id mbedtls_ecc_group_of_psa( psa_ecc_family_t curve,
  */
 psa_status_t mbedtls_psa_external_get_random(
     mbedtls_psa_external_random_context_t *context,
-    uint8_t *output, size_t output_size, size_t *output_length );
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length );
 #endif /* MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG */
 
 /**@}*/
@@ -1079,7 +1079,7 @@ typedef uint32_t psa_pake_primitive_t;
  *                      documentation of individual ::psa_pake_primitive_type_t
  *                      constants).
  * \param pake_bits     The bit-size of the primitive
- *                      (Value of type \c size_t. The interpretation
+ *                      (Value of type \c mbedtls_size_t. The interpretation
  *                      of this parameter depends on \p family, for more
  *                      information consult the documentation of individual
  *                      ::psa_pake_primitive_type_t constants).
@@ -1436,7 +1436,7 @@ psa_status_t psa_pake_set_password_key(psa_pake_operation_t *operation,
  */
 psa_status_t psa_pake_set_user(psa_pake_operation_t *operation,
                                const uint8_t *user_id,
-                               size_t user_id_len);
+                               mbedtls_size_t user_id_len);
 
 /** Set the peer ID for a password-authenticated key exchange.
  *
@@ -1477,7 +1477,7 @@ psa_status_t psa_pake_set_user(psa_pake_operation_t *operation,
  */
 psa_status_t psa_pake_set_peer(psa_pake_operation_t *operation,
                                const uint8_t *peer_id,
-                               size_t peer_id_len);
+                               mbedtls_size_t peer_id_len);
 
 /** Set the side for a password-authenticated key exchange.
  *
@@ -1565,8 +1565,8 @@ psa_status_t psa_pake_set_side(psa_pake_operation_t *operation,
 psa_status_t psa_pake_output(psa_pake_operation_t *operation,
                              psa_pake_step_t step,
                              uint8_t *output,
-                             size_t output_size,
-                             size_t *output_length);
+                             mbedtls_size_t output_size,
+                             mbedtls_size_t *output_length);
 
 /** Provide input for a step of a password-authenticated key exchange.
  *
@@ -1610,7 +1610,7 @@ psa_status_t psa_pake_output(psa_pake_operation_t *operation,
 psa_status_t psa_pake_input(psa_pake_operation_t *operation,
                             psa_pake_step_t step,
                             uint8_t *input,
-                            size_t input_length);
+                            mbedtls_size_t input_length);
 
 /** Get implicitly confirmed shared secret from a PAKE.
  *

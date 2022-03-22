@@ -46,14 +46,14 @@
     defined(MBEDTLS_PSA_BUILTIN_ALG_DETERMINISTIC_ECDSA) || \
     defined(MBEDTLS_PSA_BUILTIN_ALG_ECDH)
 psa_status_t mbedtls_psa_ecp_load_representation(
-    psa_key_type_t type, size_t curve_bits,
-    const uint8_t *data, size_t data_length,
+    psa_key_type_t type, mbedtls_size_t curve_bits,
+    const uint8_t *data, mbedtls_size_t data_length,
     mbedtls_ecp_keypair **p_ecp )
 {
     mbedtls_ecp_group_id grp_id = MBEDTLS_ECP_DP_NONE;
     psa_status_t status;
     mbedtls_ecp_keypair *ecp = NULL;
-    size_t curve_bytes = data_length;
+    mbedtls_size_t curve_bytes = data_length;
     int explicit_bits = ( curve_bits != 0 );
 
     if( PSA_KEY_TYPE_IS_PUBLIC_KEY( type ) &&
@@ -166,9 +166,9 @@ exit:
 
 psa_status_t mbedtls_psa_ecp_import_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, size_t data_length,
-    uint8_t *key_buffer, size_t key_buffer_size,
-    size_t *key_buffer_length, size_t *bits )
+    const uint8_t *data, mbedtls_size_t data_length,
+    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits )
 {
     psa_status_t status;
     mbedtls_ecp_keypair *ecp = NULL;
@@ -207,8 +207,8 @@ exit:
 psa_status_t mbedtls_psa_ecp_export_key( psa_key_type_t type,
                                          mbedtls_ecp_keypair *ecp,
                                          uint8_t *data,
-                                         size_t data_size,
-                                         size_t *data_length )
+                                         mbedtls_size_t data_size,
+                                         mbedtls_size_t *data_length )
 {
     psa_status_t status;
 
@@ -257,8 +257,8 @@ psa_status_t mbedtls_psa_ecp_export_key( psa_key_type_t type,
 
 psa_status_t mbedtls_psa_ecp_export_public_key(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    uint8_t *data, size_t data_size, size_t *data_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_keypair *ecp = NULL;
@@ -285,7 +285,7 @@ psa_status_t mbedtls_psa_ecp_export_public_key(
 #if defined(MBEDTLS_PSA_BUILTIN_KEY_TYPE_ECC_KEY_PAIR)
 psa_status_t mbedtls_psa_ecp_generate_key(
     const psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, size_t key_buffer_size, size_t *key_buffer_length )
+    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -335,14 +335,14 @@ psa_status_t mbedtls_psa_ecp_generate_key(
     defined(MBEDTLS_PSA_BUILTIN_ALG_DETERMINISTIC_ECDSA)
 psa_status_t mbedtls_psa_ecdsa_sign_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_keypair *ecp = NULL;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t curve_bytes;
+    mbedtls_size_t curve_bytes;
     mbedtls_mpi r, s;
 
     status = mbedtls_psa_ecp_load_representation( attributes->core.type,
@@ -409,14 +409,14 @@ cleanup:
 
 psa_status_t mbedtls_psa_ecdsa_verify_hash(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    const uint8_t *signature, size_t signature_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    const uint8_t *signature, mbedtls_size_t signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     mbedtls_ecp_keypair *ecp = NULL;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t curve_bytes;
+    mbedtls_size_t curve_bytes;
     mbedtls_mpi r, s;
 
     (void)alg;

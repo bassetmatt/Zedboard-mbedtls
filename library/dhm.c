@@ -124,12 +124,12 @@ void mbedtls_dhm_init( mbedtls_dhm_context *ctx )
     memset( ctx, 0, sizeof( mbedtls_dhm_context ) );
 }
 
-size_t mbedtls_dhm_get_bitlen( const mbedtls_dhm_context *ctx )
+mbedtls_size_t mbedtls_dhm_get_bitlen( const mbedtls_dhm_context *ctx )
 {
     return( mbedtls_mpi_bitlen( &ctx->P ) );
 }
 
-size_t mbedtls_dhm_get_len( const mbedtls_dhm_context *ctx )
+mbedtls_size_t mbedtls_dhm_get_len( const mbedtls_dhm_context *ctx )
 {
     return( mbedtls_mpi_size( &ctx->P ) );
 }
@@ -192,7 +192,7 @@ int mbedtls_dhm_read_params( mbedtls_dhm_context *ctx,
  * Pick a random R in the range [2, M-2] for blinding or key generation.
  */
 static int dhm_random_below( mbedtls_mpi *R, const mbedtls_mpi *M,
-                int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret;
 
@@ -204,7 +204,7 @@ cleanup:
 }
 
 static int dhm_make_common( mbedtls_dhm_context *ctx, int x_size,
-                            int (*f_rng)(void *, unsigned char *, size_t),
+                            int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                             void *p_rng )
 {
     int ret = 0;
@@ -245,12 +245,12 @@ cleanup:
  * Setup and write the ServerKeyExchange parameters
  */
 int mbedtls_dhm_make_params( mbedtls_dhm_context *ctx, int x_size,
-                     unsigned char *output, size_t *olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t *olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     int ret;
-    size_t n1, n2, n3;
+    mbedtls_size_t n1, n2, n3;
     unsigned char *p;
     DHM_VALIDATE_RET( ctx != NULL );
     DHM_VALIDATE_RET( output != NULL );
@@ -317,7 +317,7 @@ int mbedtls_dhm_set_group( mbedtls_dhm_context *ctx,
  * Import the peer's public value G^Y
  */
 int mbedtls_dhm_read_public( mbedtls_dhm_context *ctx,
-                     const unsigned char *input, size_t ilen )
+                     const unsigned char *input, mbedtls_size_t ilen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     DHM_VALIDATE_RET( ctx != NULL );
@@ -336,8 +336,8 @@ int mbedtls_dhm_read_public( mbedtls_dhm_context *ctx,
  * Create own private value X and export G^X
  */
 int mbedtls_dhm_make_public( mbedtls_dhm_context *ctx, int x_size,
-                     unsigned char *output, size_t olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     int ret;
@@ -370,7 +370,7 @@ cleanup:
  *  Berlin Heidelberg, 1996. p. 104-113.
  */
 static int dhm_update_blinding( mbedtls_dhm_context *ctx,
-                    int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                    int (*f_rng)(void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret;
     mbedtls_mpi R;
@@ -434,8 +434,8 @@ cleanup:
  * Derive and export the shared secret (G^Y)^X mod P
  */
 int mbedtls_dhm_calc_secret( mbedtls_dhm_context *ctx,
-                     unsigned char *output, size_t output_size, size_t *olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t output_size, mbedtls_size_t *olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -509,10 +509,10 @@ void mbedtls_dhm_free( mbedtls_dhm_context *ctx )
  * Parse DHM parameters
  */
 int mbedtls_dhm_parse_dhm( mbedtls_dhm_context *dhm, const unsigned char *dhmin,
-                   size_t dhminlen )
+                   mbedtls_size_t dhminlen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
     unsigned char *p, *end;
 #if defined(MBEDTLS_PEM_PARSE_C)
     mbedtls_pem_context pem;
@@ -613,7 +613,7 @@ exit:
  * A terminating null byte is always appended. It is included in the announced
  * length only if the data looks like it is PEM encoded.
  */
-static int load_file( const char *path, unsigned char **buf, size_t *n )
+static int load_file( const char *path, unsigned char **buf, mbedtls_size_t *n )
 {
     FILE *f;
     long size;
@@ -629,7 +629,7 @@ static int load_file( const char *path, unsigned char **buf, size_t *n )
     }
     fseek( f, 0, SEEK_SET );
 
-    *n = (size_t) size;
+    *n = (mbedtls_size_t) size;
 
     if( *n + 1 == 0 ||
         ( *buf = mbedtls_calloc( 1, *n + 1 ) ) == NULL )
@@ -664,7 +664,7 @@ static int load_file( const char *path, unsigned char **buf, size_t *n )
 int mbedtls_dhm_parse_dhmfile( mbedtls_dhm_context *dhm, const char *path )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t n;
+    mbedtls_size_t n;
     unsigned char *buf;
     DHM_VALIDATE_RET( dhm != NULL );
     DHM_VALIDATE_RET( path != NULL );
@@ -708,7 +708,7 @@ static const char mbedtls_test_dhm_params[] = {
   0x49, 0x75, 0xb3, 0x02, 0x01, 0x02 };
 #endif /* MBEDTLS_PEM_PARSE_C */
 
-static const size_t mbedtls_test_dhm_params_len = sizeof( mbedtls_test_dhm_params );
+static const mbedtls_size_t mbedtls_test_dhm_params_len = sizeof( mbedtls_test_dhm_params );
 
 /*
  * Checkup routine

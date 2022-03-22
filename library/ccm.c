@@ -108,12 +108,12 @@ void mbedtls_ccm_free( mbedtls_ccm_context *ctx )
  * Encrypt or decrypt a partial block with CTR
  */
 static int mbedtls_ccm_crypt( mbedtls_ccm_context *ctx,
-                              size_t offset, size_t use_len,
+                              mbedtls_size_t offset, mbedtls_size_t use_len,
                               const unsigned char *input,
                               unsigned char *output )
 {
-    size_t i;
-    size_t olen = 0;
+    mbedtls_size_t i;
+    mbedtls_size_t olen = 0;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char tmp_buf[16] = {0};
 
@@ -142,7 +142,7 @@ static int ccm_calculate_first_block_if_ready(mbedtls_ccm_context *ctx)
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char i;
-    size_t len_left, olen;
+    mbedtls_size_t len_left, olen;
 
     /* length calulcation can be done only after both
      * mbedtls_ccm_starts() and mbedtls_ccm_set_lengths() have been executed
@@ -203,7 +203,7 @@ static int ccm_calculate_first_block_if_ready(mbedtls_ccm_context *ctx)
 int mbedtls_ccm_starts( mbedtls_ccm_context *ctx,
                         int mode,
                         const unsigned char *iv,
-                        size_t iv_len )
+                        mbedtls_size_t iv_len )
 {
     /* Also implies q is within bounds */
     if( iv_len < 7 || iv_len > 13 )
@@ -238,9 +238,9 @@ int mbedtls_ccm_starts( mbedtls_ccm_context *ctx,
 }
 
 int mbedtls_ccm_set_lengths( mbedtls_ccm_context *ctx,
-                             size_t total_ad_len,
-                             size_t plaintext_len,
-                             size_t tag_len )
+                             mbedtls_size_t total_ad_len,
+                             mbedtls_size_t plaintext_len,
+                             mbedtls_size_t tag_len )
 {
     /*
      * Check length requirements: SP800-38C A.1
@@ -266,11 +266,11 @@ int mbedtls_ccm_set_lengths( mbedtls_ccm_context *ctx,
 
 int mbedtls_ccm_update_ad( mbedtls_ccm_context *ctx,
                            const unsigned char *add,
-                           size_t add_len )
+                           mbedtls_size_t add_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char i;
-    size_t olen, use_len, offset;
+    mbedtls_size_t olen, use_len, offset;
 
     if( ctx->state & CCM_STATE__ERROR )
     {
@@ -338,13 +338,13 @@ int mbedtls_ccm_update_ad( mbedtls_ccm_context *ctx,
 }
 
 int mbedtls_ccm_update( mbedtls_ccm_context *ctx,
-                        const unsigned char *input, size_t input_len,
-                        unsigned char *output, size_t output_size,
-                        size_t *output_len )
+                        const unsigned char *input, mbedtls_size_t input_len,
+                        unsigned char *output, mbedtls_size_t output_size,
+                        mbedtls_size_t *output_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char i;
-    size_t use_len, offset, olen;
+    mbedtls_size_t use_len, offset, olen;
 
     unsigned char local_output[16];
 
@@ -446,7 +446,7 @@ exit:
 }
 
 int mbedtls_ccm_finish( mbedtls_ccm_context *ctx,
-                        unsigned char *tag, size_t tag_len )
+                        unsigned char *tag, mbedtls_size_t tag_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char i;
@@ -485,14 +485,14 @@ int mbedtls_ccm_finish( mbedtls_ccm_context *ctx,
 /*
  * Authenticated encryption or decryption
  */
-static int ccm_auth_crypt( mbedtls_ccm_context *ctx, int mode, size_t length,
-                           const unsigned char *iv, size_t iv_len,
-                           const unsigned char *add, size_t add_len,
+static int ccm_auth_crypt( mbedtls_ccm_context *ctx, int mode, mbedtls_size_t length,
+                           const unsigned char *iv, mbedtls_size_t iv_len,
+                           const unsigned char *add, mbedtls_size_t add_len,
                            const unsigned char *input, unsigned char *output,
-                           unsigned char *tag, size_t tag_len )
+                           unsigned char *tag, mbedtls_size_t tag_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t olen;
+    mbedtls_size_t olen;
 
     if( ( ret = mbedtls_ccm_starts( ctx, mode, iv, iv_len ) ) != 0 )
         return( ret );
@@ -516,21 +516,21 @@ static int ccm_auth_crypt( mbedtls_ccm_context *ctx, int mode, size_t length,
 /*
  * Authenticated encryption
  */
-int mbedtls_ccm_star_encrypt_and_tag( mbedtls_ccm_context *ctx, size_t length,
-                         const unsigned char *iv, size_t iv_len,
-                         const unsigned char *add, size_t add_len,
+int mbedtls_ccm_star_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t length,
+                         const unsigned char *iv, mbedtls_size_t iv_len,
+                         const unsigned char *add, mbedtls_size_t add_len,
                          const unsigned char *input, unsigned char *output,
-                         unsigned char *tag, size_t tag_len )
+                         unsigned char *tag, mbedtls_size_t tag_len )
 {
     return( ccm_auth_crypt( ctx, MBEDTLS_CCM_STAR_ENCRYPT, length, iv, iv_len,
                             add, add_len, input, output, tag, tag_len ) );
 }
 
-int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, size_t length,
-                         const unsigned char *iv, size_t iv_len,
-                         const unsigned char *add, size_t add_len,
+int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, mbedtls_size_t length,
+                         const unsigned char *iv, mbedtls_size_t iv_len,
+                         const unsigned char *add, mbedtls_size_t add_len,
                          const unsigned char *input, unsigned char *output,
-                         unsigned char *tag, size_t tag_len )
+                         unsigned char *tag, mbedtls_size_t tag_len )
 {
     return( ccm_auth_crypt( ctx, MBEDTLS_CCM_ENCRYPT, length, iv, iv_len,
                             add, add_len, input, output, tag, tag_len ) );
@@ -539,7 +539,7 @@ int mbedtls_ccm_encrypt_and_tag( mbedtls_ccm_context *ctx, size_t length,
 /*
  * Authenticated decryption
  */
-static int mbedtls_ccm_compare_tags(const unsigned char *tag1, const unsigned char *tag2, size_t tag_len)
+static int mbedtls_ccm_compare_tags(const unsigned char *tag1, const unsigned char *tag2, mbedtls_size_t tag_len)
 {
     unsigned char i;
     int diff;
@@ -556,11 +556,11 @@ static int mbedtls_ccm_compare_tags(const unsigned char *tag1, const unsigned ch
     return( 0 );
 }
 
-static int ccm_auth_decrypt( mbedtls_ccm_context *ctx, int mode, size_t length,
-                             const unsigned char *iv, size_t iv_len,
-                             const unsigned char *add, size_t add_len,
+static int ccm_auth_decrypt( mbedtls_ccm_context *ctx, int mode, mbedtls_size_t length,
+                             const unsigned char *iv, mbedtls_size_t iv_len,
+                             const unsigned char *add, mbedtls_size_t add_len,
                              const unsigned char *input, unsigned char *output,
-                             const unsigned char *tag, size_t tag_len )
+                             const unsigned char *tag, mbedtls_size_t tag_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char check_tag[16];
@@ -581,22 +581,22 @@ static int ccm_auth_decrypt( mbedtls_ccm_context *ctx, int mode, size_t length,
     return( 0 );
 }
 
-int mbedtls_ccm_star_auth_decrypt( mbedtls_ccm_context *ctx, size_t length,
-                      const unsigned char *iv, size_t iv_len,
-                      const unsigned char *add, size_t add_len,
+int mbedtls_ccm_star_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t length,
+                      const unsigned char *iv, mbedtls_size_t iv_len,
+                      const unsigned char *add, mbedtls_size_t add_len,
                       const unsigned char *input, unsigned char *output,
-                      const unsigned char *tag, size_t tag_len )
+                      const unsigned char *tag, mbedtls_size_t tag_len )
 {
     return ccm_auth_decrypt( ctx, MBEDTLS_CCM_STAR_DECRYPT, length,
                              iv, iv_len, add, add_len,
                              input, output, tag, tag_len );
 }
 
-int mbedtls_ccm_auth_decrypt( mbedtls_ccm_context *ctx, size_t length,
-                      const unsigned char *iv, size_t iv_len,
-                      const unsigned char *add, size_t add_len,
+int mbedtls_ccm_auth_decrypt( mbedtls_ccm_context *ctx, mbedtls_size_t length,
+                      const unsigned char *iv, mbedtls_size_t iv_len,
+                      const unsigned char *add, mbedtls_size_t add_len,
                       const unsigned char *input, unsigned char *output,
-                      const unsigned char *tag, size_t tag_len )
+                      const unsigned char *tag, mbedtls_size_t tag_len )
 {
     return ccm_auth_decrypt( ctx, MBEDTLS_CCM_DECRYPT, length,
                              iv, iv_len, add, add_len,
@@ -637,10 +637,10 @@ static const unsigned char msg_test_data[CCM_SELFTEST_PT_MAX_LEN] = {
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
 };
 
-static const size_t iv_len_test_data [NB_TESTS] = { 7, 8,  12 };
-static const size_t add_len_test_data[NB_TESTS] = { 8, 16, 20 };
-static const size_t msg_len_test_data[NB_TESTS] = { 4, 16, 24 };
-static const size_t tag_len_test_data[NB_TESTS] = { 4, 6,  8  };
+static const mbedtls_size_t iv_len_test_data [NB_TESTS] = { 7, 8,  12 };
+static const mbedtls_size_t add_len_test_data[NB_TESTS] = { 8, 16, 20 };
+static const mbedtls_size_t msg_len_test_data[NB_TESTS] = { 4, 16, 24 };
+static const mbedtls_size_t tag_len_test_data[NB_TESTS] = { 4, 6,  8  };
 
 static const unsigned char res_test_data[NB_TESTS][CCM_SELFTEST_CT_MAX_LEN] = {
     {   0x71, 0x62, 0x01, 0x5b, 0x4d, 0xac, 0x25, 0x5d },
@@ -663,7 +663,7 @@ int mbedtls_ccm_self_test( int verbose )
      */
     unsigned char plaintext[CCM_SELFTEST_PT_MAX_LEN];
     unsigned char ciphertext[CCM_SELFTEST_CT_MAX_LEN];
-    size_t i;
+    mbedtls_size_t i;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     mbedtls_ccm_init( &ctx );

@@ -73,7 +73,7 @@ int mbedtls_ecdh_can_do( mbedtls_ecp_group_id gid )
  */
 static int ecdh_gen_public_restartable( mbedtls_ecp_group *grp,
                     mbedtls_mpi *d, mbedtls_ecp_point *Q,
-                    int (*f_rng)(void *, unsigned char *, size_t),
+                    int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                     void *p_rng,
                     mbedtls_ecp_restart_ctx *rs_ctx )
 {
@@ -96,7 +96,7 @@ cleanup:
  * Generate public key
  */
 int mbedtls_ecdh_gen_public( mbedtls_ecp_group *grp, mbedtls_mpi *d, mbedtls_ecp_point *Q,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng )
 {
     ECDH_VALIDATE_RET( grp != NULL );
@@ -114,7 +114,7 @@ int mbedtls_ecdh_gen_public( mbedtls_ecp_group *grp, mbedtls_mpi *d, mbedtls_ecp
 static int ecdh_compute_shared_restartable( mbedtls_ecp_group *grp,
                          mbedtls_mpi *z,
                          const mbedtls_ecp_point *Q, const mbedtls_mpi *d,
-                         int (*f_rng)(void *, unsigned char *, size_t),
+                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                          void *p_rng,
                          mbedtls_ecp_restart_ctx *rs_ctx )
 {
@@ -145,7 +145,7 @@ cleanup:
  */
 int mbedtls_ecdh_compute_shared( mbedtls_ecp_group *grp, mbedtls_mpi *z,
                          const mbedtls_ecp_point *Q, const mbedtls_mpi *d,
-                         int (*f_rng)(void *, unsigned char *, size_t),
+                         int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                          void *p_rng )
 {
     ECDH_VALIDATE_RET( grp != NULL );
@@ -296,16 +296,16 @@ void mbedtls_ecdh_free( mbedtls_ecdh_context *ctx )
 }
 
 static int ecdh_make_params_internal( mbedtls_ecdh_context_mbed *ctx,
-                                      size_t *olen, int point_format,
-                                      unsigned char *buf, size_t blen,
+                                      mbedtls_size_t *olen, int point_format,
+                                      unsigned char *buf, mbedtls_size_t blen,
                                       int (*f_rng)(void *,
                                                    unsigned char *,
-                                                   size_t),
+                                                   mbedtls_size_t),
                                       void *p_rng,
                                       int restart_enabled )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t grp_len, pt_len;
+    mbedtls_size_t grp_len, pt_len;
 #if defined(MBEDTLS_ECP_RESTARTABLE)
     mbedtls_ecp_restart_ctx *rs_ctx = NULL;
 #endif
@@ -353,9 +353,9 @@ static int ecdh_make_params_internal( mbedtls_ecdh_context_mbed *ctx,
  *          ECPoint         public;
  *      } ServerECDHParams;
  */
-int mbedtls_ecdh_make_params( mbedtls_ecdh_context *ctx, size_t *olen,
-                              unsigned char *buf, size_t blen,
-                              int (*f_rng)(void *, unsigned char *, size_t),
+int mbedtls_ecdh_make_params( mbedtls_ecdh_context *ctx, mbedtls_size_t *olen,
+                              unsigned char *buf, mbedtls_size_t blen,
+                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                               void *p_rng )
 {
     int restart_enabled = 0;
@@ -519,11 +519,11 @@ int mbedtls_ecdh_get_params( mbedtls_ecdh_context *ctx,
 }
 
 static int ecdh_make_public_internal( mbedtls_ecdh_context_mbed *ctx,
-                                      size_t *olen, int point_format,
-                                      unsigned char *buf, size_t blen,
+                                      mbedtls_size_t *olen, int point_format,
+                                      unsigned char *buf, mbedtls_size_t blen,
                                       int (*f_rng)(void *,
                                                    unsigned char *,
-                                                   size_t),
+                                                   mbedtls_size_t),
                                       void *p_rng,
                                       int restart_enabled )
 {
@@ -559,9 +559,9 @@ static int ecdh_make_public_internal( mbedtls_ecdh_context_mbed *ctx,
 /*
  * Setup and export the client public value
  */
-int mbedtls_ecdh_make_public( mbedtls_ecdh_context *ctx, size_t *olen,
-                              unsigned char *buf, size_t blen,
-                              int (*f_rng)(void *, unsigned char *, size_t),
+int mbedtls_ecdh_make_public( mbedtls_ecdh_context *ctx, mbedtls_size_t *olen,
+                              unsigned char *buf, mbedtls_size_t blen,
+                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                               void *p_rng )
 {
     int restart_enabled = 0;
@@ -597,7 +597,7 @@ int mbedtls_ecdh_make_public( mbedtls_ecdh_context *ctx, size_t *olen,
 }
 
 static int ecdh_read_public_internal( mbedtls_ecdh_context_mbed *ctx,
-                                      const unsigned char *buf, size_t blen )
+                                      const unsigned char *buf, mbedtls_size_t blen )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
@@ -606,7 +606,7 @@ static int ecdh_read_public_internal( mbedtls_ecdh_context_mbed *ctx,
                                             blen ) ) != 0 )
         return( ret );
 
-    if( (size_t)( p - buf ) != blen )
+    if( (mbedtls_size_t)( p - buf ) != blen )
         return( MBEDTLS_ERR_ECP_BAD_INPUT_DATA );
 
     return( 0 );
@@ -616,7 +616,7 @@ static int ecdh_read_public_internal( mbedtls_ecdh_context_mbed *ctx,
  * Parse and import the client's public value
  */
 int mbedtls_ecdh_read_public( mbedtls_ecdh_context *ctx,
-                              const unsigned char *buf, size_t blen )
+                              const unsigned char *buf, mbedtls_size_t blen )
 {
     ECDH_VALIDATE_RET( ctx != NULL );
     ECDH_VALIDATE_RET( buf != NULL );
@@ -641,11 +641,11 @@ int mbedtls_ecdh_read_public( mbedtls_ecdh_context *ctx,
 }
 
 static int ecdh_calc_secret_internal( mbedtls_ecdh_context_mbed *ctx,
-                                      size_t *olen, unsigned char *buf,
-                                      size_t blen,
+                                      mbedtls_size_t *olen, unsigned char *buf,
+                                      mbedtls_size_t blen,
                                       int (*f_rng)(void *,
                                                    unsigned char *,
-                                                   size_t),
+                                                   mbedtls_size_t),
                                       void *p_rng,
                                       int restart_enabled )
 {
@@ -693,9 +693,9 @@ static int ecdh_calc_secret_internal( mbedtls_ecdh_context_mbed *ctx,
 /*
  * Derive and export the shared secret
  */
-int mbedtls_ecdh_calc_secret( mbedtls_ecdh_context *ctx, size_t *olen,
-                              unsigned char *buf, size_t blen,
-                              int (*f_rng)(void *, unsigned char *, size_t),
+int mbedtls_ecdh_calc_secret( mbedtls_ecdh_context *ctx, mbedtls_size_t *olen,
+                              unsigned char *buf, mbedtls_size_t blen,
+                              int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                               void *p_rng )
 {
     int restart_enabled = 0;
@@ -731,9 +731,9 @@ int mbedtls_ecdh_calc_secret( mbedtls_ecdh_context *ctx, size_t *olen,
 #if defined(MBEDTLS_SSL_PROTO_TLS1_3)
 
 static int ecdh_tls13_make_params_internal( mbedtls_ecdh_context_mbed *ctx,
-                                            size_t *out_len, int point_format,
-                                            unsigned char *buf, size_t buf_len,
-                int ( *f_rng )( void *, unsigned char *, size_t), void *p_rng )
+                                            mbedtls_size_t *out_len, int point_format,
+                                            unsigned char *buf, mbedtls_size_t buf_len,
+                int ( *f_rng )( void *, unsigned char *, mbedtls_size_t), void *p_rng )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
@@ -752,9 +752,9 @@ static int ecdh_tls13_make_params_internal( mbedtls_ecdh_context_mbed *ctx,
     return( 0 );
 }
 
-int mbedtls_ecdh_tls13_make_params( mbedtls_ecdh_context *ctx, size_t *out_len,
-                            unsigned char *buf, size_t buf_len,
-                            int ( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_ecdh_tls13_make_params( mbedtls_ecdh_context *ctx, mbedtls_size_t *out_len,
+                            unsigned char *buf, mbedtls_size_t buf_len,
+                            int ( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                             void *p_rng )
 {
     ECDH_VALIDATE_RET( ctx != NULL );
@@ -809,11 +809,11 @@ int mbedtls_ecdh_setup_no_everest( mbedtls_ecdh_context *ctx,
 
 static int ecdh_tls13_read_public_internal( mbedtls_ecdh_context_mbed *ctx,
                                             const unsigned char *buf,
-                                            size_t buf_len )
+                                            mbedtls_size_t buf_len )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     const unsigned char *p = buf;
-    size_t data_len;
+    mbedtls_size_t data_len;
 
     if( buf_len < 3 )
         return( MBEDTLS_ERR_ECP_BAD_INPUT_DATA );
@@ -838,7 +838,7 @@ static int ecdh_tls13_read_public_internal( mbedtls_ecdh_context_mbed *ctx,
  */
 int mbedtls_ecdh_tls13_read_public( mbedtls_ecdh_context *ctx,
                                     const unsigned char *buf,
-                                    size_t buf_len )
+                                    mbedtls_size_t buf_len )
 {
     ECDH_VALIDATE_RET( ctx != NULL );
     ECDH_VALIDATE_RET( buf != NULL );

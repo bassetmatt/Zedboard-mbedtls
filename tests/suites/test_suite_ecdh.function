@@ -126,7 +126,7 @@ void ecdh_primitive_testvec( int id, data_t * rnd_buf_A, char * xA_str,
     if( grp.nbits % 8 != 0 )
     {
         unsigned char shift = 8 - ( grp.nbits % 8 );
-        size_t i;
+        mbedtls_size_t i;
 
         for( i = 0; i < rnd_info_A.length - 1; i++ )
             rnd_buf_A->x[i] = rnd_buf_A->x[i] << shift
@@ -144,7 +144,7 @@ void ecdh_primitive_testvec( int id, data_t * rnd_buf_A, char * xA_str,
     if( grp.nbits % 8 != 0 )
     {
         unsigned char shift = 8 - ( grp.nbits % 8 );
-        size_t i;
+        mbedtls_size_t i;
 
         for( i = 0; i < rnd_info_B.length - 1; i++ )
             rnd_buf_B->x[i] = rnd_buf_B->x[i] << shift
@@ -195,10 +195,10 @@ void ecdh_exchange( int id )
     mbedtls_ecdh_context srv, cli;
     unsigned char buf[1000];
     const unsigned char *vbuf;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_test_rnd_pseudo_info rnd_info;
     unsigned char res_buf[1000];
-    size_t res_len;
+    mbedtls_size_t res_len;
 
     mbedtls_ecdh_init( &srv );
     mbedtls_ecdh_init( &cli );
@@ -241,7 +241,7 @@ void ecdh_restart( int id, data_t *dA, data_t *dB, data_t *z,
     mbedtls_ecdh_context srv, cli;
     unsigned char buf[1000];
     const unsigned char *vbuf;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_test_rnd_buf_info rnd_info_A, rnd_info_B;
     mbedtls_test_rnd_pseudo_info rnd_info;
     int cnt_restart;
@@ -373,7 +373,7 @@ void ecdh_exchange_calc_secret( int grp_id,
     mbedtls_ecp_keypair their_key;
     mbedtls_ecdh_context ecdh;
     unsigned char shared_secret[MBEDTLS_ECP_MAX_BYTES];
-    size_t shared_secret_length = 0;
+    mbedtls_size_t shared_secret_length = 0;
 
     memset( &rnd_info, 0x00, sizeof( mbedtls_test_rnd_pseudo_info ) );
     mbedtls_ecdh_init( &ecdh );

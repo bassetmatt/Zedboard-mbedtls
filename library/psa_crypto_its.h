@@ -109,7 +109,7 @@ psa_status_t psa_its_get(psa_storage_uid_t uid,
                          uint32_t data_offset,
                          uint32_t data_length,
                          void *p_data,
-                         size_t *p_data_length );
+                         mbedtls_size_t *p_data_length );
 
 /**
  * \brief Retrieve the metadata about the provided uid

@@ -196,8 +196,8 @@ int mbedtls_dhm_read_params( mbedtls_dhm_context *ctx,
  * \return         An \c MBEDTLS_ERR_DHM_XXX error code on failure.
  */
 int mbedtls_dhm_make_params( mbedtls_dhm_context *ctx, int x_size,
-                     unsigned char *output, size_t *olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t *olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng );
 
 /**
@@ -236,7 +236,7 @@ int mbedtls_dhm_set_group( mbedtls_dhm_context *ctx,
  * \return         An \c MBEDTLS_ERR_DHM_XXX error code on failure.
  */
 int mbedtls_dhm_read_public( mbedtls_dhm_context *ctx,
-                     const unsigned char *input, size_t ilen );
+                     const unsigned char *input, mbedtls_size_t ilen );
 
 /**
  * \brief          This function creates a DHM key pair and exports
@@ -263,8 +263,8 @@ int mbedtls_dhm_read_public( mbedtls_dhm_context *ctx,
  * \return         An \c MBEDTLS_ERR_DHM_XXX error code on failure.
  */
 int mbedtls_dhm_make_public( mbedtls_dhm_context *ctx, int x_size,
-                     unsigned char *output, size_t olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng );
 
 /**
@@ -294,8 +294,8 @@ int mbedtls_dhm_make_public( mbedtls_dhm_context *ctx, int x_size,
  * \return              An \c MBEDTLS_ERR_DHM_XXX error code on failure.
  */
 int mbedtls_dhm_calc_secret( mbedtls_dhm_context *ctx,
-                     unsigned char *output, size_t output_size, size_t *olen,
-                     int (*f_rng)(void *, unsigned char *, size_t),
+                     unsigned char *output, mbedtls_size_t output_size, mbedtls_size_t *olen,
+                     int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                      void *p_rng );
 
 /**
@@ -306,7 +306,7 @@ int mbedtls_dhm_calc_secret( mbedtls_dhm_context *ctx,
  * \return         The size of the prime modulus in bits,
  *                 i.e. the number n such that 2^(n-1) <= P < 2^n.
  */
-size_t mbedtls_dhm_get_bitlen( const mbedtls_dhm_context *ctx );
+mbedtls_size_t mbedtls_dhm_get_bitlen( const mbedtls_dhm_context *ctx );
 
 /**
  * \brief          This function returns the size of the prime modulus in bytes.
@@ -316,7 +316,7 @@ size_t mbedtls_dhm_get_bitlen( const mbedtls_dhm_context *ctx );
  * \return         The size of the prime modulus in bytes,
  *                 i.e. the number n such that 2^(8*(n-1)) <= P < 2^(8*n).
  */
-size_t mbedtls_dhm_get_len( const mbedtls_dhm_context *ctx );
+mbedtls_size_t mbedtls_dhm_get_len( const mbedtls_dhm_context *ctx );
 
 /**
  * \brief          This function copies a parameter of a DHM key.
@@ -360,7 +360,7 @@ void mbedtls_dhm_free( mbedtls_dhm_context *ctx );
  *                    code on failure.
  */
 int mbedtls_dhm_parse_dhm( mbedtls_dhm_context *dhm, const unsigned char *dhmin,
-                           size_t dhminlen );
+                           mbedtls_size_t dhminlen );
 
 #if defined(MBEDTLS_FS_IO)
 /**

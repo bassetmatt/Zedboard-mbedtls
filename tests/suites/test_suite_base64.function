@@ -81,7 +81,7 @@ void mbedtls_base64_encode( char * src_string, char * dst_string,
 {
     unsigned char src_str[1000];
     unsigned char dst_str[1000];
-    size_t len, src_len;
+    mbedtls_size_t len, src_len;
 
     memset(src_str, 0x00, 1000);
     memset(dst_str, 0x00, 1000);
@@ -109,7 +109,7 @@ void mbedtls_base64_decode( char * src_string, char * dst_string, int result )
 {
     unsigned char src_str[1000];
     unsigned char dst_str[1000];
-    size_t len;
+    mbedtls_size_t len;
     int res;
 
     memset(src_str, 0x00, 1000);
@@ -130,7 +130,7 @@ void base64_encode_hex( data_t * src, char * dst, int dst_buf_size,
                         int result )
 {
     unsigned char *res = NULL;
-    size_t len;
+    mbedtls_size_t len;
 
     res = mbedtls_test_zero_alloc( dst_buf_size );
 
@@ -158,7 +158,7 @@ void base64_decode_hex( char * src, data_t * dst, int dst_buf_size,
                         int result )
 {
     unsigned char *res = NULL;
-    size_t len;
+    mbedtls_size_t len;
 
     res = mbedtls_test_zero_alloc( dst_buf_size );
 
@@ -179,7 +179,7 @@ exit:
 void base64_decode_hex_src( data_t * src, char * dst_ref, int result )
 {
     unsigned char dst[1000] = { 0 };
-    size_t len;
+    mbedtls_size_t len;
 
     TEST_ASSERT( mbedtls_base64_decode( dst, sizeof( dst ), &len, src->x, src->len ) == result );
     if( result == 0 )

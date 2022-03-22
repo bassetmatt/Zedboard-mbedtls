@@ -148,8 +148,8 @@ int main( void )
 typedef struct
 {
     char magic[WRAPPED_DATA_MAGIC_LENGTH];
-    size_t ad_size; /* Size of the additional data, which is this header. */
-    size_t payload_size; /* Size of the encrypted data. */
+    mbedtls_size_t ad_size; /* Size of the additional data, which is this header. */
+    mbedtls_size_t payload_size; /* Size of the encrypted data. */
     /* Store the IV inside the additional data. It's convenient. */
     uint8_t iv[WRAPPING_IV_SIZE];
 } wrapped_data_header_t;
@@ -170,7 +170,7 @@ static psa_status_t save_key( psa_key_id_t key,
 {
     psa_status_t status = PSA_SUCCESS;
     uint8_t key_data[KEY_SIZE_BYTES];
-    size_t key_size;
+    mbedtls_size_t key_size;
     FILE *key_file = NULL;
 
     PSA_CHECK( psa_export_key( key,
@@ -226,7 +226,7 @@ static psa_status_t import_key_from_file( psa_key_usage_t usage,
     psa_status_t status = PSA_SUCCESS;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     uint8_t key_data[KEY_SIZE_BYTES];
-    size_t key_size;
+    mbedtls_size_t key_size;
     FILE *key_file = NULL;
     unsigned char extra_byte;
 
@@ -268,13 +268,13 @@ exit:
  * is the identifier of the final derived key.
  */
 static psa_status_t derive_key_ladder( const char *ladder[],
-                                       size_t ladder_depth,
+                                       mbedtls_size_t ladder_depth,
                                        psa_key_id_t *key )
 {
     psa_status_t status = PSA_SUCCESS;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
-    size_t i;
+    mbedtls_size_t i;
 
     psa_set_key_usage_flags( &attributes,
                              PSA_KEY_USAGE_DERIVE | PSA_KEY_USAGE_EXPORT );
@@ -364,10 +364,10 @@ static psa_status_t wrap_data( const char *input_file_name,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_type_t key_type;
     long input_position;
-    size_t input_size;
-    size_t buffer_size = 0;
+    mbedtls_size_t input_size;
+    mbedtls_size_t buffer_size = 0;
     unsigned char *buffer = NULL;
-    size_t ciphertext_size;
+    mbedtls_size_t ciphertext_size;
     wrapped_data_header_t header;
 
     /* Find the size of the data to wrap. */
@@ -446,8 +446,8 @@ static psa_status_t unwrap_data( const char *input_file_name,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_type_t key_type;
     unsigned char *buffer = NULL;
-    size_t ciphertext_size = 0;
-    size_t plaintext_size;
+    mbedtls_size_t ciphertext_size = 0;
+    mbedtls_size_t plaintext_size;
     wrapped_data_header_t header;
     unsigned char extra_byte;
 
@@ -527,7 +527,7 @@ exit:
 
 static psa_status_t run( enum program_mode mode,
                          const char *key_file_name,
-                         const char *ladder[], size_t ladder_depth,
+                         const char *ladder[], mbedtls_size_t ladder_depth,
                          const char *input_file_name,
                          const char *output_file_name )
 {
@@ -614,7 +614,7 @@ int main( int argc, char *argv[] )
     const char *input_file_name = NULL;
     const char *output_file_name = NULL;
     const char *ladder[MAX_LADDER_DEPTH];
-    size_t ladder_depth = 0;
+    mbedtls_size_t ladder_depth = 0;
     int i;
     enum program_mode mode;
     psa_status_t status;

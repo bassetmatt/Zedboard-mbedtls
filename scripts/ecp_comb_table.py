@@ -51,7 +51,7 @@ SRC_DUMP_COMB_TABLE = r'''
 static void dump_mpi_initialize( const char *name, const mbedtls_mpi *d )
 {
     uint8_t buf[128] = {0};
-    size_t olen;
+    mbedtls_size_t olen;
     uint8_t *p;
 
     olen = mbedtls_mpi_size( d );
@@ -70,7 +70,7 @@ static void dump_T( const mbedtls_ecp_group *grp )
 
     printf( "#if MBEDTLS_ECP_FIXED_POINT_OPTIM == 1\n" );
 
-    for (size_t i = 0; i < grp->T_size; ++i) {
+    for (mbedtls_size_t i = 0; i < grp->T_size; ++i) {
         snprintf( name, sizeof(name), "%s_T_%zu_X", CURVE_NAME, i );
         dump_mpi_initialize( name, &grp->T[i].X );
 
@@ -78,8 +78,8 @@ static void dump_T( const mbedtls_ecp_group *grp )
         dump_mpi_initialize( name, &grp->T[i].Y );
     }
     printf( "static const mbedtls_ecp_point %s_T[%zu] = {\n", CURVE_NAME, grp->T_size );
-    size_t olen;
-    for (size_t i = 0; i < grp->T_size; ++i) {
+    mbedtls_size_t olen;
+    for (mbedtls_size_t i = 0; i < grp->T_size; ++i) {
         int z;
         if ( mbedtls_mpi_cmp_int(&grp->T[i].Z, 0) == 0 ) {
             z = 0;

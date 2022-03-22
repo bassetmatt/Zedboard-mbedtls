@@ -86,7 +86,7 @@ static inline psa_key_type_t mbedtls_psa_translate_cipher_type(
 }
 
 static inline psa_algorithm_t mbedtls_psa_translate_cipher_mode(
-    mbedtls_cipher_mode_t mode, size_t taglen )
+    mbedtls_cipher_mode_t mode, mbedtls_size_t taglen )
 {
     switch( mode )
     {
@@ -166,8 +166,8 @@ static inline psa_algorithm_t mbedtls_psa_translate_md( mbedtls_md_type_t md_alg
 /* Translations for ECC. */
 
 static inline int mbedtls_psa_get_ecc_oid_from_id(
-    psa_ecc_family_t curve, size_t bits,
-    char const **oid, size_t *oid_len )
+    psa_ecc_family_t curve, mbedtls_size_t bits,
+    char const **oid, mbedtls_size_t *oid_len )
 {
     switch( curve )
     {
@@ -266,7 +266,7 @@ static inline int mbedtls_psa_get_ecc_oid_from_id(
  * into a PSA ECC group identifier. */
 #if defined(MBEDTLS_ECP_C)
 static inline psa_key_type_t mbedtls_psa_parse_tls_ecc_group(
-    uint16_t tls_ecc_grp_reg_id, size_t *bits )
+    uint16_t tls_ecc_grp_reg_id, mbedtls_size_t *bits )
 {
     const mbedtls_ecp_curve_info *curve_info =
         mbedtls_ecp_curve_info_from_tls_id( tls_ecc_grp_reg_id );
@@ -291,7 +291,7 @@ static inline psa_key_type_t mbedtls_psa_parse_tls_ecc_group(
  * This type name is not part of the Mbed TLS stable API. It may be renamed
  * or moved without warning.
  */
-typedef int mbedtls_f_rng_t( void *p_rng, unsigned char *output, size_t output_size );
+typedef int mbedtls_f_rng_t( void *p_rng, unsigned char *output, mbedtls_size_t output_size );
 
 #if defined(MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG)
 
@@ -332,7 +332,7 @@ typedef int mbedtls_f_rng_t( void *p_rng, unsigned char *output, size_t output_s
  */
 int mbedtls_psa_get_random( void *p_rng,
                             unsigned char *output,
-                            size_t output_size );
+                            mbedtls_size_t output_size );
 
 /** The random generator state for the PSA subsystem.
  *

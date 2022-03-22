@@ -39,10 +39,10 @@
 
 int mbedtls_test_rnd_std_rand( void *rng_state,
                                unsigned char *output,
-                               size_t len )
+                               mbedtls_size_t len )
 {
 #if !defined(__OpenBSD__) && !defined(__NetBSD__)
-    size_t i;
+    mbedtls_size_t i;
 
     if( rng_state != NULL )
         rng_state  = NULL;
@@ -61,7 +61,7 @@ int mbedtls_test_rnd_std_rand( void *rng_state,
 
 int mbedtls_test_rnd_zero_rand( void *rng_state,
                                 unsigned char *output,
-                                size_t len )
+                                mbedtls_size_t len )
 {
     if( rng_state != NULL )
         rng_state  = NULL;
@@ -73,10 +73,10 @@ int mbedtls_test_rnd_zero_rand( void *rng_state,
 
 int mbedtls_test_rnd_buffer_rand( void *rng_state,
                                   unsigned char *output,
-                                  size_t len )
+                                  mbedtls_size_t len )
 {
     mbedtls_test_rnd_buf_info *info = (mbedtls_test_rnd_buf_info *) rng_state;
-    size_t use_len;
+    mbedtls_size_t use_len;
 
     if( rng_state == NULL )
         return( mbedtls_test_rnd_std_rand( NULL, output, len ) );
@@ -109,7 +109,7 @@ int mbedtls_test_rnd_buffer_rand( void *rng_state,
 
 int mbedtls_test_rnd_pseudo_rand( void *rng_state,
                                   unsigned char *output,
-                                  size_t len )
+                                  mbedtls_size_t len )
 {
     mbedtls_test_rnd_pseudo_info *info =
         (mbedtls_test_rnd_pseudo_info *) rng_state;
@@ -123,7 +123,7 @@ int mbedtls_test_rnd_pseudo_rand( void *rng_state,
 
     while( len > 0 )
     {
-        size_t use_len = ( len > 4 ) ? 4 : len;
+        mbedtls_size_t use_len = ( len > 4 ) ? 4 : len;
         sum = 0;
 
         for( i = 0; i < 32; i++ )

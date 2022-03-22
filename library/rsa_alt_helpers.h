@@ -177,7 +177,7 @@ int mbedtls_rsa_deduce_crt( const mbedtls_mpi *P, const mbedtls_mpi *Q,
 int mbedtls_rsa_validate_params( const mbedtls_mpi *N, const mbedtls_mpi *P,
                                  const mbedtls_mpi *Q, const mbedtls_mpi *D,
                                  const mbedtls_mpi *E,
-                                 int (*f_rng)(void *, unsigned char *, size_t),
+                                 int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                                  void *p_rng );
 
 /**

@@ -35,9 +35,9 @@ mbedtls_test_driver_asymmetric_encryption_hooks_t mbedtls_test_driver_asymmetric
 
 psa_status_t mbedtls_test_transparent_asymmetric_encrypt(
     const psa_key_attributes_t *attributes, const uint8_t *key_buffer,
-    size_t key_buffer_size, psa_algorithm_t alg, const uint8_t *input,
-    size_t input_length, const uint8_t *salt, size_t salt_length,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    mbedtls_size_t key_buffer_size, psa_algorithm_t alg, const uint8_t *input,
+    mbedtls_size_t input_length, const uint8_t *salt, mbedtls_size_t salt_length,
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     mbedtls_test_driver_asymmetric_encryption_hooks.hits++;
 
@@ -76,9 +76,9 @@ psa_status_t mbedtls_test_transparent_asymmetric_encrypt(
 
 psa_status_t mbedtls_test_transparent_asymmetric_decrypt(
     const psa_key_attributes_t *attributes, const uint8_t *key_buffer,
-    size_t key_buffer_size, psa_algorithm_t alg, const uint8_t *input,
-    size_t input_length, const uint8_t *salt, size_t salt_length,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    mbedtls_size_t key_buffer_size, psa_algorithm_t alg, const uint8_t *input,
+    mbedtls_size_t input_length, const uint8_t *salt, mbedtls_size_t salt_length,
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     mbedtls_test_driver_asymmetric_encryption_hooks.hits++;
 
@@ -120,9 +120,9 @@ psa_status_t mbedtls_test_transparent_asymmetric_decrypt(
  */
 psa_status_t mbedtls_test_opaque_asymmetric_encrypt(
     const psa_key_attributes_t *attributes, const uint8_t *key,
-    size_t key_length, psa_algorithm_t alg, const uint8_t *input,
-    size_t input_length, const uint8_t *salt, size_t salt_length,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    mbedtls_size_t key_length, psa_algorithm_t alg, const uint8_t *input,
+    mbedtls_size_t input_length, const uint8_t *salt, mbedtls_size_t salt_length,
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     (void) attributes;
     (void) key;
@@ -140,9 +140,9 @@ psa_status_t mbedtls_test_opaque_asymmetric_encrypt(
 
 psa_status_t mbedtls_test_opaque_asymmetric_decrypt(
     const psa_key_attributes_t *attributes, const uint8_t *key,
-    size_t key_length, psa_algorithm_t alg, const uint8_t *input,
-    size_t input_length, const uint8_t *salt, size_t salt_length,
-    uint8_t *output, size_t output_size, size_t *output_length )
+    mbedtls_size_t key_length, psa_algorithm_t alg, const uint8_t *input,
+    mbedtls_size_t input_length, const uint8_t *salt, mbedtls_size_t salt_length,
+    uint8_t *output, mbedtls_size_t output_size, mbedtls_size_t *output_length )
 {
     (void) attributes;
     (void) key;

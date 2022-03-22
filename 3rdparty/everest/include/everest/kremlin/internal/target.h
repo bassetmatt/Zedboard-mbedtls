@@ -84,7 +84,7 @@ inline static int32_t krml_time() {
 #define KRML_CHECK_SIZE(size_elt, sz)                                          \
   do {                                                                         \
     _KRML_CHECK_SIZE_PRAGMA                                                    \
-    if (((size_t)(sz)) > ((size_t)(SIZE_MAX / (size_elt)))) {                  \
+    if (((mbedtls_size_t)(sz)) > ((mbedtls_size_t)(SIZE_MAX / (size_elt)))) {                  \
       KRML_HOST_PRINTF(                                                        \
           "Maximum allocatable size exceeded, aborting before overflow at "    \
           "%s:%d\n",                                                           \

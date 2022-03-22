@@ -184,7 +184,7 @@ typedef struct mbedtls_ctr_drbg_context
                                      resistance is enabled, that is
                                      whether to systematically reseed before
                                      each random generation. */
-    size_t MBEDTLS_PRIVATE(entropy_len);         /*!< The amount of entropy grabbed on each
+    mbedtls_size_t MBEDTLS_PRIVATE(entropy_len);         /*!< The amount of entropy grabbed on each
                                      seed or reseed operation, in bytes. */
     int MBEDTLS_PRIVATE(reseed_interval);        /*!< The reseed interval.
                                  * This is the maximum number of requests
@@ -195,7 +195,7 @@ typedef struct mbedtls_ctr_drbg_context
     /*
      * Callbacks (Entropy)
      */
-    int (*MBEDTLS_PRIVATE(f_entropy))(void *, unsigned char *, size_t);
+    int (*MBEDTLS_PRIVATE(f_entropy))(void *, unsigned char *, mbedtls_size_t);
                                 /*!< The entropy callback function. */
 
     void *MBEDTLS_PRIVATE(p_entropy);            /*!< The context for the entropy function. */
@@ -327,10 +327,10 @@ void mbedtls_ctr_drbg_init( mbedtls_ctr_drbg_context *ctx );
  * \return              #MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED on failure.
  */
 int mbedtls_ctr_drbg_seed( mbedtls_ctr_drbg_context *ctx,
-                   int (*f_entropy)(void *, unsigned char *, size_t),
+                   int (*f_entropy)(void *, unsigned char *, mbedtls_size_t),
                    void *p_entropy,
                    const unsigned char *custom,
-                   size_t len );
+                   mbedtls_size_t len );
 
 /**
  * \brief               This function resets CTR_DRBG context to the state immediately
@@ -381,7 +381,7 @@ void mbedtls_ctr_drbg_set_prediction_resistance( mbedtls_ctr_drbg_context *ctx,
  *                      entropy function that is set in the context.
  */
 void mbedtls_ctr_drbg_set_entropy_len( mbedtls_ctr_drbg_context *ctx,
-                               size_t len );
+                               mbedtls_size_t len );
 
 /**
  * \brief               This function sets the amount of entropy grabbed
@@ -403,7 +403,7 @@ void mbedtls_ctr_drbg_set_entropy_len( mbedtls_ctr_drbg_context *ctx,
  *                      if the initial seeding has already taken place.
  */
 int mbedtls_ctr_drbg_set_nonce_len( mbedtls_ctr_drbg_context *ctx,
-                                    size_t len );
+                                    mbedtls_size_t len );
 
 /**
  * \brief               This function sets the reseed interval.
@@ -441,7 +441,7 @@ void mbedtls_ctr_drbg_set_reseed_interval( mbedtls_ctr_drbg_context *ctx,
  * \return              #MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED on failure.
  */
 int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
-                     const unsigned char *additional, size_t len );
+                     const unsigned char *additional, mbedtls_size_t len );
 
 /**
  * \brief              This function updates the state of the CTR_DRBG context.
@@ -465,7 +465,7 @@ int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
  */
 int mbedtls_ctr_drbg_update( mbedtls_ctr_drbg_context *ctx,
                              const unsigned char *additional,
-                             size_t add_len );
+                             mbedtls_size_t add_len );
 
 /**
  * \brief   This function updates a CTR_DRBG instance with additional
@@ -499,8 +499,8 @@ int mbedtls_ctr_drbg_update( mbedtls_ctr_drbg_context *ctx,
  *            #MBEDTLS_ERR_CTR_DRBG_REQUEST_TOO_BIG on failure.
  */
 int mbedtls_ctr_drbg_random_with_add( void *p_rng,
-                              unsigned char *output, size_t output_len,
-                              const unsigned char *additional, size_t add_len );
+                              unsigned char *output, mbedtls_size_t output_len,
+                              const unsigned char *additional, mbedtls_size_t add_len );
 
 /**
  * \brief   This function uses CTR_DRBG to generate random data.
@@ -527,7 +527,7 @@ int mbedtls_ctr_drbg_random_with_add( void *p_rng,
  *                      #MBEDTLS_ERR_CTR_DRBG_REQUEST_TOO_BIG on failure.
  */
 int mbedtls_ctr_drbg_random( void *p_rng,
-                     unsigned char *output, size_t output_len );
+                     unsigned char *output, mbedtls_size_t output_len );
 
 #if defined(MBEDTLS_FS_IO)
 /**

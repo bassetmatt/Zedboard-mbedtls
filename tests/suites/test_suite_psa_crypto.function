@@ -31,7 +31,7 @@
 #define ASSERT_OPERATION_IS_INACTIVE( operation ) TEST_ASSERT( operation.id == 0 )
 
 /** An invalid export length that will never be set by psa_export_key(). */
-static const size_t INVALID_EXPORT_LENGTH = ~0U;
+static const mbedtls_size_t INVALID_EXPORT_LENGTH = ~0U;
 
 /** Test if a buffer contains a constant byte value.
  *
@@ -44,9 +44,9 @@ static const size_t INVALID_EXPORT_LENGTH = ~0U;
  * \return          1 if the buffer is all-bits-zero.
  * \return          0 if there is at least one nonzero byte.
  */
-static int mem_is_char( void *buffer, unsigned char c, size_t size )
+static int mem_is_char( void *buffer, unsigned char c, mbedtls_size_t size )
 {
-    size_t i;
+    mbedtls_size_t i;
     for( i = 0; i < size; i++ )
     {
         if( ( (unsigned char *) buffer )[i] != c )
@@ -58,7 +58,7 @@ static int mem_is_char( void *buffer, unsigned char c, size_t size )
 /* Write the ASN.1 INTEGER with the value 2^(bits-1)+x backwards from *p. */
 static int asn1_write_10x( unsigned char **p,
                            unsigned char *start,
-                           size_t bits,
+                           mbedtls_size_t bits,
                            unsigned char x )
 {
     int ret;
@@ -82,12 +82,12 @@ static int asn1_write_10x( unsigned char **p,
 }
 
 static int construct_fake_rsa_key( unsigned char *buffer,
-                                   size_t buffer_size,
+                                   mbedtls_size_t buffer_size,
                                    unsigned char **p,
-                                   size_t bits,
+                                   mbedtls_size_t bits,
                                    int keypair )
 {
-    size_t half_bits = ( bits + 1 ) / 2;
+    mbedtls_size_t half_bits = ( bits + 1 ) / 2;
     int ret;
     int len = 0;
     /* Construct something that looks like a DER encoding of
@@ -142,7 +142,7 @@ static int construct_fake_rsa_key( unsigned char *buffer,
 
 int exercise_mac_setup( psa_key_type_t key_type,
                         const unsigned char *key_bytes,
-                        size_t key_length,
+                        mbedtls_size_t key_length,
                         psa_algorithm_t alg,
                         psa_mac_operation_t *operation,
                         psa_status_t *status )
@@ -175,7 +175,7 @@ exit:
 
 int exercise_cipher_setup( psa_key_type_t key_type,
                            const unsigned char *key_bytes,
-                           size_t key_length,
+                           mbedtls_size_t key_length,
                            psa_algorithm_t alg,
                            psa_cipher_operation_t *operation,
                            psa_status_t *status )
@@ -212,7 +212,7 @@ static int test_operations_on_invalid_key( mbedtls_svc_key_id_t key )
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     mbedtls_svc_key_id_t key_id = mbedtls_svc_key_id_make( 1, 0x6964 );
     uint8_t buffer[1];
-    size_t length;
+    mbedtls_size_t length;
     int ok = 0;
 
     psa_set_key_id( &attributes, key_id );
@@ -335,25 +335,25 @@ static int aead_multipart_internal_func( int key_type_arg, data_t *key_data,
     unsigned char *output_data = NULL;
     unsigned char *part_data = NULL;
     unsigned char *final_data = NULL;
-    size_t data_true_size = 0;
-    size_t part_data_size = 0;
-    size_t output_size = 0;
-    size_t final_output_size = 0;
-    size_t output_length = 0;
-    size_t key_bits = 0;
-    size_t tag_length = 0;
-    size_t part_offset = 0;
-    size_t part_length = 0;
-    size_t output_part_length = 0;
-    size_t tag_size = 0;
-    size_t ad_part_len = 0;
-    size_t data_part_len = 0;
+    mbedtls_size_t data_true_size = 0;
+    mbedtls_size_t part_data_size = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t final_output_size = 0;
+    mbedtls_size_t output_length = 0;
+    mbedtls_size_t key_bits = 0;
+    mbedtls_size_t tag_length = 0;
+    mbedtls_size_t part_offset = 0;
+    mbedtls_size_t part_length = 0;
+    mbedtls_size_t output_part_length = 0;
+    mbedtls_size_t tag_size = 0;
+    mbedtls_size_t ad_part_len = 0;
+    mbedtls_size_t data_part_len = 0;
     uint8_t tag_buffer[PSA_AEAD_TAG_MAX_SIZE];
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
 
     int test_ok = 0;
-    size_t part_count = 0;
+    mbedtls_size_t part_count = 0;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -441,7 +441,7 @@ static int aead_multipart_internal_func( int key_type_arg, data_t *key_data,
     if( ad_part_len_arg != -1 )
     {
         /* Pass additional data in parts */
-        ad_part_len = (size_t) ad_part_len_arg;
+        ad_part_len = (mbedtls_size_t) ad_part_len_arg;
 
         for( part_offset = 0, part_count = 0;
              part_offset < additional_data->len;
@@ -476,9 +476,9 @@ static int aead_multipart_internal_func( int key_type_arg, data_t *key_data,
     if( data_part_len_arg != -1 )
     {
         /* Pass data in parts */
-        data_part_len = ( size_t ) data_part_len_arg;
+        data_part_len = ( mbedtls_size_t ) data_part_len_arg;
         part_data_size = PSA_AEAD_UPDATE_OUTPUT_SIZE( key_type, alg,
-                                                      ( size_t ) data_part_len );
+                                                      ( mbedtls_size_t ) data_part_len );
 
         ASSERT_ALLOC( part_data, part_data_size );
 
@@ -617,15 +617,15 @@ static int mac_multipart_internal_func( int key_type_arg, data_t *key_data,
     psa_algorithm_t alg = alg_arg;
     psa_mac_operation_t operation = PSA_MAC_OPERATION_INIT;
     unsigned char mac[PSA_MAC_MAX_SIZE];
-    size_t part_offset = 0;
-    size_t part_length = 0;
-    size_t data_part_len = 0;
-    size_t mac_len = 0;
+    mbedtls_size_t part_offset = 0;
+    mbedtls_size_t part_length = 0;
+    mbedtls_size_t data_part_len = 0;
+    mbedtls_size_t mac_len = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
 
     int test_ok = 0;
-    size_t part_count = 0;
+    mbedtls_size_t part_count = 0;
 
     PSA_INIT( );
 
@@ -650,7 +650,7 @@ static int mac_multipart_internal_func( int key_type_arg, data_t *key_data,
     if( data_part_len_arg != -1 )
     {
         /* Pass data in parts */
-        data_part_len = ( size_t ) data_part_len_arg;
+        data_part_len = ( mbedtls_size_t ) data_part_len_arg;
 
         for( part_offset = 0, part_count = 0;
              part_offset < input_data->len;
@@ -715,7 +715,7 @@ exit:
 /* BEGIN_CASE */
 void static_checks( )
 {
-    size_t max_truncated_mac_size =
+    mbedtls_size_t max_truncated_mac_size =
         PSA_ALG_MAC_TRUNCATION_MASK >> PSA_MAC_TRUNCATION_OFFSET;
 
     /* Check that the length for a truncated MAC always fits in the algorithm
@@ -784,7 +784,7 @@ void import_with_data( data_t *data, int type_arg,
     psa_key_attributes_t got_attributes = PSA_KEY_ATTRIBUTES_INIT;
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t type = type_arg;
-    size_t attr_bits = attr_bits_arg;
+    mbedtls_size_t attr_bits = attr_bits_arg;
     psa_status_t expected_status = expected_status_arg;
     psa_status_t status;
 
@@ -824,14 +824,14 @@ void import_large_key( int type_arg, int byte_size_arg,
                        int expected_status_arg )
 {
     psa_key_type_t type = type_arg;
-    size_t byte_size = byte_size_arg;
+    mbedtls_size_t byte_size = byte_size_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t expected_status = expected_status_arg;
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_status_t status;
     uint8_t *buffer = NULL;
-    size_t buffer_size = byte_size + 1;
-    size_t n;
+    mbedtls_size_t buffer_size = byte_size + 1;
+    mbedtls_size_t n;
 
     /* Skip the test case if the target running the test cannot
      * accomodate large keys due to heap size constraints */
@@ -879,17 +879,17 @@ exit:
 void import_rsa_made_up( int bits_arg, int keypair, int expected_status_arg )
 {
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_status_t expected_status = expected_status_arg;
     psa_status_t status;
     psa_key_type_t type =
         keypair ? PSA_KEY_TYPE_RSA_KEY_PAIR : PSA_KEY_TYPE_RSA_PUBLIC_KEY;
-    size_t buffer_size = /* Slight overapproximations */
+    mbedtls_size_t buffer_size = /* Slight overapproximations */
         keypair ? bits * 9 / 16 + 80 : bits / 8 + 20;
     unsigned char *buffer = NULL;
     unsigned char *p;
     int ret;
-    size_t length;
+    mbedtls_size_t length;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -931,9 +931,9 @@ void import_export( data_t *data,
     psa_key_lifetime_t lifetime = lifetime_arg;
     unsigned char *exported = NULL;
     unsigned char *reexported = NULL;
-    size_t export_size;
-    size_t exported_length = INVALID_EXPORT_LENGTH;
-    size_t reexported_length;
+    mbedtls_size_t export_size;
+    mbedtls_size_t exported_length = INVALID_EXPORT_LENGTH;
+    mbedtls_size_t reexported_length;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_attributes_t got_attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -954,7 +954,7 @@ void import_export( data_t *data,
     /* Test the key information */
     PSA_ASSERT( psa_get_key_attributes( key, &got_attributes ) );
     TEST_EQUAL( psa_get_key_type( &got_attributes ), type );
-    TEST_EQUAL( psa_get_key_bits( &got_attributes ), (size_t) expected_bits );
+    TEST_EQUAL( psa_get_key_bits( &got_attributes ), (mbedtls_size_t) expected_bits );
     ASSERT_NO_SLOT_NUMBER( &got_attributes );
 
     /* Export the key */
@@ -1039,8 +1039,8 @@ void import_export_public_key( data_t *data,
     psa_status_t status;
     psa_key_lifetime_t lifetime = lifetime_arg;
     unsigned char *exported = NULL;
-    size_t export_size = expected_public_key->len + export_size_delta;
-    size_t exported_length = INVALID_EXPORT_LENGTH;
+    mbedtls_size_t export_size = expected_public_key->len + export_size_delta;
+    mbedtls_size_t exported_length = INVALID_EXPORT_LENGTH;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -1062,7 +1062,7 @@ void import_export_public_key( data_t *data,
     if( status == PSA_SUCCESS )
     {
         psa_key_type_t public_type = PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR( type );
-        size_t bits;
+        mbedtls_size_t bits;
         PSA_ASSERT( psa_get_key_attributes( key, &attributes ) );
         bits = psa_get_key_bits( &attributes );
         TEST_ASSERT( expected_public_key->len <=
@@ -1095,7 +1095,7 @@ void import_and_exercise_key( data_t *data,
 {
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t type = type_arg;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_algorithm_t alg = alg_arg;
     psa_key_usage_t usage = mbedtls_test_psa_usage_to_exercise( type, alg );
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -1144,8 +1144,8 @@ void effective_key_attributes( int type_arg, int expected_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = type_arg;
     psa_key_type_t expected_key_type = expected_type_arg;
-    size_t bits = bits_arg;
-    size_t expected_bits = expected_bits_arg;
+    mbedtls_size_t bits = bits_arg;
+    mbedtls_size_t expected_bits = expected_bits_arg;
     psa_algorithm_t alg = alg_arg;
     psa_algorithm_t expected_alg = expected_alg_arg;
     psa_key_usage_t usage = usage_arg;
@@ -1265,7 +1265,7 @@ void mac_key_policy( int policy_usage_arg,
 
     /* Calculate the MAC, one-shot case. */
     uint8_t input[128] = {0};
-    size_t mac_len;
+    mbedtls_size_t mac_len;
     TEST_EQUAL( psa_mac_compute( key, exercise_alg,
                                  input, 128,
                                  mac, PSA_MAC_MAX_SIZE, &mac_len ),
@@ -1346,9 +1346,9 @@ void cipher_key_policy( int policy_usage_arg,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_usage_t policy_usage = policy_usage_arg;
-    size_t output_buffer_size = 0;
-    size_t input_buffer_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t input_buffer_size = 0;
+    mbedtls_size_t output_length = 0;
     uint8_t *output = NULL;
     uint8_t *input = NULL;
     psa_status_t status;
@@ -1436,10 +1436,10 @@ void aead_key_policy( int policy_usage_arg,
     psa_status_t status;
     psa_status_t expected_status = expected_status_arg;
     unsigned char nonce[16] = {0};
-    size_t nonce_length = nonce_length_arg;
+    mbedtls_size_t nonce_length = nonce_length_arg;
     unsigned char tag[16];
-    size_t tag_length = tag_length_arg;
-    size_t output_length;
+    mbedtls_size_t tag_length = tag_length_arg;
+    mbedtls_size_t output_length;
 
     TEST_ASSERT( nonce_length <= sizeof( nonce ) );
     TEST_ASSERT( tag_length <= sizeof( tag ) );
@@ -1517,10 +1517,10 @@ void asymmetric_encryption_key_policy( int policy_usage_arg,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_usage_t policy_usage = policy_usage_arg;
     psa_status_t status;
-    size_t key_bits;
-    size_t buffer_length;
+    mbedtls_size_t key_bits;
+    mbedtls_size_t buffer_length;
     unsigned char *buffer = NULL;
-    size_t output_length;
+    mbedtls_size_t output_length;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -1598,9 +1598,9 @@ void asymmetric_signature_key_policy( int policy_usage_arg,
      * a valid input length to sign. If `payload_length_arg <= 0`,
      * `exercise_alg` is supposed to be forbidden by the policy. */
     int compatible_alg = payload_length_arg > 0;
-    size_t payload_length = compatible_alg ? payload_length_arg : 0;
+    mbedtls_size_t payload_length = compatible_alg ? payload_length_arg : 0;
     unsigned char signature[PSA_SIGNATURE_MAX_SIZE] = {0};
-    size_t signature_length;
+    mbedtls_size_t signature_length;
 
     /* Check if all implicit usage flags are deployed
        in the expected usage flags. */
@@ -1899,7 +1899,7 @@ void copy_success( int source_usage_arg,
                 psa_get_key_enrollment_algorithm( &target_attributes ) );
     if( expected_usage & PSA_KEY_USAGE_EXPORT )
     {
-        size_t length;
+        mbedtls_size_t length;
         ASSERT_ALLOC( export_buffer, material->len );
         PSA_ASSERT( psa_export_key( target_key, export_buffer,
                                     material->len, &length ) );
@@ -2017,8 +2017,8 @@ void hash_setup( int alg_arg,
 {
     psa_algorithm_t alg = alg_arg;
     uint8_t *output = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_status_t expected_status = expected_status_arg;
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
     psa_status_t status;
@@ -2063,8 +2063,8 @@ void hash_compute_fail( int alg_arg, data_t *input,
 {
     psa_algorithm_t alg = alg_arg;
     uint8_t *output = NULL;
-    size_t output_size = output_size_arg;
-    size_t output_length = INVALID_EXPORT_LENGTH;
+    mbedtls_size_t output_size = output_size_arg;
+    mbedtls_size_t output_length = INVALID_EXPORT_LENGTH;
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
     psa_status_t expected_status = expected_status_arg;
     psa_status_t status;
@@ -2160,9 +2160,9 @@ void hash_compute_compare( int alg_arg, data_t *input,
 {
     psa_algorithm_t alg = alg_arg;
     uint8_t output[PSA_HASH_MAX_SIZE + 1];
-    size_t output_length = INVALID_EXPORT_LENGTH;
+    mbedtls_size_t output_length = INVALID_EXPORT_LENGTH;
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
-    size_t i;
+    mbedtls_size_t i;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -2270,7 +2270,7 @@ void hash_bad_order( )
         0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
         0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55 };
     unsigned char hash[sizeof(valid_hash)] = { 0 };
-    size_t hash_len;
+    mbedtls_size_t hash_len;
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -2373,7 +2373,7 @@ void hash_verify_bad_args( )
         0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14, 0x9a, 0xfb, 0xf4, 0xc8,
         0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
         0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55, 0xaa, 0xbb };
-    size_t expected_size = PSA_HASH_LENGTH( alg );
+    mbedtls_size_t expected_size = PSA_HASH_LENGTH( alg );
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -2407,9 +2407,9 @@ void hash_finish_bad_args( )
 {
     psa_algorithm_t alg = PSA_ALG_SHA_256;
     unsigned char hash[PSA_HASH_MAX_SIZE];
-    size_t expected_size = PSA_HASH_LENGTH( alg );
+    mbedtls_size_t expected_size = PSA_HASH_LENGTH( alg );
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
-    size_t hash_len;
+    mbedtls_size_t hash_len;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -2434,7 +2434,7 @@ void hash_clone_source_state( )
     psa_hash_operation_t op_setup = PSA_HASH_OPERATION_INIT;
     psa_hash_operation_t op_finished = PSA_HASH_OPERATION_INIT;
     psa_hash_operation_t op_aborted = PSA_HASH_OPERATION_INIT;
-    size_t hash_len;
+    mbedtls_size_t hash_len;
 
     PSA_ASSERT( psa_crypto_init( ) );
     PSA_ASSERT( psa_hash_setup( &op_source, alg ) );
@@ -2479,7 +2479,7 @@ void hash_clone_target_state( )
     psa_hash_operation_t op_finished = PSA_HASH_OPERATION_INIT;
     psa_hash_operation_t op_aborted = PSA_HASH_OPERATION_INIT;
     psa_hash_operation_t op_target = PSA_HASH_OPERATION_INIT;
-    size_t hash_len;
+    mbedtls_size_t hash_len;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -2594,7 +2594,7 @@ void mac_bad_order( )
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_mac_operation_t operation = PSA_MAC_OPERATION_INIT;
     uint8_t sign_mac[PSA_MAC_MAX_SIZE + 10] = { 0 };
-    size_t sign_mac_length = 0;
+    mbedtls_size_t sign_mac_length = 0;
     const uint8_t input[] = { 0xbb, 0xbb, 0xbb, 0xbb };
     const uint8_t verify_mac[] = {
         0x74, 0x65, 0x93, 0x8c, 0xeb, 0x1d, 0xb3, 0x76, 0x5a, 0x38, 0xe7, 0xdd,
@@ -2714,7 +2714,7 @@ void mac_sign_verify_multi( int key_type_arg,
                             int is_verify,
                             data_t *expected_mac )
 {
-    size_t data_part_len = 0;
+    mbedtls_size_t data_part_len = 0;
 
     for( data_part_len = 1; data_part_len <= input->len; data_part_len++ )
     {
@@ -2758,10 +2758,10 @@ void mac_sign( int key_type_arg,
     psa_mac_operation_t operation = PSA_MAC_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     uint8_t *actual_mac = NULL;
-    size_t mac_buffer_size =
+    mbedtls_size_t mac_buffer_size =
         PSA_MAC_LENGTH( key_type, PSA_BYTES_TO_BITS( key_data->len ), alg );
-    size_t mac_length = 0;
-    const size_t output_sizes_to_test[] = {
+    mbedtls_size_t mac_length = 0;
+    const mbedtls_size_t output_sizes_to_test[] = {
         0,
         1,
         expected_mac->len - 1,
@@ -2782,9 +2782,9 @@ void mac_sign( int key_type_arg,
     PSA_ASSERT( psa_import_key( &attributes, key_data->x, key_data->len,
                                 &key ) );
 
-    for( size_t i = 0; i < ARRAY_LENGTH( output_sizes_to_test ); i++ )
+    for( mbedtls_size_t i = 0; i < ARRAY_LENGTH( output_sizes_to_test ); i++ )
     {
-        const size_t output_size = output_sizes_to_test[i];
+        const mbedtls_size_t output_size = output_sizes_to_test[i];
         psa_status_t expected_status =
             ( output_size >= expected_mac->len ? PSA_SUCCESS :
               PSA_ERROR_BUFFER_TOO_SMALL );
@@ -2904,7 +2904,7 @@ void mac_verify( int key_type_arg,
                 PSA_ERROR_INVALID_SIGNATURE );
 
     /* Test changing one byte. */
-    for( size_t i = 0; i < expected_mac->len; i++ )
+    for( mbedtls_size_t i = 0; i < expected_mac->len; i++ )
     {
         mbedtls_test_set_step( i );
         perturbed_mac[i] ^= 1;
@@ -2937,7 +2937,7 @@ void cipher_operation_init( )
 {
     const uint8_t input[1] = { 0 };
     unsigned char output[1] = { 0 };
-    size_t output_length;
+    mbedtls_size_t output_length;
     /* Test each valid way of initializing the object, except for `= {0}`, as
      * Clang 5 complains when `-Wmissing-field-initializers` is used, even
      * though it's OK by the C standard. We could test for this, but we'd need
@@ -3027,7 +3027,7 @@ void cipher_bad_order( )
         0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb, 0xbb,
         0xbb, 0xbb, 0xbb, 0xbb };
     uint8_t buffer[PSA_BLOCK_CIPHER_BLOCK_LENGTH(PSA_KEY_TYPE_AES)] = { 0 };
-    size_t length = 0;
+    mbedtls_size_t length = 0;
 
     PSA_ASSERT( psa_crypto_init( ) );
     psa_set_key_usage_flags( &attributes, PSA_KEY_USAGE_ENCRYPT | PSA_KEY_USAGE_DECRYPT );
@@ -3196,12 +3196,12 @@ void cipher_encrypt_fail( int alg_arg,
     psa_algorithm_t alg = alg_arg;
     psa_status_t expected_status = expected_status_arg;
     unsigned char iv[PSA_CIPHER_IV_MAX_SIZE] = {0};
-    size_t iv_size = PSA_CIPHER_IV_MAX_SIZE;
-    size_t iv_length = 0;
+    mbedtls_size_t iv_size = PSA_CIPHER_IV_MAX_SIZE;
+    mbedtls_size_t iv_length = 0;
     unsigned char *output = NULL;
-    size_t output_buffer_size = 0;
-    size_t output_length = 0;
-    size_t function_output_length;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t output_length = 0;
+    mbedtls_size_t function_output_length;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -3277,7 +3277,7 @@ void cipher_encrypt_validate_iv_length( int alg, int key_type, data_t* key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    size_t output_buffer_size = 0;
+    mbedtls_size_t output_buffer_size = 0;
     unsigned char *output = NULL;
 
     output_buffer_size = PSA_CIPHER_ENCRYPT_OUTPUT_SIZE( key_type, alg, input->len );
@@ -3315,10 +3315,10 @@ void cipher_encrypt_alg_without_iv( int alg_arg,
     psa_algorithm_t alg = alg_arg;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     uint8_t iv[1] = { 0x5a };
-    size_t iv_length;
+    mbedtls_size_t iv_length;
     unsigned char *output = NULL;
-    size_t output_buffer_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -3424,14 +3424,14 @@ void cipher_encrypt_validation( int alg_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t iv_size = PSA_CIPHER_IV_LENGTH ( key_type, alg );
+    mbedtls_size_t iv_size = PSA_CIPHER_IV_LENGTH ( key_type, alg );
     unsigned char *output1 = NULL;
-    size_t output1_buffer_size = 0;
-    size_t output1_length = 0;
+    mbedtls_size_t output1_buffer_size = 0;
+    mbedtls_size_t output1_length = 0;
     unsigned char *output2 = NULL;
-    size_t output2_buffer_size = 0;
-    size_t output2_length = 0;
-    size_t function_output_length = 0;
+    mbedtls_size_t output2_buffer_size = 0;
+    mbedtls_size_t output2_length = 0;
+    mbedtls_size_t function_output_length = 0;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -3509,13 +3509,13 @@ void cipher_encrypt_multipart( int alg_arg, int key_type_arg,
     psa_algorithm_t alg = alg_arg;
     psa_status_t status;
     psa_status_t expected_status = expected_status_arg;
-    size_t first_part_size = first_part_size_arg;
-    size_t output1_length = output1_length_arg;
-    size_t output2_length = output2_length_arg;
+    mbedtls_size_t first_part_size = first_part_size_arg;
+    mbedtls_size_t output1_length = output1_length_arg;
+    mbedtls_size_t output2_length = output2_length_arg;
     unsigned char *output = NULL;
-    size_t output_buffer_size = 0;
-    size_t function_output_length = 0;
-    size_t total_output_length = 0;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t function_output_length = 0;
+    mbedtls_size_t total_output_length = 0;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -3611,13 +3611,13 @@ void cipher_decrypt_multipart( int alg_arg, int key_type_arg,
     psa_algorithm_t alg = alg_arg;
     psa_status_t status;
     psa_status_t expected_status = expected_status_arg;
-    size_t first_part_size = first_part_size_arg;
-    size_t output1_length = output1_length_arg;
-    size_t output2_length = output2_length_arg;
+    mbedtls_size_t first_part_size = first_part_size_arg;
+    mbedtls_size_t output1_length = output1_length_arg;
+    mbedtls_size_t output2_length = output2_length_arg;
     unsigned char *output = NULL;
-    size_t output_buffer_size = 0;
-    size_t function_output_length = 0;
-    size_t total_output_length = 0;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t function_output_length = 0;
+    mbedtls_size_t total_output_length = 0;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -3714,12 +3714,12 @@ void cipher_decrypt_fail( int alg_arg,
     psa_algorithm_t alg = alg_arg;
     psa_status_t expected_status = expected_status_arg;
     unsigned char *input = NULL;
-    size_t input_buffer_size = 0;
+    mbedtls_size_t input_buffer_size = 0;
     unsigned char *output = NULL;
     unsigned char *output_multi = NULL;
-    size_t output_buffer_size = 0;
-    size_t output_length = 0;
-    size_t function_output_length;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t output_length = 0;
+    mbedtls_size_t function_output_length;
     psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
@@ -3736,7 +3736,7 @@ void cipher_decrypt_fail( int alg_arg,
     }
 
     /* Allocate input buffer and copy the iv and the plaintext */
-    input_buffer_size = ( (size_t) input_arg->len + (size_t) iv->len );
+    input_buffer_size = ( (mbedtls_size_t) input_arg->len + (mbedtls_size_t) iv->len );
     if ( input_buffer_size > 0 )
     {
         ASSERT_ALLOC( input, input_buffer_size );
@@ -3823,10 +3823,10 @@ void cipher_decrypt( int alg_arg,
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
     unsigned char *input = NULL;
-    size_t input_buffer_size = 0;
+    mbedtls_size_t input_buffer_size = 0;
     unsigned char *output = NULL;
-    size_t output_buffer_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_buffer_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -3836,7 +3836,7 @@ void cipher_decrypt( int alg_arg,
     psa_set_key_type( &attributes, key_type );
 
     /* Allocate input buffer and copy the iv and the plaintext */
-    input_buffer_size = ( (size_t) input_arg->len + (size_t) iv->len );
+    input_buffer_size = ( (mbedtls_size_t) input_arg->len + (mbedtls_size_t) iv->len );
     if ( input_buffer_size > 0 )
     {
         ASSERT_ALLOC( input, input_buffer_size );
@@ -3877,11 +3877,11 @@ void cipher_verify_output( int alg_arg,
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
     unsigned char *output1 = NULL;
-    size_t output1_size = 0;
-    size_t output1_length = 0;
+    mbedtls_size_t output1_size = 0;
+    mbedtls_size_t output1_length = 0;
     unsigned char *output2 = NULL;
-    size_t output2_size = 0;
-    size_t output2_length = 0;
+    mbedtls_size_t output2_size = 0;
+    mbedtls_size_t output2_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -3934,17 +3934,17 @@ void cipher_verify_output_multipart( int alg_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t first_part_size = first_part_size_arg;
+    mbedtls_size_t first_part_size = first_part_size_arg;
     unsigned char iv[16] = {0};
-    size_t iv_size = 16;
-    size_t iv_length = 0;
+    mbedtls_size_t iv_size = 16;
+    mbedtls_size_t iv_length = 0;
     unsigned char *output1 = NULL;
-    size_t output1_buffer_size = 0;
-    size_t output1_length = 0;
+    mbedtls_size_t output1_buffer_size = 0;
+    mbedtls_size_t output1_length = 0;
     unsigned char *output2 = NULL;
-    size_t output2_buffer_size = 0;
-    size_t output2_length = 0;
-    size_t function_output_length;
+    mbedtls_size_t output2_buffer_size = 0;
+    mbedtls_size_t output2_length = 0;
+    mbedtls_size_t function_output_length;
     psa_cipher_operation_t operation1 = PSA_CIPHER_OPERATION_INIT;
     psa_cipher_operation_t operation2 = PSA_CIPHER_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -4079,12 +4079,12 @@ void aead_encrypt_decrypt( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *output_data = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
     unsigned char *output_data2 = NULL;
-    size_t output_length2 = 0;
+    mbedtls_size_t output_length2 = 0;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
     psa_status_t expected_result = expected_result_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -4177,10 +4177,10 @@ void aead_encrypt( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *output_data = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
 
@@ -4244,10 +4244,10 @@ void aead_decrypt( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *output_data = NULL;
-    size_t output_size = 0;
-    size_t output_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t expected_result = expected_result_arg;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
@@ -4316,8 +4316,8 @@ void aead_multipart_encrypt( int key_type_arg, data_t *key_data,
                              int do_set_lengths,
                              data_t *expected_output )
 {
-    size_t ad_part_len = 0;
-    size_t data_part_len = 0;
+    mbedtls_size_t ad_part_len = 0;
+    mbedtls_size_t data_part_len = 0;
     set_lengths_method_t set_lengths_method = DO_NOT_SET_LENGTHS;
 
     for( ad_part_len = 1; ad_part_len <= additional_data->len; ad_part_len++ )
@@ -4407,8 +4407,8 @@ void aead_multipart_decrypt( int key_type_arg, data_t *key_data,
                              int do_set_lengths,
                              data_t *expected_output )
 {
-    size_t ad_part_len = 0;
-    size_t data_part_len = 0;
+    mbedtls_size_t ad_part_len = 0;
+    mbedtls_size_t data_part_len = 0;
     set_lengths_method_t set_lengths_method = DO_NOT_SET_LENGTHS;
 
     for( ad_part_len = 1; ad_part_len <= additional_data->len; ad_part_len++ )
@@ -4507,14 +4507,14 @@ void aead_multipart_generate_nonce( int key_type_arg, data_t *key_data,
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
     psa_status_t expected_status = expected_status_arg;
-    size_t actual_nonce_length = 0;
-    size_t expected_nonce_length = expected_nonce_length_arg;
+    mbedtls_size_t actual_nonce_length = 0;
+    mbedtls_size_t expected_nonce_length = expected_nonce_length_arg;
     unsigned char *output = NULL;
     unsigned char *ciphertext = NULL;
-    size_t output_size = 0;
-    size_t ciphertext_size = 0;
-    size_t ciphertext_length = 0;
-    size_t tag_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t ciphertext_size = 0;
+    mbedtls_size_t ciphertext_length = 0;
+    mbedtls_size_t tag_length = 0;
     uint8_t tag_buffer[PSA_AEAD_TAG_MAX_SIZE];
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -4612,13 +4612,13 @@ void aead_multipart_set_nonce( int key_type_arg, data_t *key_data,
     psa_status_t expected_status = expected_status_arg;
     unsigned char *output = NULL;
     unsigned char *ciphertext = NULL;
-    size_t nonce_length;
-    size_t output_size = 0;
-    size_t ciphertext_size = 0;
-    size_t ciphertext_length = 0;
-    size_t tag_length = 0;
+    mbedtls_size_t nonce_length;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t ciphertext_size = 0;
+    mbedtls_size_t ciphertext_length = 0;
+    mbedtls_size_t tag_length = 0;
     uint8_t tag_buffer[PSA_AEAD_TAG_MAX_SIZE];
-    size_t index = 0;
+    mbedtls_size_t index = 0;
     set_lengths_method_t set_lengths_method = set_lengths_method_arg;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -4665,7 +4665,7 @@ void aead_multipart_set_nonce( int key_type_arg, data_t *key_data,
     else
     {
         /* If length is zero, then this will return NULL. */
-        nonce_length = ( size_t ) nonce_length_arg;
+        nonce_length = ( mbedtls_size_t ) nonce_length_arg;
         ASSERT_ALLOC( nonce_buffer, nonce_length );
 
         if( nonce_buffer )
@@ -4742,10 +4742,10 @@ void aead_multipart_update_buffer_test( int key_type_arg, data_t *key_data,
     psa_status_t expected_status = expected_status_arg;
     unsigned char *output = NULL;
     unsigned char *ciphertext = NULL;
-    size_t output_size = output_size_arg;
-    size_t ciphertext_size = 0;
-    size_t ciphertext_length = 0;
-    size_t tag_length = 0;
+    mbedtls_size_t output_size = output_size_arg;
+    mbedtls_size_t ciphertext_size = 0;
+    mbedtls_size_t ciphertext_length = 0;
+    mbedtls_size_t tag_length = 0;
     uint8_t tag_buffer[PSA_AEAD_TAG_MAX_SIZE];
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -4829,11 +4829,11 @@ void aead_multipart_finish_buffer_test( int key_type_arg, data_t *key_data,
     unsigned char *ciphertext = NULL;
     unsigned char *finish_ciphertext = NULL;
     unsigned char *tag_buffer = NULL;
-    size_t ciphertext_size = 0;
-    size_t ciphertext_length = 0;
-    size_t finish_ciphertext_size = ( size_t ) finish_ciphertext_size_arg;
-    size_t tag_size = ( size_t ) tag_size_arg;
-    size_t tag_length = 0;
+    mbedtls_size_t ciphertext_size = 0;
+    mbedtls_size_t ciphertext_length = 0;
+    mbedtls_size_t finish_ciphertext_size = ( mbedtls_size_t ) finish_ciphertext_size_arg;
+    mbedtls_size_t tag_size = ( mbedtls_size_t ) tag_size_arg;
+    mbedtls_size_t tag_length = 0;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -4917,12 +4917,12 @@ void aead_multipart_verify( int key_type_arg, data_t *key_data,
     psa_status_t expected_setup_status = expected_setup_status_arg;
     unsigned char *plaintext = NULL;
     unsigned char *finish_plaintext = NULL;
-    size_t plaintext_size = 0;
-    size_t plaintext_length = 0;
-    size_t verify_plaintext_size = 0;
+    mbedtls_size_t plaintext_size = 0;
+    mbedtls_size_t plaintext_length = 0;
+    mbedtls_size_t verify_plaintext_size = 0;
     tag_usage_method_t tag_usage = tag_usage_arg;
     unsigned char *tag_buffer = NULL;
-    size_t tag_size = 0;
+    mbedtls_size_t tag_size = 0;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -5049,16 +5049,16 @@ void aead_multipart_state_test( int key_type_arg, data_t *key_data,
     psa_aead_operation_t operation = PSA_AEAD_OPERATION_INIT;
     unsigned char *output_data = NULL;
     unsigned char *final_data = NULL;
-    size_t output_size = 0;
-    size_t finish_output_size = 0;
-    size_t output_length = 0;
-    size_t key_bits = 0;
-    size_t tag_length = 0;
-    size_t tag_size = 0;
-    size_t nonce_length = 0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t finish_output_size = 0;
+    mbedtls_size_t output_length = 0;
+    mbedtls_size_t key_bits = 0;
+    mbedtls_size_t tag_length = 0;
+    mbedtls_size_t tag_size = 0;
+    mbedtls_size_t nonce_length = 0;
     uint8_t nonce_buffer[PSA_AEAD_NONCE_MAX_SIZE];
     uint8_t tag_buffer[PSA_AEAD_TAG_MAX_SIZE];
-    size_t output_part_length = 0;
+    mbedtls_size_t output_part_length = 0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -5885,9 +5885,9 @@ void signature_size( int type_arg,
 {
     psa_key_type_t type = type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t actual_size = PSA_SIGN_OUTPUT_SIZE( type, bits, alg );
+    mbedtls_size_t actual_size = PSA_SIGN_OUTPUT_SIZE( type, bits, alg );
 
-    TEST_EQUAL( actual_size, (size_t) expected_size_arg );
+    TEST_EQUAL( actual_size, (mbedtls_size_t) expected_size_arg );
 
 exit:
     ;
@@ -5902,10 +5902,10 @@ void sign_hash_deterministic( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *signature = NULL;
-    size_t signature_size;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_size;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -5957,11 +5957,11 @@ void sign_hash_fail( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t signature_size = signature_size_arg;
+    mbedtls_size_t signature_size = signature_size_arg;
     psa_status_t actual_status;
     psa_status_t expected_status = expected_status_arg;
     unsigned char *signature = NULL;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     ASSERT_ALLOC( signature, signature_size );
@@ -6001,10 +6001,10 @@ void sign_verify_hash( int key_type_arg, data_t *key_data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *signature = NULL;
-    size_t signature_size;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_size;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -6141,10 +6141,10 @@ void sign_message_deterministic( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *signature = NULL;
-    size_t signature_size;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_size;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -6192,11 +6192,11 @@ void sign_message_fail( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t signature_size = signature_size_arg;
+    mbedtls_size_t signature_size = signature_size_arg;
     psa_status_t actual_status;
     psa_status_t expected_status = expected_status_arg;
     unsigned char *signature = NULL;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     ASSERT_ALLOC( signature, signature_size );
@@ -6238,10 +6238,10 @@ void sign_verify_message( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *signature = NULL;
-    size_t signature_size;
-    size_t signature_length = 0xdeadbeef;
+    mbedtls_size_t signature_size;
+    mbedtls_size_t signature_length = 0xdeadbeef;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -6376,11 +6376,11 @@ void asymmetric_encrypt( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t expected_output_length = expected_output_length_arg;
-    size_t key_bits;
+    mbedtls_size_t expected_output_length = expected_output_length_arg;
+    mbedtls_size_t key_bits;
     unsigned char *output = NULL;
-    size_t output_size;
-    size_t output_length = ~0;
+    mbedtls_size_t output_size;
+    mbedtls_size_t output_length = ~0;
     psa_status_t actual_status;
     psa_status_t expected_status = expected_status_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -6450,13 +6450,13 @@ void asymmetric_encrypt_decrypt( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *output = NULL;
-    size_t output_size;
-    size_t output_length = ~0;
+    mbedtls_size_t output_size;
+    mbedtls_size_t output_length = ~0;
     unsigned char *output2 = NULL;
-    size_t output2_size;
-    size_t output2_length = ~0;
+    mbedtls_size_t output2_size;
+    mbedtls_size_t output2_length = ~0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -6527,10 +6527,10 @@ void asymmetric_decrypt( int key_type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
-    size_t key_bits;
+    mbedtls_size_t key_bits;
     unsigned char *output = NULL;
-    size_t output_size = 0;
-    size_t output_length = ~0;
+    mbedtls_size_t output_size = 0;
+    mbedtls_size_t output_length = ~0;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -6597,8 +6597,8 @@ void asymmetric_decrypt_fail( int key_type_arg,
     psa_key_type_t key_type = key_type_arg;
     psa_algorithm_t alg = alg_arg;
     unsigned char *output = NULL;
-    size_t output_size = output_size_arg;
-    size_t output_length = ~0;
+    mbedtls_size_t output_size = output_size_arg;
+    mbedtls_size_t output_length = ~0;
     psa_status_t actual_status;
     psa_status_t expected_status = expected_status_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -6653,7 +6653,7 @@ void key_derivation_init( )
      * Clang 5 complains when `-Wmissing-field-initializers` is used, even
      * though it's OK by the C standard. We could test for this, but we'd need
      * to supress the Clang warning for the test. */
-    size_t capacity;
+    mbedtls_size_t capacity;
     psa_key_derivation_operation_t func = psa_key_derivation_operation_init( );
     psa_key_derivation_operation_t init = PSA_KEY_DERIVATION_OPERATION_INIT;
     psa_key_derivation_operation_t zero;
@@ -6698,7 +6698,7 @@ void derive_set_capacity( int alg_arg, int capacity_arg,
                           int expected_status_arg )
 {
     psa_algorithm_t alg = alg_arg;
-    size_t capacity = capacity_arg;
+    mbedtls_size_t capacity = capacity_arg;
     psa_status_t expected_status = expected_status_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
 
@@ -6737,7 +6737,7 @@ void derive_input( int alg_arg,
                                     MBEDTLS_SVC_KEY_ID_INIT };
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    size_t i;
+    mbedtls_size_t i;
     psa_key_type_t output_key_type = output_key_type_arg;
     mbedtls_svc_key_id_t output_key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_status_t expected_output_status = expected_output_status_arg;
@@ -6820,14 +6820,14 @@ void derive_over_capacity( int alg_arg )
 {
     psa_algorithm_t alg = alg_arg;
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
-    size_t key_type = PSA_KEY_TYPE_DERIVE;
+    mbedtls_size_t key_type = PSA_KEY_TYPE_DERIVE;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     unsigned char input1[] = "Input 1";
-    size_t input1_length = sizeof( input1 );
+    mbedtls_size_t input1_length = sizeof( input1 );
     unsigned char input2[] = "Input 2";
-    size_t input2_length = sizeof( input2 );
+    mbedtls_size_t input2_length = sizeof( input2 );
     uint8_t buffer[42];
-    size_t capacity = sizeof( buffer );
+    mbedtls_size_t capacity = sizeof( buffer );
     const uint8_t key_data[22] = { 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
                                    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
                                    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b};
@@ -6870,8 +6870,8 @@ exit:
 void derive_actions_without_setup( )
 {
     uint8_t output_buffer[16];
-    size_t buffer_size = 16;
-    size_t capacity = 0;
+    mbedtls_size_t buffer_size = 16;
+    mbedtls_size_t capacity = 0;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
 
     TEST_ASSERT( psa_key_derivation_output_bytes( &operation,
@@ -6910,19 +6910,19 @@ void derive_output( int alg_arg,
     mbedtls_svc_key_id_t keys[] = { MBEDTLS_SVC_KEY_ID_INIT,
                                     MBEDTLS_SVC_KEY_ID_INIT,
                                     MBEDTLS_SVC_KEY_ID_INIT };
-    size_t requested_capacity = requested_capacity_arg;
+    mbedtls_size_t requested_capacity = requested_capacity_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     uint8_t *expected_outputs[2] =
         {expected_output1->x, expected_output2->x};
-    size_t output_sizes[2] =
+    mbedtls_size_t output_sizes[2] =
         {expected_output1->len, expected_output2->len};
-    size_t output_buffer_size = 0;
+    mbedtls_size_t output_buffer_size = 0;
     uint8_t *output_buffer = NULL;
-    size_t expected_capacity;
-    size_t current_capacity;
+    mbedtls_size_t expected_capacity;
+    mbedtls_size_t current_capacity;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_status_t status;
-    size_t i;
+    mbedtls_size_t i;
 
     for( i = 0; i < ARRAY_LENGTH( expected_outputs ); i++ )
     {
@@ -7028,11 +7028,11 @@ void derive_full( int alg_arg,
 {
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_algorithm_t alg = alg_arg;
-    size_t requested_capacity = requested_capacity_arg;
+    mbedtls_size_t requested_capacity = requested_capacity_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     unsigned char output_buffer[16];
-    size_t expected_capacity = requested_capacity;
-    size_t current_capacity;
+    mbedtls_size_t expected_capacity = requested_capacity;
+    mbedtls_size_t current_capacity;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -7057,7 +7057,7 @@ void derive_full( int alg_arg,
     /* Expansion phase. */
     while( current_capacity > 0 )
     {
-        size_t read_size = sizeof( output_buffer );
+        mbedtls_size_t read_size = sizeof( output_buffer );
         if( read_size > current_capacity )
             read_size = current_capacity;
         PSA_ASSERT( psa_key_derivation_output_bytes( &operation,
@@ -7096,10 +7096,10 @@ void derive_key_exercise( int alg_arg,
     mbedtls_svc_key_id_t derived_key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_algorithm_t alg = alg_arg;
     psa_key_type_t derived_type = derived_type_arg;
-    size_t derived_bits = derived_bits_arg;
+    mbedtls_size_t derived_bits = derived_bits_arg;
     psa_key_usage_t derived_usage = derived_usage_arg;
     psa_algorithm_t derived_alg = derived_alg_arg;
-    size_t capacity = PSA_BITS_TO_BYTES( derived_bits );
+    mbedtls_size_t capacity = PSA_BITS_TO_BYTES( derived_bits );
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_attributes_t got_attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -7160,15 +7160,15 @@ void derive_key_export( int alg_arg,
     mbedtls_svc_key_id_t base_key = MBEDTLS_SVC_KEY_ID_INIT;
     mbedtls_svc_key_id_t derived_key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_algorithm_t alg = alg_arg;
-    size_t bytes1 = bytes1_arg;
-    size_t bytes2 = bytes2_arg;
-    size_t capacity = bytes1 + bytes2;
+    mbedtls_size_t bytes1 = bytes1_arg;
+    mbedtls_size_t bytes2 = bytes2_arg;
+    mbedtls_size_t capacity = bytes1 + bytes2;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     uint8_t *output_buffer = NULL;
     uint8_t *export_buffer = NULL;
     psa_key_attributes_t base_attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_attributes_t derived_attributes = PSA_KEY_ATTRIBUTES_INIT;
-    size_t length;
+    mbedtls_size_t length;
 
     ASSERT_ALLOC( output_buffer, capacity );
     ASSERT_ALLOC( export_buffer, capacity );
@@ -7244,14 +7244,14 @@ void derive_key_type( int alg_arg,
     mbedtls_svc_key_id_t derived_key = MBEDTLS_SVC_KEY_ID_INIT;
     const psa_algorithm_t alg = alg_arg;
     const psa_key_type_t key_type = key_type_arg;
-    const size_t bits = bits_arg;
+    const mbedtls_size_t bits = bits_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
-    const size_t export_buffer_size =
+    const mbedtls_size_t export_buffer_size =
         PSA_EXPORT_KEY_OUTPUT_SIZE( key_type, bits );
     uint8_t *export_buffer = NULL;
     psa_key_attributes_t base_attributes = PSA_KEY_ATTRIBUTES_INIT;
     psa_key_attributes_t derived_attributes = PSA_KEY_ATTRIBUTES_INIT;
-    size_t export_length;
+    mbedtls_size_t export_length;
 
     ASSERT_ALLOC( export_buffer, export_buffer_size );
     PSA_ASSERT( psa_crypto_init( ) );
@@ -7302,7 +7302,7 @@ void derive_key( int alg_arg,
     mbedtls_svc_key_id_t derived_key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_algorithm_t alg = alg_arg;
     psa_key_type_t type = type_arg;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_status_t expected_status = expected_status_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     psa_key_attributes_t base_attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -7403,8 +7403,8 @@ void raw_key_agreement( int alg_arg,
     psa_key_type_t our_key_type = our_key_type_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     unsigned char *output = NULL;
-    size_t output_length = ~0;
-    size_t key_bits;
+    mbedtls_size_t output_length = ~0;
+    mbedtls_size_t key_bits;
 
     ASSERT_ALLOC( output, expected_output->len );
     PSA_ASSERT( psa_crypto_init( ) );
@@ -7448,7 +7448,7 @@ void key_agreement_capacity( int alg_arg,
     psa_key_type_t our_key_type = our_key_type_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    size_t actual_capacity;
+    mbedtls_size_t actual_capacity;
     unsigned char output[16];
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -7476,7 +7476,7 @@ void key_agreement_capacity( int alg_arg,
     /* Test the advertized capacity. */
     PSA_ASSERT( psa_key_derivation_get_capacity(
                     &operation, &actual_capacity ) );
-    TEST_EQUAL( actual_capacity, (size_t) expected_capacity_arg );
+    TEST_EQUAL( actual_capacity, (mbedtls_size_t) expected_capacity_arg );
 
     /* Test the actual capacity by reading the output. */
     while( actual_capacity > sizeof( output ) )
@@ -7560,10 +7560,10 @@ exit:
 /* BEGIN_CASE */
 void generate_random( int bytes_arg )
 {
-    size_t bytes = bytes_arg;
+    mbedtls_size_t bytes = bytes_arg;
     unsigned char *output = NULL;
     unsigned char *changed = NULL;
-    size_t i;
+    mbedtls_size_t i;
     unsigned run;
 
     TEST_ASSERT( bytes_arg >= 0 );
@@ -7615,7 +7615,7 @@ void generate_key( int type_arg,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t type = type_arg;
     psa_key_usage_t usage = usage_arg;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_algorithm_t alg = alg_arg;
     psa_status_t expected_status = expected_status_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -7665,19 +7665,19 @@ void generate_key_rsa( int bits_arg,
 {
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t type = PSA_KEY_TYPE_RSA_KEY_PAIR;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_key_usage_t usage = PSA_KEY_USAGE_ENCRYPT | PSA_KEY_USAGE_DECRYPT;
     psa_algorithm_t alg = PSA_ALG_RSA_PKCS1V15_SIGN_RAW;
     psa_status_t expected_status = expected_status_arg;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     uint8_t *exported = NULL;
-    size_t exported_size =
+    mbedtls_size_t exported_size =
         PSA_EXPORT_KEY_OUTPUT_SIZE( PSA_KEY_TYPE_RSA_PUBLIC_KEY, bits );
-    size_t exported_length = SIZE_MAX;
+    mbedtls_size_t exported_length = SIZE_MAX;
     uint8_t *e_read_buffer = NULL;
     int is_default_public_exponent = 0;
-    size_t e_read_size = PSA_KEY_DOMAIN_PARAMETERS_SIZE( type, bits );
-    size_t e_read_length = SIZE_MAX;
+    mbedtls_size_t e_read_size = PSA_KEY_DOMAIN_PARAMETERS_SIZE( type, bits );
+    mbedtls_size_t e_read_length = SIZE_MAX;
 
     if( e_arg->len == 0 ||
         ( e_arg->len == 3 &&
@@ -7725,7 +7725,7 @@ void generate_key_rsa( int bits_arg,
     {
         uint8_t *p = exported;
         uint8_t *end = exported + exported_length;
-        size_t len;
+        mbedtls_size_t len;
         /*   RSAPublicKey ::= SEQUENCE {
          *      modulus            INTEGER,    -- n
          *      publicExponent     INTEGER  }  -- e
@@ -7777,15 +7777,15 @@ void persistent_key_load_key_from_storage( data_t *data,
     mbedtls_svc_key_id_t key = MBEDTLS_SVC_KEY_ID_INIT;
     mbedtls_svc_key_id_t base_key = MBEDTLS_SVC_KEY_ID_INIT;
     psa_key_type_t type = type_arg;
-    size_t bits = bits_arg;
+    mbedtls_size_t bits = bits_arg;
     psa_key_usage_t usage_flags = usage_flags_arg;
     psa_algorithm_t alg = alg_arg;
     psa_key_derivation_operation_t operation = PSA_KEY_DERIVATION_OPERATION_INIT;
     unsigned char *first_export = NULL;
     unsigned char *second_export = NULL;
-    size_t export_size = PSA_EXPORT_KEY_OUTPUT_SIZE( type, bits );
-    size_t first_exported_length;
-    size_t second_exported_length;
+    mbedtls_size_t export_size = PSA_EXPORT_KEY_OUTPUT_SIZE( type, bits );
+    mbedtls_size_t first_exported_length;
+    mbedtls_size_t second_exported_length;
 
     if( usage_flags & PSA_KEY_USAGE_EXPORT )
     {

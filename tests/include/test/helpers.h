@@ -172,8 +172,8 @@ int mbedtls_test_equal( const char *test, int line_no, const char* filename,
  * \return         \c -1 if the output buffer is too small or the input string
  *                 is not a valid hexadecimal representation.
  */
-int mbedtls_test_unhexify( unsigned char *obuf, size_t obufmax,
-                           const char *ibuf, size_t *len );
+int mbedtls_test_unhexify( unsigned char *obuf, mbedtls_size_t obufmax,
+                           const char *ibuf, mbedtls_size_t *len );
 
 void mbedtls_test_hexify( unsigned char *obuf,
                           const unsigned char *ibuf,
@@ -186,7 +186,7 @@ void mbedtls_test_hexify( unsigned char *obuf,
  *
  * For convenience, dies if allocation fails.
  */
-unsigned char *mbedtls_test_zero_alloc( size_t len );
+unsigned char *mbedtls_test_zero_alloc( mbedtls_size_t len );
 
 /**
  * Allocate and fill a buffer from hex data.
@@ -198,7 +198,7 @@ unsigned char *mbedtls_test_zero_alloc( size_t len );
  *
  * For convenience, dies if allocation fails.
  */
-unsigned char *mbedtls_test_unhexify_alloc( const char *ibuf, size_t *olen );
+unsigned char *mbedtls_test_unhexify_alloc( const char *ibuf, mbedtls_size_t *olen );
 
 int mbedtls_test_hexcmp( uint8_t * a, uint8_t * b,
                          uint32_t a_len, uint32_t b_len );

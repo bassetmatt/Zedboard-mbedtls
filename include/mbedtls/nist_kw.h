@@ -131,8 +131,8 @@ void mbedtls_nist_kw_free( mbedtls_nist_kw_context *ctx );
  * \return          cipher-specific error code on failure of the underlying cipher.
  */
 int mbedtls_nist_kw_wrap( mbedtls_nist_kw_context *ctx, mbedtls_nist_kw_mode_t mode,
-                          const unsigned char *input, size_t in_len,
-                          unsigned char *output, size_t* out_len, size_t out_size );
+                          const unsigned char *input, mbedtls_size_t in_len,
+                          unsigned char *output, mbedtls_size_t* out_len, mbedtls_size_t out_size );
 
 /**
  * \brief           This function decrypts a buffer using key wrapping.
@@ -158,8 +158,8 @@ int mbedtls_nist_kw_wrap( mbedtls_nist_kw_context *ctx, mbedtls_nist_kw_mode_t m
  * \return          cipher-specific error code on failure of the underlying cipher.
  */
 int mbedtls_nist_kw_unwrap( mbedtls_nist_kw_context *ctx, mbedtls_nist_kw_mode_t mode,
-                            const unsigned char *input, size_t in_len,
-                            unsigned char *output, size_t* out_len, size_t out_size);
+                            const unsigned char *input, mbedtls_size_t in_len,
+                            unsigned char *output, mbedtls_size_t* out_len, mbedtls_size_t out_size);
 
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)

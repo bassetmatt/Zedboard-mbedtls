@@ -180,13 +180,13 @@ struct options
 } opt;
 
 int write_certificate( mbedtls_x509write_cert *crt, const char *output_file,
-                       int (*f_rng)(void *, unsigned char *, size_t),
+                       int (*f_rng)(void *, unsigned char *, mbedtls_size_t),
                        void *p_rng )
 {
     int ret;
     FILE *f;
     unsigned char output_buf[4096];
-    size_t len = 0;
+    mbedtls_size_t len = 0;
 
     memset( output_buf, 0, 4096 );
     if( ( ret = mbedtls_x509write_crt_pem( crt, output_buf, 4096,

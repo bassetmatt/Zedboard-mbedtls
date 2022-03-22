@@ -143,7 +143,7 @@ void mbedtls_aesni_gcm_mult( unsigned char c[16],
                      const unsigned char b[16] )
 {
     unsigned char aa[16], bb[16], cc[16];
-    size_t i;
+    mbedtls_size_t i;
 
     /* The inputs are in big-endian order, so byte-reverse them */
     for( i = 0; i < 16; i++ )
@@ -446,7 +446,7 @@ static void aesni_setkey_enc_256( unsigned char *rk,
  */
 int mbedtls_aesni_setkey_enc( unsigned char *rk,
                       const unsigned char *key,
-                      size_t bits )
+                      mbedtls_size_t bits )
 {
     switch( bits )
     {

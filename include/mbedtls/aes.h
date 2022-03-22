@@ -305,7 +305,7 @@ int mbedtls_aes_crypt_ecb( mbedtls_aes_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
                     int mode,
-                    size_t length,
+                    mbedtls_size_t length,
                     unsigned char iv[16],
                     const unsigned char *input,
                     unsigned char *output );
@@ -350,7 +350,7 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
                            int mode,
-                           size_t length,
+                           mbedtls_size_t length,
                            const unsigned char data_unit[16],
                            const unsigned char *input,
                            unsigned char *output );
@@ -386,7 +386,7 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
  *                 #MBEDTLS_AES_DECRYPT.
  * \param length   The length of the input data in Bytes.
  * \param iv_off   The offset in IV (updated after use).
- *                 It must point to a valid \c size_t.
+ *                 It must point to a valid \c mbedtls_size_t.
  * \param iv       The initialization vector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
@@ -399,8 +399,8 @@ int mbedtls_aes_crypt_xts( mbedtls_aes_xts_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_cfb128( mbedtls_aes_context *ctx,
                        int mode,
-                       size_t length,
-                       size_t *iv_off,
+                       mbedtls_size_t length,
+                       mbedtls_size_t *iv_off,
                        unsigned char iv[16],
                        const unsigned char *input,
                        unsigned char *output );
@@ -444,7 +444,7 @@ int mbedtls_aes_crypt_cfb128( mbedtls_aes_context *ctx,
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_cfb8( mbedtls_aes_context *ctx,
                     int mode,
-                    size_t length,
+                    mbedtls_size_t length,
                     unsigned char iv[16],
                     const unsigned char *input,
                     unsigned char *output );
@@ -486,7 +486,7 @@ int mbedtls_aes_crypt_cfb8( mbedtls_aes_context *ctx,
  *                 It must be initialized and bound to a key.
  * \param length   The length of the input data.
  * \param iv_off   The offset in IV (updated after use).
- *                 It must point to a valid \c size_t.
+ *                 It must point to a valid \c mbedtls_size_t.
  * \param iv       The initialization vector (updated after use).
  *                 It must be a readable and writeable buffer of \c 16 Bytes.
  * \param input    The buffer holding the input data.
@@ -498,8 +498,8 @@ int mbedtls_aes_crypt_cfb8( mbedtls_aes_context *ctx,
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_ofb( mbedtls_aes_context *ctx,
-                       size_t length,
-                       size_t *iv_off,
+                       mbedtls_size_t length,
+                       mbedtls_size_t *iv_off,
                        unsigned char iv[16],
                        const unsigned char *input,
                        unsigned char *output );
@@ -566,7 +566,7 @@ int mbedtls_aes_crypt_ofb( mbedtls_aes_context *ctx,
  * \param nc_off           The offset in the current \p stream_block, for
  *                         resuming within the current cipher stream. The
  *                         offset pointer should be 0 at the start of a stream.
- *                         It must point to a valid \c size_t.
+ *                         It must point to a valid \c mbedtls_size_t.
  * \param nonce_counter    The 128-bit nonce and counter.
  *                         It must be a readable-writeable buffer of \c 16 Bytes.
  * \param stream_block     The saved stream block for resuming. This is
@@ -581,8 +581,8 @@ int mbedtls_aes_crypt_ofb( mbedtls_aes_context *ctx,
  */
 MBEDTLS_CHECK_RETURN_TYPICAL
 int mbedtls_aes_crypt_ctr( mbedtls_aes_context *ctx,
-                       size_t length,
-                       size_t *nc_off,
+                       mbedtls_size_t length,
+                       mbedtls_size_t *nc_off,
                        unsigned char nonce_counter[16],
                        unsigned char stream_block[16],
                        const unsigned char *input,

@@ -217,7 +217,7 @@ void rng_free( rng_context_t *rng );
  * \return              \c 0 on success.
  * \return              An Mbed TLS error code on error.
  */
-int rng_get( void *p_rng, unsigned char *output, size_t output_len );
+int rng_get( void *p_rng, unsigned char *output, mbedtls_size_t output_len );
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO) && defined(MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG)
 /* The test implementation of the PSA external RNG is insecure. When
@@ -236,8 +236,8 @@ int ca_callback( void *data, mbedtls_x509_crt const *child,
  * Test recv/send functions that make sure each try returns
  * WANT_READ/WANT_WRITE at least once before sucesseding
  */
-int delayed_recv( void *ctx, unsigned char *buf, size_t len );
-int delayed_send( void *ctx, const unsigned char *buf, size_t len );
+int delayed_recv( void *ctx, unsigned char *buf, mbedtls_size_t len );
+int delayed_send( void *ctx, const unsigned char *buf, mbedtls_size_t len );
 
 /*
  * Wait for an event from the underlying transport or the timer

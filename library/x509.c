@@ -147,7 +147,7 @@ static int x509_get_hash_alg( const mbedtls_x509_buf *alg, mbedtls_md_type_t *md
     unsigned char *p;
     const unsigned char *end;
     mbedtls_x509_buf md_oid;
-    size_t len;
+    mbedtls_size_t len;
 
     /* Make sure we got a SEQUENCE and setup bounds */
     if( alg->tag != ( MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE ) )
@@ -207,7 +207,7 @@ int mbedtls_x509_get_rsassa_pss_params( const mbedtls_x509_buf *params,
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     unsigned char *p;
     const unsigned char *end, *end2;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_x509_buf alg_id, alg_params;
 
     /* First set everything to defaults */
@@ -348,7 +348,7 @@ static int x509_get_attr_type_value( unsigned char **p,
                                      mbedtls_x509_name *cur )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_x509_buf *oid;
     mbedtls_x509_buf *val;
 
@@ -429,7 +429,7 @@ int mbedtls_x509_get_name( unsigned char **p, const unsigned char *end,
                    mbedtls_x509_name *cur )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t set_len;
+    mbedtls_size_t set_len;
     const unsigned char *end_set;
 
     /* don't use recursion, we'd risk stack overflow if not optimized */
@@ -478,7 +478,7 @@ int mbedtls_x509_get_name( unsigned char **p, const unsigned char *end,
     }
 }
 
-static int x509_parse_int( unsigned char **p, size_t n, int *res )
+static int x509_parse_int( unsigned char **p, mbedtls_size_t n, int *res )
 {
     *res = 0;
 
@@ -531,7 +531,7 @@ static int x509_date_is_valid(const mbedtls_x509_time *t )
  * Parse an ASN1_UTC_TIME (yearlen=2) or ASN1_GENERALIZED_TIME (yearlen=4)
  * field.
  */
-static int x509_parse_time( unsigned char **p, size_t len, size_t yearlen,
+static int x509_parse_time( unsigned char **p, mbedtls_size_t len, mbedtls_size_t yearlen,
                             mbedtls_x509_time *tm )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
@@ -600,7 +600,7 @@ int mbedtls_x509_get_time( unsigned char **p, const unsigned char *end,
                            mbedtls_x509_time *tm )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len, year_len;
+    mbedtls_size_t len, year_len;
     unsigned char tag;
 
     if( ( end - *p ) < 1 )
@@ -629,7 +629,7 @@ int mbedtls_x509_get_time( unsigned char **p, const unsigned char *end,
 int mbedtls_x509_get_sig( unsigned char **p, const unsigned char *end, mbedtls_x509_buf *sig )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
     int tag_type;
 
     if( ( end - *p ) < 1 )
@@ -706,7 +706,7 @@ int mbedtls_x509_get_ext( unsigned char **p, const unsigned char *end,
                           mbedtls_x509_buf *ext, int tag )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t len;
+    mbedtls_size_t len;
 
     /* Extension structure use EXPLICIT tagging. That is, the actual
      * `Extensions` structure is wrapped by a tag-length pair using
@@ -738,10 +738,10 @@ int mbedtls_x509_get_ext( unsigned char **p, const unsigned char *end,
  * Store the name in printable form into buf; no more
  * than size characters will be written
  */
-int mbedtls_x509_dn_gets( char *buf, size_t size, const mbedtls_x509_name *dn )
+int mbedtls_x509_dn_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_name *dn )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i, n;
+    mbedtls_size_t i, n;
     unsigned char c, merge = 0;
     const mbedtls_x509_name *name;
     const char *short_name = NULL;
@@ -800,10 +800,10 @@ int mbedtls_x509_dn_gets( char *buf, size_t size, const mbedtls_x509_name *dn )
  * Store the serial in printable form into buf; no more
  * than size characters will be written
  */
-int mbedtls_x509_serial_gets( char *buf, size_t size, const mbedtls_x509_buf *serial )
+int mbedtls_x509_serial_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_buf *serial )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    size_t i, n, nr;
+    mbedtls_size_t i, n, nr;
     char *p;
 
     p = buf;
@@ -835,13 +835,13 @@ int mbedtls_x509_serial_gets( char *buf, size_t size, const mbedtls_x509_buf *se
 /*
  * Helper for writing signature algorithms
  */
-int mbedtls_x509_sig_alg_gets( char *buf, size_t size, const mbedtls_x509_buf *sig_oid,
+int mbedtls_x509_sig_alg_gets( char *buf, mbedtls_size_t size, const mbedtls_x509_buf *sig_oid,
                        mbedtls_pk_type_t pk_alg, mbedtls_md_type_t md_alg,
                        const void *sig_opts )
 {
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     char *p = buf;
-    size_t n = size;
+    mbedtls_size_t n = size;
     const char *desc = NULL;
 
     ret = mbedtls_oid_get_sig_alg_desc( sig_oid, &desc );
@@ -881,10 +881,10 @@ int mbedtls_x509_sig_alg_gets( char *buf, size_t size, const mbedtls_x509_buf *s
 /*
  * Helper for writing "RSA key size", "EC key size", etc
  */
-int mbedtls_x509_key_size_helper( char *buf, size_t buf_size, const char *name )
+int mbedtls_x509_key_size_helper( char *buf, mbedtls_size_t buf_size, const char *name )
 {
     char *p = buf;
-    size_t n = buf_size;
+    mbedtls_size_t n = buf_size;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
 
     ret = mbedtls_snprintf( p, n, "%s key size", name );

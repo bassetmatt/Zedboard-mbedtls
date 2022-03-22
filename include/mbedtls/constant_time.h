@@ -40,6 +40,6 @@
  */
 int mbedtls_ct_memcmp( const void *a,
                        const void *b,
-                       size_t n );
+                       mbedtls_size_t n );
 
 #endif /* MBEDTLS_CONSTANT_TIME_H */

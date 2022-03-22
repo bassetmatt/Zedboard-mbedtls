@@ -92,13 +92,13 @@ typedef struct mbedtls_hmac_drbg_context
     int MBEDTLS_PRIVATE(reseed_counter);                     /*!< reseed counter         */
 
     /* Administrative state */
-    size_t MBEDTLS_PRIVATE(entropy_len);         /*!< entropy bytes grabbed on each (re)seed */
+    mbedtls_size_t MBEDTLS_PRIVATE(entropy_len);         /*!< entropy bytes grabbed on each (re)seed */
     int MBEDTLS_PRIVATE(prediction_resistance);  /*!< enable prediction resistance (Automatic
                                      reseed before every random generation) */
     int MBEDTLS_PRIVATE(reseed_interval);        /*!< reseed interval   */
 
     /* Callbacks */
-    int (*MBEDTLS_PRIVATE(f_entropy))(void *, unsigned char *, size_t); /*!< entropy function */
+    int (*MBEDTLS_PRIVATE(f_entropy))(void *, unsigned char *, mbedtls_size_t); /*!< entropy function */
     void *MBEDTLS_PRIVATE(p_entropy);            /*!< context for the entropy function        */
 
 #if defined(MBEDTLS_THREADING_C)
@@ -198,10 +198,10 @@ void mbedtls_hmac_drbg_init( mbedtls_hmac_drbg_context *ctx );
  */
 int mbedtls_hmac_drbg_seed( mbedtls_hmac_drbg_context *ctx,
                     const mbedtls_md_info_t * md_info,
-                    int (*f_entropy)(void *, unsigned char *, size_t),
+                    int (*f_entropy)(void *, unsigned char *, mbedtls_size_t),
                     void *p_entropy,
                     const unsigned char *custom,
-                    size_t len );
+                    mbedtls_size_t len );
 
 /**
  * \brief               Initilisation of simpified HMAC_DRBG (never reseeds).
@@ -233,7 +233,7 @@ int mbedtls_hmac_drbg_seed( mbedtls_hmac_drbg_context *ctx,
  */
 int mbedtls_hmac_drbg_seed_buf( mbedtls_hmac_drbg_context *ctx,
                         const mbedtls_md_info_t * md_info,
-                        const unsigned char *data, size_t data_len );
+                        const unsigned char *data, mbedtls_size_t data_len );
 
 /**
  * \brief               This function turns prediction resistance on or off.
@@ -261,7 +261,7 @@ void mbedtls_hmac_drbg_set_prediction_resistance( mbedtls_hmac_drbg_context *ctx
  * \param len           The amount of entropy to grab, in bytes.
  */
 void mbedtls_hmac_drbg_set_entropy_len( mbedtls_hmac_drbg_context *ctx,
-                                size_t len );
+                                mbedtls_size_t len );
 
 /**
  * \brief               Set the reseed interval.
@@ -296,7 +296,7 @@ void mbedtls_hmac_drbg_set_reseed_interval( mbedtls_hmac_drbg_context *ctx,
  *                      hash calculation.
  */
 int mbedtls_hmac_drbg_update( mbedtls_hmac_drbg_context *ctx,
-                              const unsigned char *additional, size_t add_len );
+                              const unsigned char *additional, mbedtls_size_t add_len );
 
 /**
  * \brief               This function reseeds the HMAC_DRBG context, that is
@@ -323,7 +323,7 @@ int mbedtls_hmac_drbg_update( mbedtls_hmac_drbg_context *ctx,
  *                      if a call to the entropy function failed.
  */
 int mbedtls_hmac_drbg_reseed( mbedtls_hmac_drbg_context *ctx,
-                      const unsigned char *additional, size_t len );
+                      const unsigned char *additional, mbedtls_size_t len );
 
 /**
  * \brief   This function updates an HMAC_DRBG instance with additional
@@ -357,9 +357,9 @@ int mbedtls_hmac_drbg_reseed( mbedtls_hmac_drbg_context *ctx,
  *                      \p add_len > #MBEDTLS_HMAC_DRBG_MAX_INPUT.
  */
 int mbedtls_hmac_drbg_random_with_add( void *p_rng,
-                               unsigned char *output, size_t output_len,
+                               unsigned char *output, mbedtls_size_t output_len,
                                const unsigned char *additional,
-                               size_t add_len );
+                               mbedtls_size_t add_len );
 
 /**
  * \brief   This function uses HMAC_DRBG to generate random data.
@@ -388,7 +388,7 @@ int mbedtls_hmac_drbg_random_with_add( void *p_rng,
  * \return              #MBEDTLS_ERR_HMAC_DRBG_REQUEST_TOO_BIG if
  *                      \p out_len > #MBEDTLS_HMAC_DRBG_MAX_REQUEST.
  */
-int mbedtls_hmac_drbg_random( void *p_rng, unsigned char *output, size_t out_len );
+int mbedtls_hmac_drbg_random( void *p_rng, unsigned char *output, mbedtls_size_t out_len );
 
 /**
  * \brief               This function resets HMAC_DRBG context to the state immediately

@@ -198,7 +198,7 @@ int mbedtls_aria_crypt_ecb( mbedtls_aria_context *ctx,
  */
 int mbedtls_aria_crypt_cbc( mbedtls_aria_context *ctx,
                             int mode,
-                            size_t length,
+                            mbedtls_size_t length,
                             unsigned char iv[MBEDTLS_ARIA_BLOCKSIZE],
                             const unsigned char *input,
                             unsigned char *output );
@@ -248,8 +248,8 @@ int mbedtls_aria_crypt_cbc( mbedtls_aria_context *ctx,
  */
 int mbedtls_aria_crypt_cfb128( mbedtls_aria_context *ctx,
                                int mode,
-                               size_t length,
-                               size_t *iv_off,
+                               mbedtls_size_t length,
+                               mbedtls_size_t *iv_off,
                                unsigned char iv[MBEDTLS_ARIA_BLOCKSIZE],
                                const unsigned char *input,
                                unsigned char *output );
@@ -334,8 +334,8 @@ int mbedtls_aria_crypt_cfb128( mbedtls_aria_context *ctx,
  * \return                 A negative error code on failure.
  */
 int mbedtls_aria_crypt_ctr( mbedtls_aria_context *ctx,
-                            size_t length,
-                            size_t *nc_off,
+                            mbedtls_size_t length,
+                            mbedtls_size_t *nc_off,
                             unsigned char nonce_counter[MBEDTLS_ARIA_BLOCKSIZE],
                             unsigned char stream_block[MBEDTLS_ARIA_BLOCKSIZE],
                             const unsigned char *input,

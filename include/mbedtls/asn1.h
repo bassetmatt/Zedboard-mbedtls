@@ -152,7 +152,7 @@ extern "C" {
 typedef struct mbedtls_asn1_buf
 {
     int tag;                /**< ASN1 type, e.g. MBEDTLS_ASN1_UTF8_STRING. */
-    size_t len;             /**< ASN1 length, in octets. */
+    mbedtls_size_t len;             /**< ASN1 length, in octets. */
     unsigned char *p;       /**< ASN1 data, e.g. in ASCII. */
 }
 mbedtls_asn1_buf;
@@ -162,7 +162,7 @@ mbedtls_asn1_buf;
  */
 typedef struct mbedtls_asn1_bitstring
 {
-    size_t len;                 /**< ASN1 length, in octets. */
+    mbedtls_size_t len;                 /**< ASN1 length, in octets. */
     unsigned char unused_bits;  /**< Number of unused bits at the end of the string */
     unsigned char *p;           /**< Raw ASN1 data for the bit string */
 }
@@ -232,7 +232,7 @@ mbedtls_asn1_named_data;
  */
 int mbedtls_asn1_get_len( unsigned char **p,
                           const unsigned char *end,
-                          size_t *len );
+                          mbedtls_size_t *len );
 
 /**
  * \brief       Get the tag and length of the element.
@@ -257,7 +257,7 @@ int mbedtls_asn1_get_len( unsigned char **p,
  */
 int mbedtls_asn1_get_tag( unsigned char **p,
                           const unsigned char *end,
-                          size_t *len, int tag );
+                          mbedtls_size_t *len, int tag );
 
 /**
  * \brief       Retrieve a boolean ASN.1 tag and its value.
@@ -360,7 +360,7 @@ int mbedtls_asn1_get_bitstring( unsigned char **p, const unsigned char *end,
  */
 int mbedtls_asn1_get_bitstring_null( unsigned char **p,
                                      const unsigned char *end,
-                                     size_t *len );
+                                     mbedtls_size_t *len );
 
 /**
  * \brief       Parses and splits an ASN.1 "SEQUENCE OF <tag>".
@@ -527,7 +527,7 @@ int mbedtls_asn1_traverse_sequence_of(
     unsigned char tag_must_mask, unsigned char tag_must_val,
     unsigned char tag_may_mask, unsigned char tag_may_val,
     int (*cb)( void *ctx, int tag,
-               unsigned char* start, size_t len ),
+               unsigned char* start, mbedtls_size_t len ),
     void *ctx );
 
 #if defined(MBEDTLS_BIGNUM_C)
@@ -604,7 +604,7 @@ int mbedtls_asn1_get_alg_null( unsigned char **p,
  * \return      NULL if not found, or a pointer to the existing entry.
  */
 const mbedtls_asn1_named_data *mbedtls_asn1_find_named_data( const mbedtls_asn1_named_data *list,
-                                       const char *oid, size_t len );
+                                       const char *oid, mbedtls_size_t len );
 
 /**
  * \brief       Free a mbedtls_asn1_named_data entry

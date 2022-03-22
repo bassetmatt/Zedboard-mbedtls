@@ -38,7 +38,7 @@ void test_hkdf_extract( int md_alg, char *hex_ikm_string,
     unsigned char *salt = NULL;
     unsigned char *prk = NULL;
     unsigned char *output_prk = NULL;
-    size_t ikm_len, salt_len, prk_len, output_prk_len;
+    mbedtls_size_t ikm_len, salt_len, prk_len, output_prk_len;
 
     const mbedtls_md_info_t *md = mbedtls_md_info_from_type( md_alg );
     TEST_ASSERT( md != NULL );
@@ -73,7 +73,7 @@ void test_hkdf_expand( int md_alg, char *hex_info_string,
     unsigned char *prk = NULL;
     unsigned char *okm = NULL;
     unsigned char *output_okm = NULL;
-    size_t info_len, prk_len, okm_len;
+    mbedtls_size_t info_len, prk_len, okm_len;
 
     const mbedtls_md_info_t *md = mbedtls_md_info_from_type( md_alg );
     TEST_ASSERT( md != NULL );
@@ -106,7 +106,7 @@ void test_hkdf_extract_ret( int hash_len, int ret )
     unsigned char *salt = NULL;
     unsigned char *ikm = NULL;
     unsigned char *prk = NULL;
-    size_t salt_len, ikm_len;
+    mbedtls_size_t salt_len, ikm_len;
     struct mbedtls_md_info_t fake_md_info;
 
     memset( &fake_md_info, 0, sizeof( fake_md_info ) );
@@ -133,7 +133,7 @@ void test_hkdf_expand_ret( int hash_len, int prk_len, int okm_len, int ret )
     unsigned char *info = NULL;
     unsigned char *prk = NULL;
     unsigned char *okm = NULL;
-    size_t info_len;
+    mbedtls_size_t info_len;
     struct mbedtls_md_info_t fake_md_info;
 
     memset( &fake_md_info, 0, sizeof( fake_md_info ) );

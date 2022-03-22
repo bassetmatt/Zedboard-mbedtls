@@ -59,7 +59,7 @@ int main( int argc, char *argv[] )
     FILE *f;
     int ret = 1;
     int exit_code = MBEDTLS_EXIT_FAILURE;
-    size_t i;
+    mbedtls_size_t i;
     mbedtls_rsa_context rsa;
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;

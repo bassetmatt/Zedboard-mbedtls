@@ -53,9 +53,9 @@ mbedtls_time_t dummy_constant_time( mbedtls_time_t* time )
 }
 
 #if !defined(MBEDTLS_TEST_USE_PSA_CRYPTO_RNG)
-static int dummy_entropy( void *data, unsigned char *output, size_t len )
+static int dummy_entropy( void *data, unsigned char *output, mbedtls_size_t len )
 {
-    size_t i;
+    mbedtls_size_t i;
     int ret;
     (void) data;
 
@@ -110,7 +110,7 @@ int rng_seed( rng_context_t *rng, int reproducible, const char *pers )
     }
     return( 0 );
 #else /* !MBEDTLS_TEST_USE_PSA_CRYPTO_RNG */
-    int ( *f_entropy )( void *, unsigned char *, size_t ) =
+    int ( *f_entropy )( void *, unsigned char *, mbedtls_size_t ) =
         ( reproducible ? dummy_entropy : mbedtls_entropy_func );
 
     if ( reproducible )
@@ -171,7 +171,7 @@ void rng_free( rng_context_t *rng )
 #endif /* !MBEDTLS_TEST_USE_PSA_CRYPTO_RNG */
 }
 
-int rng_get( void *p_rng, unsigned char *output, size_t output_len )
+int rng_get( void *p_rng, unsigned char *output, mbedtls_size_t output_len )
 {
 #if defined(MBEDTLS_TEST_USE_PSA_CRYPTO_RNG)
     (void) p_rng;
@@ -247,7 +247,7 @@ exit:
 }
 #endif /* MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK */
 
-int delayed_recv( void *ctx, unsigned char *buf, size_t len )
+int delayed_recv( void *ctx, unsigned char *buf, mbedtls_size_t len )
 {
     static int first_try = 1;
     int ret;
@@ -264,7 +264,7 @@ int delayed_recv( void *ctx, unsigned char *buf, size_t len )
     return( ret );
 }
 
-int delayed_send( void *ctx, const unsigned char *buf, size_t len )
+int delayed_send( void *ctx, const unsigned char *buf, mbedtls_size_t len )
 {
     static int first_try = 1;
     int ret;

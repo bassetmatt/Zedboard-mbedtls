@@ -590,7 +590,7 @@ void mbedtls_aria_free( mbedtls_aria_context *ctx )
  */
 int mbedtls_aria_crypt_cbc( mbedtls_aria_context *ctx,
                             int mode,
-                            size_t length,
+                            mbedtls_size_t length,
                             unsigned char iv[MBEDTLS_ARIA_BLOCKSIZE],
                             const unsigned char *input,
                             unsigned char *output )
@@ -651,14 +651,14 @@ int mbedtls_aria_crypt_cbc( mbedtls_aria_context *ctx,
  */
 int mbedtls_aria_crypt_cfb128( mbedtls_aria_context *ctx,
                                int mode,
-                               size_t length,
-                               size_t *iv_off,
+                               mbedtls_size_t length,
+                               mbedtls_size_t *iv_off,
                                unsigned char iv[MBEDTLS_ARIA_BLOCKSIZE],
                                const unsigned char *input,
                                unsigned char *output )
 {
     unsigned char c;
-    size_t n;
+    mbedtls_size_t n;
 
     ARIA_VALIDATE_RET( ctx != NULL );
     ARIA_VALIDATE_RET( mode == MBEDTLS_ARIA_ENCRYPT ||
@@ -714,15 +714,15 @@ int mbedtls_aria_crypt_cfb128( mbedtls_aria_context *ctx,
  * ARIA-CTR buffer encryption/decryption
  */
 int mbedtls_aria_crypt_ctr( mbedtls_aria_context *ctx,
-                            size_t length,
-                            size_t *nc_off,
+                            mbedtls_size_t length,
+                            mbedtls_size_t *nc_off,
                             unsigned char nonce_counter[MBEDTLS_ARIA_BLOCKSIZE],
                             unsigned char stream_block[MBEDTLS_ARIA_BLOCKSIZE],
                             const unsigned char *input,
                             unsigned char *output )
 {
     int c, i;
-    size_t n;
+    mbedtls_size_t n;
 
     ARIA_VALIDATE_RET( ctx != NULL );
     ARIA_VALIDATE_RET( length == 0 || input  != NULL );
@@ -916,7 +916,7 @@ int mbedtls_aria_self_test( int verbose )
     int ret = 1;
 
 #if (defined(MBEDTLS_CIPHER_MODE_CFB) || defined(MBEDTLS_CIPHER_MODE_CTR))
-    size_t j;
+    mbedtls_size_t j;
 #endif
 
 #if (defined(MBEDTLS_CIPHER_MODE_CBC) || \

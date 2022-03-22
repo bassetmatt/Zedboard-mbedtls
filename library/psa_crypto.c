@@ -331,7 +331,7 @@ psa_status_t mbedtls_to_psa_error( int ret )
     defined(MBEDTLS_PSA_BUILTIN_ALG_DETERMINISTIC_ECDSA) || \
     defined(MBEDTLS_PSA_BUILTIN_ALG_ECDH)
 mbedtls_ecp_group_id mbedtls_ecc_group_of_psa( psa_ecc_family_t curve,
-                                               size_t bits,
+                                               mbedtls_size_t bits,
                                                int bits_is_sloppy )
 {
     switch( curve )
@@ -431,7 +431,7 @@ mbedtls_ecp_group_id mbedtls_ecc_group_of_psa( psa_ecc_family_t curve,
           defined(MBEDTLS_PSA_BUILTIN_ALG_ECDH) */
 
 psa_status_t psa_validate_unstructured_key_bit_size( psa_key_type_t type,
-                                                     size_t bits )
+                                                     mbedtls_size_t bits )
 {
     /* Check that the bit size is acceptable for the key type */
     switch( type )
@@ -521,7 +521,7 @@ MBEDTLS_STATIC_TESTABLE psa_status_t psa_mac_key_can_do(
 }
 
 psa_status_t psa_allocate_buffer_to_slot( psa_key_slot_t *slot,
-                                          size_t buffer_length )
+                                          mbedtls_size_t buffer_length )
 {
     if( slot->key.data != NULL )
         return( PSA_ERROR_ALREADY_EXISTS );
@@ -536,7 +536,7 @@ psa_status_t psa_allocate_buffer_to_slot( psa_key_slot_t *slot,
 
 psa_status_t psa_copy_key_material_into_slot( psa_key_slot_t *slot,
                                               const uint8_t* data,
-                                              size_t data_length )
+                                              mbedtls_size_t data_length )
 {
     psa_status_t status = psa_allocate_buffer_to_slot( slot,
                                                        data_length );
@@ -549,9 +549,9 @@ psa_status_t psa_copy_key_material_into_slot( psa_key_slot_t *slot,
 
 psa_status_t psa_import_key_into_slot(
     const psa_key_attributes_t *attributes,
-    const uint8_t *data, size_t data_length,
-    uint8_t *key_buffer, size_t key_buffer_size,
-    size_t *key_buffer_length, size_t *bits )
+    const uint8_t *data, mbedtls_size_t data_length,
+    uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    mbedtls_size_t *key_buffer_length, mbedtls_size_t *bits )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_type_t type = attributes->core.type;
@@ -637,9 +637,9 @@ static psa_algorithm_t psa_key_policy_algorithm_intersection(
         ( PSA_ALG_AEAD_WITH_SHORTENED_TAG( alg1, 0 ) ==
           PSA_ALG_AEAD_WITH_SHORTENED_TAG( alg2, 0 ) ) )
     {
-        size_t alg1_len = PSA_ALG_AEAD_GET_TAG_LENGTH( alg1 );
-        size_t alg2_len = PSA_ALG_AEAD_GET_TAG_LENGTH( alg2 );
-        size_t restricted_len = alg1_len > alg2_len ? alg1_len : alg2_len;
+        mbedtls_size_t alg1_len = PSA_ALG_AEAD_GET_TAG_LENGTH( alg1 );
+        mbedtls_size_t alg2_len = PSA_ALG_AEAD_GET_TAG_LENGTH( alg2 );
+        mbedtls_size_t restricted_len = alg1_len > alg2_len ? alg1_len : alg2_len;
 
         /* If both are wildcards, return most restrictive wildcard */
         if( ( ( alg1 & PSA_ALG_AEAD_AT_LEAST_THIS_LENGTH_FLAG ) != 0 ) &&
@@ -680,9 +680,9 @@ static psa_algorithm_t psa_key_policy_algorithm_intersection(
          * Note that for at-least-this-length wildcard algorithms, the output
          * length is set to the shortest allowed length, which allows us to
          * calculate the most restrictive tag length for the intersection. */
-        size_t alg1_len = PSA_MAC_LENGTH( key_type, 0, alg1 );
-        size_t alg2_len = PSA_MAC_LENGTH( key_type, 0, alg2 );
-        size_t restricted_len = alg1_len > alg2_len ? alg1_len : alg2_len;
+        mbedtls_size_t alg1_len = PSA_MAC_LENGTH( key_type, 0, alg1 );
+        mbedtls_size_t alg2_len = PSA_MAC_LENGTH( key_type, 0, alg2 );
+        mbedtls_size_t restricted_len = alg1_len > alg2_len ? alg1_len : alg2_len;
 
         /* If both are wildcards, return most restrictive wildcard */
         if( ( ( alg1 & PSA_ALG_MAC_AT_LEAST_THIS_LENGTH_FLAG ) != 0 ) &&
@@ -759,9 +759,9 @@ static int psa_key_algorithm_permits( psa_key_type_t key_type,
          * Note that none of the currently supported algorithms have an output
          * length dependent on actual key size, so setting it to a bogus value
          * of 0 is currently OK. */
-        size_t requested_output_length = PSA_MAC_LENGTH(
+        mbedtls_size_t requested_output_length = PSA_MAC_LENGTH(
                                             key_type, 0, requested_alg );
-        size_t default_output_length = PSA_MAC_LENGTH(
+        mbedtls_size_t default_output_length = PSA_MAC_LENGTH(
                                         key_type, 0,
                                         PSA_ALG_FULL_LENGTH_MAC( requested_alg ) );
 
@@ -1137,7 +1137,7 @@ static psa_status_t psa_get_rsa_public_exponent(
     mbedtls_mpi mpi;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
     uint8_t *buffer = NULL;
-    size_t buflen;
+    mbedtls_size_t buflen;
     mbedtls_mpi_init( &mpi );
 
     ret = mbedtls_rsa_export( rsa, NULL, NULL, NULL, NULL, &mpi );
@@ -1256,10 +1256,10 @@ psa_status_t psa_get_key_slot_number(
 #endif /* MBEDTLS_PSA_CRYPTO_SE_C */
 
 static psa_status_t psa_export_key_buffer_internal( const uint8_t *key_buffer,
-                                                    size_t key_buffer_size,
+                                                    mbedtls_size_t key_buffer_size,
                                                     uint8_t *data,
-                                                    size_t data_size,
-                                                    size_t *data_length )
+                                                    mbedtls_size_t data_size,
+                                                    mbedtls_size_t *data_length )
 {
     if( key_buffer_size > data_size )
         return( PSA_ERROR_BUFFER_TOO_SMALL );
@@ -1272,8 +1272,8 @@ static psa_status_t psa_export_key_buffer_internal( const uint8_t *key_buffer,
 
 psa_status_t psa_export_key_internal(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    uint8_t *data, size_t data_size, size_t *data_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    uint8_t *data, mbedtls_size_t data_size, mbedtls_size_t *data_length )
 {
     psa_key_type_t type = attributes->core.type;
 
@@ -1296,8 +1296,8 @@ psa_status_t psa_export_key_internal(
 
 psa_status_t psa_export_key( mbedtls_svc_key_id_t key,
                              uint8_t *data,
-                             size_t data_size,
-                             size_t *data_length )
+                             mbedtls_size_t data_size,
+                             mbedtls_size_t *data_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -1339,10 +1339,10 @@ psa_status_t psa_export_key( mbedtls_svc_key_id_t key,
 psa_status_t psa_export_public_key_internal(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     uint8_t *data,
-    size_t data_size,
-    size_t *data_length )
+    mbedtls_size_t data_size,
+    mbedtls_size_t *data_length )
 {
     psa_key_type_t type = attributes->core.type;
 
@@ -1400,8 +1400,8 @@ psa_status_t psa_export_public_key_internal(
 
 psa_status_t psa_export_public_key( mbedtls_svc_key_id_t key,
                                     uint8_t *data,
-                                    size_t data_size,
-                                    size_t *data_length )
+                                    mbedtls_size_t data_size,
+                                    mbedtls_size_t *data_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -1882,14 +1882,14 @@ static psa_status_t psa_validate_optional_attributes(
 
 psa_status_t psa_import_key( const psa_key_attributes_t *attributes,
                              const uint8_t *data,
-                             size_t data_length,
+                             mbedtls_size_t data_length,
                              mbedtls_svc_key_id_t *key )
 {
     psa_status_t status;
     psa_key_slot_t *slot = NULL;
     psa_se_drv_table_entry_t *driver = NULL;
-    size_t bits;
-    size_t storage_size = data_length;
+    mbedtls_size_t bits;
+    mbedtls_size_t storage_size = data_length;
 
     *key = MBEDTLS_SVC_KEY_ID_INIT;
 
@@ -2007,7 +2007,7 @@ psa_status_t psa_copy_key( mbedtls_svc_key_id_t source_key,
     psa_key_slot_t *target_slot = NULL;
     psa_key_attributes_t actual_attributes = *specified_attributes;
     psa_se_drv_table_entry_t *driver = NULL;
-    size_t storage_size = 0;
+    mbedtls_size_t storage_size = 0;
 
     *target_key = MBEDTLS_SVC_KEY_ID_INIT;
 
@@ -2148,7 +2148,7 @@ exit:
 
 psa_status_t psa_hash_update( psa_hash_operation_t *operation,
                               const uint8_t *input,
-                              size_t input_length )
+                              mbedtls_size_t input_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -2174,8 +2174,8 @@ exit:
 
 psa_status_t psa_hash_finish( psa_hash_operation_t *operation,
                               uint8_t *hash,
-                              size_t hash_size,
-                              size_t *hash_length )
+                              mbedtls_size_t hash_size,
+                              mbedtls_size_t *hash_length )
 {
     *hash_length = 0;
     if( operation->id == 0 )
@@ -2189,10 +2189,10 @@ psa_status_t psa_hash_finish( psa_hash_operation_t *operation,
 
 psa_status_t psa_hash_verify( psa_hash_operation_t *operation,
                               const uint8_t *hash,
-                              size_t hash_length )
+                              mbedtls_size_t hash_length )
 {
     uint8_t actual_hash[PSA_HASH_MAX_SIZE];
-    size_t actual_hash_length;
+    mbedtls_size_t actual_hash_length;
     psa_status_t status = psa_hash_finish(
                             operation,
                             actual_hash, sizeof( actual_hash ),
@@ -2219,9 +2219,9 @@ exit:
 }
 
 psa_status_t psa_hash_compute( psa_algorithm_t alg,
-                               const uint8_t *input, size_t input_length,
-                               uint8_t *hash, size_t hash_size,
-                               size_t *hash_length )
+                               const uint8_t *input, mbedtls_size_t input_length,
+                               uint8_t *hash, mbedtls_size_t hash_size,
+                               mbedtls_size_t *hash_length )
 {
     *hash_length = 0;
     if( !PSA_ALG_IS_HASH( alg ) )
@@ -2232,11 +2232,11 @@ psa_status_t psa_hash_compute( psa_algorithm_t alg,
 }
 
 psa_status_t psa_hash_compare( psa_algorithm_t alg,
-                               const uint8_t *input, size_t input_length,
-                               const uint8_t *hash, size_t hash_length )
+                               const uint8_t *input, mbedtls_size_t input_length,
+                               const uint8_t *hash, mbedtls_size_t hash_length )
 {
     uint8_t actual_hash[PSA_HASH_MAX_SIZE];
-    size_t actual_hash_length;
+    mbedtls_size_t actual_hash_length;
 
     if( !PSA_ALG_IS_HASH( alg ) )
         return( PSA_ERROR_INVALID_ARGUMENT );
@@ -2303,7 +2303,7 @@ static psa_status_t psa_mac_finalize_alg_and_key_validation(
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_type_t key_type = psa_get_key_type( attributes );
-    size_t key_bits = psa_get_key_bits( attributes );
+    mbedtls_size_t key_bits = psa_get_key_bits( attributes );
 
     if( ! PSA_ALG_IS_MAC( alg ) )
         return( PSA_ERROR_INVALID_ARGUMENT );
@@ -2413,7 +2413,7 @@ psa_status_t psa_mac_verify_setup( psa_mac_operation_t *operation,
 
 psa_status_t psa_mac_update( psa_mac_operation_t *operation,
                              const uint8_t *input,
-                             size_t input_length )
+                             mbedtls_size_t input_length )
 {
     if( operation->id == 0 )
         return( PSA_ERROR_BAD_STATE );
@@ -2433,8 +2433,8 @@ psa_status_t psa_mac_update( psa_mac_operation_t *operation,
 
 psa_status_t psa_mac_sign_finish( psa_mac_operation_t *operation,
                                   uint8_t *mac,
-                                  size_t mac_size,
-                                  size_t *mac_length )
+                                  mbedtls_size_t mac_size,
+                                  mbedtls_size_t *mac_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t abort_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -2493,7 +2493,7 @@ exit:
 
 psa_status_t psa_mac_verify_finish( psa_mac_operation_t *operation,
                                     const uint8_t *mac,
-                                    size_t mac_length )
+                                    mbedtls_size_t mac_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t abort_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -2528,10 +2528,10 @@ exit:
 static psa_status_t psa_mac_compute_internal( mbedtls_svc_key_id_t key,
                                               psa_algorithm_t alg,
                                               const uint8_t *input,
-                                              size_t input_length,
+                                              mbedtls_size_t input_length,
                                               uint8_t *mac,
-                                              size_t mac_size,
-                                              size_t *mac_length,
+                                              mbedtls_size_t mac_size,
+                                              mbedtls_size_t *mac_length,
                                               int is_sign )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -2592,10 +2592,10 @@ exit:
 psa_status_t psa_mac_compute( mbedtls_svc_key_id_t key,
                               psa_algorithm_t alg,
                               const uint8_t *input,
-                              size_t input_length,
+                              mbedtls_size_t input_length,
                               uint8_t *mac,
-                              size_t mac_size,
-                              size_t *mac_length)
+                              mbedtls_size_t mac_size,
+                              mbedtls_size_t *mac_length)
 {
     return( psa_mac_compute_internal( key, alg,
                                       input, input_length,
@@ -2605,13 +2605,13 @@ psa_status_t psa_mac_compute( mbedtls_svc_key_id_t key,
 psa_status_t psa_mac_verify( mbedtls_svc_key_id_t key,
                              psa_algorithm_t alg,
                              const uint8_t *input,
-                             size_t input_length,
+                             mbedtls_size_t input_length,
                              const uint8_t *mac,
-                             size_t mac_length)
+                             mbedtls_size_t mac_length)
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     uint8_t actual_mac[PSA_MAC_MAX_SIZE];
-    size_t actual_mac_length;
+    mbedtls_size_t actual_mac_length;
 
     status = psa_mac_compute_internal( key, alg,
                                        input, input_length,
@@ -2668,10 +2668,10 @@ static psa_status_t psa_sign_internal( mbedtls_svc_key_id_t key,
                                        int input_is_message,
                                        psa_algorithm_t alg,
                                        const uint8_t * input,
-                                       size_t input_length,
+                                       mbedtls_size_t input_length,
                                        uint8_t * signature,
-                                       size_t signature_size,
-                                       size_t * signature_length )
+                                       mbedtls_size_t signature_size,
+                                       mbedtls_size_t * signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -2748,9 +2748,9 @@ static psa_status_t psa_verify_internal( mbedtls_svc_key_id_t key,
                                          int input_is_message,
                                          psa_algorithm_t alg,
                                          const uint8_t * input,
-                                         size_t input_length,
+                                         mbedtls_size_t input_length,
                                          const uint8_t * signature,
-                                         size_t signature_length )
+                                         mbedtls_size_t signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -2797,19 +2797,19 @@ static psa_status_t psa_verify_internal( mbedtls_svc_key_id_t key,
 psa_status_t psa_sign_message_builtin(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     uint8_t *signature,
-    size_t signature_size,
-    size_t *signature_length )
+    mbedtls_size_t signature_size,
+    mbedtls_size_t *signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
     if ( PSA_ALG_IS_SIGN_HASH( alg ) )
     {
-        size_t hash_length;
+        mbedtls_size_t hash_length;
         uint8_t hash[PSA_HASH_MAX_SIZE];
 
         status = psa_driver_wrapper_hash_compute(
@@ -2832,10 +2832,10 @@ psa_status_t psa_sign_message_builtin(
 psa_status_t psa_sign_message( mbedtls_svc_key_id_t key,
                                psa_algorithm_t alg,
                                const uint8_t * input,
-                               size_t input_length,
+                               mbedtls_size_t input_length,
                                uint8_t * signature,
-                               size_t signature_size,
-                               size_t * signature_length )
+                               mbedtls_size_t signature_size,
+                               mbedtls_size_t * signature_length )
 {
     return psa_sign_internal(
         key, 1, alg, input, input_length,
@@ -2845,18 +2845,18 @@ psa_status_t psa_sign_message( mbedtls_svc_key_id_t key,
 psa_status_t psa_verify_message_builtin(
     const psa_key_attributes_t *attributes,
     const uint8_t *key_buffer,
-    size_t key_buffer_size,
+    mbedtls_size_t key_buffer_size,
     psa_algorithm_t alg,
     const uint8_t *input,
-    size_t input_length,
+    mbedtls_size_t input_length,
     const uint8_t *signature,
-    size_t signature_length )
+    mbedtls_size_t signature_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
     if ( PSA_ALG_IS_SIGN_HASH( alg ) )
     {
-        size_t hash_length;
+        mbedtls_size_t hash_length;
         uint8_t hash[PSA_HASH_MAX_SIZE];
 
         status = psa_driver_wrapper_hash_compute(
@@ -2879,9 +2879,9 @@ psa_status_t psa_verify_message_builtin(
 psa_status_t psa_verify_message( mbedtls_svc_key_id_t key,
                                  psa_algorithm_t alg,
                                  const uint8_t * input,
-                                 size_t input_length,
+                                 mbedtls_size_t input_length,
                                  const uint8_t * signature,
-                                 size_t signature_length )
+                                 mbedtls_size_t signature_length )
 {
     return psa_verify_internal(
         key, 1, alg, input, input_length,
@@ -2890,9 +2890,9 @@ psa_status_t psa_verify_message( mbedtls_svc_key_id_t key,
 
 psa_status_t psa_sign_hash_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    uint8_t *signature, size_t signature_size, size_t *signature_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    uint8_t *signature, mbedtls_size_t signature_size, mbedtls_size_t *signature_length )
 {
     if( attributes->core.type == PSA_KEY_TYPE_RSA_KEY_PAIR )
     {
@@ -2948,10 +2948,10 @@ psa_status_t psa_sign_hash_builtin(
 psa_status_t psa_sign_hash( mbedtls_svc_key_id_t key,
                             psa_algorithm_t alg,
                             const uint8_t *hash,
-                            size_t hash_length,
+                            mbedtls_size_t hash_length,
                             uint8_t *signature,
-                            size_t signature_size,
-                            size_t *signature_length )
+                            mbedtls_size_t signature_size,
+                            mbedtls_size_t *signature_length )
 {
     return psa_sign_internal(
         key, 0, alg, hash, hash_length,
@@ -2960,9 +2960,9 @@ psa_status_t psa_sign_hash( mbedtls_svc_key_id_t key,
 
 psa_status_t psa_verify_hash_builtin(
     const psa_key_attributes_t *attributes,
-    const uint8_t *key_buffer, size_t key_buffer_size,
-    psa_algorithm_t alg, const uint8_t *hash, size_t hash_length,
-    const uint8_t *signature, size_t signature_length )
+    const uint8_t *key_buffer, mbedtls_size_t key_buffer_size,
+    psa_algorithm_t alg, const uint8_t *hash, mbedtls_size_t hash_length,
+    const uint8_t *signature, mbedtls_size_t signature_length )
 {
     if( PSA_KEY_TYPE_IS_RSA( attributes->core.type ) )
     {
@@ -3017,9 +3017,9 @@ psa_status_t psa_verify_hash_builtin(
 psa_status_t psa_verify_hash( mbedtls_svc_key_id_t key,
                               psa_algorithm_t alg,
                               const uint8_t *hash,
-                              size_t hash_length,
+                              mbedtls_size_t hash_length,
                               const uint8_t *signature,
-                              size_t signature_length )
+                              mbedtls_size_t signature_length )
 {
     return psa_verify_internal(
         key, 0, alg, hash, hash_length,
@@ -3029,12 +3029,12 @@ psa_status_t psa_verify_hash( mbedtls_svc_key_id_t key,
 psa_status_t psa_asymmetric_encrypt( mbedtls_svc_key_id_t key,
                                      psa_algorithm_t alg,
                                      const uint8_t *input,
-                                     size_t input_length,
+                                     mbedtls_size_t input_length,
                                      const uint8_t *salt,
-                                     size_t salt_length,
+                                     mbedtls_size_t salt_length,
                                      uint8_t *output,
-                                     size_t output_size,
-                                     size_t *output_length )
+                                     mbedtls_size_t output_size,
+                                     mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -3079,12 +3079,12 @@ exit:
 psa_status_t psa_asymmetric_decrypt( mbedtls_svc_key_id_t key,
                                      psa_algorithm_t alg,
                                      const uint8_t *input,
-                                     size_t input_length,
+                                     mbedtls_size_t input_length,
                                      const uint8_t *salt,
-                                     size_t salt_length,
+                                     mbedtls_size_t salt_length,
                                      uint8_t *output,
-                                     size_t output_size,
-                                     size_t *output_length )
+                                     mbedtls_size_t output_size,
+                                     mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -3215,12 +3215,12 @@ psa_status_t psa_cipher_decrypt_setup( psa_cipher_operation_t *operation,
 
 psa_status_t psa_cipher_generate_iv( psa_cipher_operation_t *operation,
                                      uint8_t *iv,
-                                     size_t iv_size,
-                                     size_t *iv_length )
+                                     mbedtls_size_t iv_size,
+                                     mbedtls_size_t *iv_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     uint8_t local_iv[PSA_CIPHER_IV_MAX_SIZE];
-    size_t default_iv_length;
+    mbedtls_size_t default_iv_length;
 
     if( operation->id == 0 )
     {
@@ -3272,7 +3272,7 @@ exit:
 
 psa_status_t psa_cipher_set_iv( psa_cipher_operation_t *operation,
                                 const uint8_t *iv,
-                                size_t iv_length )
+                                mbedtls_size_t iv_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -3308,10 +3308,10 @@ exit:
 
 psa_status_t psa_cipher_update( psa_cipher_operation_t *operation,
                                 const uint8_t *input,
-                                size_t input_length,
+                                mbedtls_size_t input_length,
                                 uint8_t *output,
-                                size_t output_size,
-                                size_t *output_length )
+                                mbedtls_size_t output_size,
+                                mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -3343,8 +3343,8 @@ exit:
 
 psa_status_t psa_cipher_finish( psa_cipher_operation_t *operation,
                                 uint8_t *output,
-                                size_t output_size,
-                                size_t *output_length )
+                                mbedtls_size_t output_size,
+                                mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_GENERIC_ERROR;
 
@@ -3399,16 +3399,16 @@ psa_status_t psa_cipher_abort( psa_cipher_operation_t *operation )
 psa_status_t psa_cipher_encrypt( mbedtls_svc_key_id_t key,
                                  psa_algorithm_t alg,
                                  const uint8_t *input,
-                                 size_t input_length,
+                                 mbedtls_size_t input_length,
                                  uint8_t *output,
-                                 size_t output_size,
-                                 size_t *output_length )
+                                 mbedtls_size_t output_size,
+                                 mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_slot_t *slot = NULL;
     uint8_t local_iv[PSA_CIPHER_IV_MAX_SIZE];
-    size_t default_iv_length = 0;
+    mbedtls_size_t default_iv_length = 0;
 
     if( ! PSA_ALG_IS_CIPHER( alg ) )
     {
@@ -3472,10 +3472,10 @@ exit:
 psa_status_t psa_cipher_decrypt( mbedtls_svc_key_id_t key,
                                  psa_algorithm_t alg,
                                  const uint8_t *input,
-                                 size_t input_length,
+                                 mbedtls_size_t input_length,
                                  uint8_t *output,
-                                 size_t output_size,
-                                 size_t *output_length )
+                                 mbedtls_size_t output_size,
+                                 mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -3537,7 +3537,7 @@ static psa_algorithm_t psa_aead_get_base_algorithm( psa_algorithm_t alg )
 
 /* Helper function to perform common nonce length checks. */
 static psa_status_t psa_aead_check_nonce_length( psa_algorithm_t alg,
-                                                 size_t nonce_length )
+                                                 mbedtls_size_t nonce_length )
 {
     psa_algorithm_t base_alg = psa_aead_get_base_algorithm( alg );
 
@@ -3587,14 +3587,14 @@ static psa_status_t psa_aead_check_algorithm( psa_algorithm_t alg )
 psa_status_t psa_aead_encrypt( mbedtls_svc_key_id_t key,
                                psa_algorithm_t alg,
                                const uint8_t *nonce,
-                               size_t nonce_length,
+                               mbedtls_size_t nonce_length,
                                const uint8_t *additional_data,
-                               size_t additional_data_length,
+                               mbedtls_size_t additional_data_length,
                                const uint8_t *plaintext,
-                               size_t plaintext_length,
+                               mbedtls_size_t plaintext_length,
                                uint8_t *ciphertext,
-                               size_t ciphertext_size,
-                               size_t *ciphertext_length )
+                               mbedtls_size_t ciphertext_size,
+                               mbedtls_size_t *ciphertext_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_slot_t *slot;
@@ -3638,14 +3638,14 @@ exit:
 psa_status_t psa_aead_decrypt( mbedtls_svc_key_id_t key,
                                psa_algorithm_t alg,
                                const uint8_t *nonce,
-                               size_t nonce_length,
+                               mbedtls_size_t nonce_length,
                                const uint8_t *additional_data,
-                               size_t additional_data_length,
+                               mbedtls_size_t additional_data_length,
                                const uint8_t *ciphertext,
-                               size_t ciphertext_length,
+                               mbedtls_size_t ciphertext_length,
                                uint8_t *plaintext,
-                               size_t plaintext_size,
-                               size_t *plaintext_length )
+                               mbedtls_size_t plaintext_size,
+                               mbedtls_size_t *plaintext_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_slot_t *slot;
@@ -3823,12 +3823,12 @@ psa_status_t psa_aead_decrypt_setup( psa_aead_operation_t *operation,
 /* Generate a random nonce / IV for multipart AEAD operation */
 psa_status_t psa_aead_generate_nonce( psa_aead_operation_t *operation,
                                       uint8_t *nonce,
-                                      size_t nonce_size,
-                                      size_t *nonce_length )
+                                      mbedtls_size_t nonce_size,
+                                      mbedtls_size_t *nonce_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     uint8_t local_nonce[PSA_AEAD_NONCE_MAX_SIZE];
-    size_t required_nonce_size;
+    mbedtls_size_t required_nonce_size;
 
     *nonce_length = 0;
 
@@ -3883,7 +3883,7 @@ exit:
    operation.*/
 psa_status_t psa_aead_set_nonce( psa_aead_operation_t *operation,
                                  const uint8_t *nonce,
-                                 size_t nonce_length )
+                                 mbedtls_size_t nonce_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -3920,8 +3920,8 @@ exit:
 
 /* Declare the lengths of the message and additional data for multipart AEAD. */
 psa_status_t psa_aead_set_lengths( psa_aead_operation_t *operation,
-                                   size_t ad_length,
-                                   size_t plaintext_length )
+                                   mbedtls_size_t ad_length,
+                                   mbedtls_size_t plaintext_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -3942,7 +3942,7 @@ psa_status_t psa_aead_set_lengths( psa_aead_operation_t *operation,
     {
 #if defined(PSA_WANT_ALG_GCM)
         case PSA_ALG_GCM:
-            /* Lengths can only be too large for GCM if size_t is bigger than 32
+            /* Lengths can only be too large for GCM if mbedtls_size_t is bigger than 32
             * bits. Without the guard this code will generate warnings on 32bit
             * builds. */
 #if SIZE_MAX > UINT32_MAX
@@ -3992,7 +3992,7 @@ exit:
 /* Pass additional data to an active multipart AEAD operation. */
 psa_status_t psa_aead_update_ad( psa_aead_operation_t *operation,
                                  const uint8_t *input,
-                                 size_t input_length )
+                                 mbedtls_size_t input_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -4042,10 +4042,10 @@ exit:
    operation.*/
 psa_status_t psa_aead_update( psa_aead_operation_t *operation,
                               const uint8_t *input,
-                              size_t input_length,
+                              mbedtls_size_t input_length,
                               uint8_t *output,
-                              size_t output_size,
-                              size_t *output_length )
+                              mbedtls_size_t output_size,
+                              mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -4118,11 +4118,11 @@ static psa_status_t psa_aead_final_checks( const psa_aead_operation_t *operation
 /* Finish encrypting a message in a multipart AEAD operation. */
 psa_status_t psa_aead_finish( psa_aead_operation_t *operation,
                               uint8_t *ciphertext,
-                              size_t ciphertext_size,
-                              size_t *ciphertext_length,
+                              mbedtls_size_t ciphertext_size,
+                              mbedtls_size_t *ciphertext_length,
                               uint8_t *tag,
-                              size_t tag_size,
-                              size_t *tag_length )
+                              mbedtls_size_t tag_size,
+                              mbedtls_size_t *tag_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -4167,10 +4167,10 @@ exit:
    operation.*/
 psa_status_t psa_aead_verify( psa_aead_operation_t *operation,
                               uint8_t *plaintext,
-                              size_t plaintext_size,
-                              size_t *plaintext_length,
+                              mbedtls_size_t plaintext_size,
+                              mbedtls_size_t *plaintext_length,
                               const uint8_t *tag,
-                              size_t tag_length )
+                              mbedtls_size_t tag_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -4234,7 +4234,7 @@ static psa_status_t psa_key_derivation_start_hmac(
     psa_mac_operation_t *operation,
     psa_algorithm_t hash_alg,
     const uint8_t *hmac_key,
-    size_t hmac_key_length )
+    mbedtls_size_t hmac_key_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
@@ -4331,7 +4331,7 @@ psa_status_t psa_key_derivation_abort( psa_key_derivation_operation_t *operation
 }
 
 psa_status_t psa_key_derivation_get_capacity(const psa_key_derivation_operation_t *operation,
-                                        size_t *capacity)
+                                        mbedtls_size_t *capacity)
 {
     if( operation->alg == 0 )
     {
@@ -4344,7 +4344,7 @@ psa_status_t psa_key_derivation_get_capacity(const psa_key_derivation_operation_
 }
 
 psa_status_t psa_key_derivation_set_capacity( psa_key_derivation_operation_t *operation,
-                                         size_t capacity )
+                                         mbedtls_size_t capacity )
 {
     if( operation->alg == 0 )
         return( PSA_ERROR_BAD_STATE );
@@ -4360,10 +4360,10 @@ psa_status_t psa_key_derivation_set_capacity( psa_key_derivation_operation_t *op
 static psa_status_t psa_key_derivation_hkdf_read( psa_hkdf_key_derivation_t *hkdf,
                                                   psa_algorithm_t hash_alg,
                                                   uint8_t *output,
-                                                  size_t output_length )
+                                                  mbedtls_size_t output_length )
 {
     uint8_t hash_length = PSA_HASH_LENGTH( hash_alg );
-    size_t hmac_output_length;
+    mbedtls_size_t hmac_output_length;
     psa_status_t status;
 
     if( hkdf->state < HKDF_STATE_KEYED || ! hkdf->info_set )
@@ -4439,7 +4439,7 @@ static psa_status_t psa_key_derivation_tls12_prf_generate_next_block(
     psa_algorithm_t hash_alg = PSA_ALG_HKDF_GET_HASH( alg );
     uint8_t hash_length = PSA_HASH_LENGTH( hash_alg );
     psa_mac_operation_t hmac = PSA_MAC_OPERATION_INIT;
-    size_t hmac_output_length;
+    mbedtls_size_t hmac_output_length;
     psa_status_t status, cleanup_status;
 
     /* We can't be wanting more output after block 0xff, otherwise
@@ -4546,7 +4546,7 @@ static psa_status_t psa_key_derivation_tls12_prf_read(
     psa_tls12_prf_key_derivation_t *tls12_prf,
     psa_algorithm_t alg,
     uint8_t *output,
-    size_t output_length )
+    mbedtls_size_t output_length )
 {
     psa_algorithm_t hash_alg = PSA_ALG_TLS12_PRF_GET_HASH( alg );
     uint8_t hash_length = PSA_HASH_LENGTH( hash_alg );
@@ -4597,7 +4597,7 @@ static psa_status_t psa_key_derivation_tls12_prf_read(
 psa_status_t psa_key_derivation_output_bytes(
     psa_key_derivation_operation_t *operation,
     uint8_t *output,
-    size_t output_length )
+    mbedtls_size_t output_length )
 {
     psa_status_t status;
     psa_algorithm_t kdf_alg = psa_key_derivation_get_kdf_alg( operation );
@@ -4670,7 +4670,7 @@ exit:
 }
 
 #if defined(MBEDTLS_PSA_BUILTIN_KEY_TYPE_DES)
-static void psa_des_set_key_parity( uint8_t *data, size_t data_size )
+static void psa_des_set_key_parity( uint8_t *data, mbedtls_size_t data_size )
 {
     if( data_size >= 8 )
         mbedtls_des_key_set_parity( data );
@@ -4717,7 +4717,7 @@ static void psa_des_set_key_parity( uint8_t *data, size_t data_size )
     defined(MBEDTLS_PSA_BUILTIN_ALG_ECDH)
 static psa_status_t psa_generate_derived_ecc_key_weierstrass_helper(
     psa_key_slot_t *slot,
-    size_t bits,
+    mbedtls_size_t bits,
     psa_key_derivation_operation_t *operation,
     uint8_t **data
     )
@@ -4749,9 +4749,9 @@ static psa_status_t psa_generate_derived_ecc_key_weierstrass_helper(
 
     /* N is the boundary of the private key domain (ecp_group.N). */
     /* Let m be the bit size of N. */
-    size_t m = ecp_group.nbits;
+    mbedtls_size_t m = ecp_group.nbits;
 
-    size_t m_bytes = PSA_BITS_TO_BYTES( m );
+    mbedtls_size_t m_bytes = PSA_BITS_TO_BYTES( m );
 
     /* Calculate N - 2 - it will be needed later. */
     MBEDTLS_MPI_CHK( mbedtls_mpi_sub_int( &diff_N_2, &ecp_group.N, 2 ) );
@@ -4824,12 +4824,12 @@ cleanup:
  */
 
 static psa_status_t psa_generate_derived_ecc_key_montgomery_helper(
-    size_t bits,
+    mbedtls_size_t bits,
     psa_key_derivation_operation_t *operation,
     uint8_t **data
     )
 {
-    size_t output_length;
+    mbedtls_size_t output_length;
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
     switch( bits )
@@ -4881,12 +4881,12 @@ static psa_status_t psa_generate_derived_ecc_key_montgomery_helper(
 
 static psa_status_t psa_generate_derived_key_internal(
     psa_key_slot_t *slot,
-    size_t bits,
+    mbedtls_size_t bits,
     psa_key_derivation_operation_t *operation )
 {
     uint8_t *data = NULL;
-    size_t bytes = PSA_BITS_TO_BYTES( bits );
-    size_t storage_size = bytes;
+    mbedtls_size_t bytes = PSA_BITS_TO_BYTES( bits );
+    mbedtls_size_t storage_size = bytes;
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
     if( PSA_KEY_TYPE_IS_PUBLIC_KEY( slot->attr.type ) )
@@ -5050,7 +5050,7 @@ static psa_status_t psa_key_derivation_setup_kdf(
     if( is_kdf_alg_supported )
     {
         psa_algorithm_t hash_alg = PSA_ALG_HKDF_GET_HASH( kdf_alg );
-        size_t hash_size = PSA_HASH_LENGTH( hash_alg );
+        mbedtls_size_t hash_size = PSA_HASH_LENGTH( hash_alg );
         if( hash_size == 0 )
             return( PSA_ERROR_NOT_SUPPORTED );
         if( ( PSA_ALG_IS_TLS12_PRF( kdf_alg ) ||
@@ -5107,7 +5107,7 @@ static psa_status_t psa_hkdf_input( psa_hkdf_key_derivation_t *hkdf,
                                     psa_algorithm_t hash_alg,
                                     psa_key_derivation_step_t step,
                                     const uint8_t *data,
-                                    size_t data_length )
+                                    mbedtls_size_t data_length )
 {
     psa_status_t status;
     switch( step )
@@ -5177,7 +5177,7 @@ static psa_status_t psa_hkdf_input( psa_hkdf_key_derivation_t *hkdf,
     defined(MBEDTLS_PSA_BUILTIN_ALG_TLS12_PSK_TO_MS)
 static psa_status_t psa_tls12_prf_set_seed( psa_tls12_prf_key_derivation_t *prf,
                                             const uint8_t *data,
-                                            size_t data_length )
+                                            mbedtls_size_t data_length )
 {
     if( prf->state != PSA_TLS12_PRF_STATE_INIT )
         return( PSA_ERROR_BAD_STATE );
@@ -5199,7 +5199,7 @@ static psa_status_t psa_tls12_prf_set_seed( psa_tls12_prf_key_derivation_t *prf,
 
 static psa_status_t psa_tls12_prf_set_key( psa_tls12_prf_key_derivation_t *prf,
                                            const uint8_t *data,
-                                           size_t data_length )
+                                           mbedtls_size_t data_length )
 {
     if( prf->state != PSA_TLS12_PRF_STATE_SEED_SET )
         return( PSA_ERROR_BAD_STATE );
@@ -5221,7 +5221,7 @@ static psa_status_t psa_tls12_prf_set_key( psa_tls12_prf_key_derivation_t *prf,
 
 static psa_status_t psa_tls12_prf_set_label( psa_tls12_prf_key_derivation_t *prf,
                                              const uint8_t *data,
-                                             size_t data_length )
+                                             mbedtls_size_t data_length )
 {
     if( prf->state != PSA_TLS12_PRF_STATE_KEY_SET )
         return( PSA_ERROR_BAD_STATE );
@@ -5244,7 +5244,7 @@ static psa_status_t psa_tls12_prf_set_label( psa_tls12_prf_key_derivation_t *prf
 static psa_status_t psa_tls12_prf_input( psa_tls12_prf_key_derivation_t *prf,
                                          psa_key_derivation_step_t step,
                                          const uint8_t *data,
-                                         size_t data_length )
+                                         mbedtls_size_t data_length )
 {
     switch( step )
     {
@@ -5265,7 +5265,7 @@ static psa_status_t psa_tls12_prf_input( psa_tls12_prf_key_derivation_t *prf,
 static psa_status_t psa_tls12_prf_psk_to_ms_set_key(
     psa_tls12_prf_key_derivation_t *prf,
     const uint8_t *data,
-    size_t data_length )
+    mbedtls_size_t data_length )
 {
     psa_status_t status;
     uint8_t pms[ 4 + 2 * PSA_TLS12_PSK_TO_MS_PSK_MAX_SIZE ];
@@ -5300,7 +5300,7 @@ static psa_status_t psa_tls12_prf_psk_to_ms_input(
     psa_tls12_prf_key_derivation_t *prf,
     psa_key_derivation_step_t step,
     const uint8_t *data,
-    size_t data_length )
+    mbedtls_size_t data_length )
 {
     if( step == PSA_KEY_DERIVATION_INPUT_SECRET )
     {
@@ -5351,7 +5351,7 @@ static psa_status_t psa_key_derivation_input_internal(
     psa_key_derivation_step_t step,
     psa_key_type_t key_type,
     const uint8_t *data,
-    size_t data_length )
+    mbedtls_size_t data_length )
 {
     psa_status_t status;
     psa_algorithm_t kdf_alg = psa_key_derivation_get_kdf_alg( operation );
@@ -5403,7 +5403,7 @@ psa_status_t psa_key_derivation_input_bytes(
     psa_key_derivation_operation_t *operation,
     psa_key_derivation_step_t step,
     const uint8_t *data,
-    size_t data_length )
+    mbedtls_size_t data_length )
 {
     return( psa_key_derivation_input_internal( operation, step,
                                                PSA_KEY_TYPE_NONE,
@@ -5450,16 +5450,16 @@ psa_status_t psa_key_derivation_input_key(
 
 #if defined(MBEDTLS_PSA_BUILTIN_ALG_ECDH)
 static psa_status_t psa_key_agreement_ecdh( const uint8_t *peer_key,
-                                            size_t peer_key_length,
+                                            mbedtls_size_t peer_key_length,
                                             const mbedtls_ecp_keypair *our_key,
                                             uint8_t *shared_secret,
-                                            size_t shared_secret_size,
-                                            size_t *shared_secret_length )
+                                            mbedtls_size_t shared_secret_size,
+                                            mbedtls_size_t *shared_secret_length )
 {
     mbedtls_ecp_keypair *their_key = NULL;
     mbedtls_ecdh_context ecdh;
     psa_status_t status;
-    size_t bits = 0;
+    mbedtls_size_t bits = 0;
     psa_ecc_family_t curve = mbedtls_ecc_group_to_psa( our_key->grp.id, &bits );
     mbedtls_ecdh_init( &ecdh );
 
@@ -5508,10 +5508,10 @@ exit:
 static psa_status_t psa_key_agreement_raw_internal( psa_algorithm_t alg,
                                                     psa_key_slot_t *private_key,
                                                     const uint8_t *peer_key,
-                                                    size_t peer_key_length,
+                                                    mbedtls_size_t peer_key_length,
                                                     uint8_t *shared_secret,
-                                                    size_t shared_secret_size,
-                                                    size_t *shared_secret_length )
+                                                    mbedtls_size_t shared_secret_size,
+                                                    mbedtls_size_t *shared_secret_length )
 {
     switch( alg )
     {
@@ -5554,11 +5554,11 @@ static psa_status_t psa_key_agreement_internal( psa_key_derivation_operation_t *
                                                 psa_key_derivation_step_t step,
                                                 psa_key_slot_t *private_key,
                                                 const uint8_t *peer_key,
-                                                size_t peer_key_length )
+                                                mbedtls_size_t peer_key_length )
 {
     psa_status_t status;
     uint8_t shared_secret[PSA_KEY_AGREEMENT_MAX_SHARED_SECRET_SIZE];
-    size_t shared_secret_length = 0;
+    mbedtls_size_t shared_secret_length = 0;
     psa_algorithm_t ka_alg = PSA_ALG_KEY_AGREEMENT_GET_BASE( operation->alg );
 
     /* Step 1: run the secret agreement algorithm to generate the shared
@@ -5588,7 +5588,7 @@ psa_status_t psa_key_derivation_key_agreement( psa_key_derivation_operation_t *o
                                                psa_key_derivation_step_t step,
                                                mbedtls_svc_key_id_t private_key,
                                                const uint8_t *peer_key,
-                                               size_t peer_key_length )
+                                               mbedtls_size_t peer_key_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -5621,10 +5621,10 @@ psa_status_t psa_key_derivation_key_agreement( psa_key_derivation_operation_t *o
 psa_status_t psa_raw_key_agreement( psa_algorithm_t alg,
                                     mbedtls_svc_key_id_t private_key,
                                     const uint8_t *peer_key,
-                                    size_t peer_key_length,
+                                    mbedtls_size_t peer_key_length,
                                     uint8_t *output,
-                                    size_t output_size,
-                                    size_t *output_length )
+                                    mbedtls_size_t output_size,
+                                    mbedtls_size_t *output_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_status_t unlock_status = PSA_ERROR_CORRUPTION_DETECTED;
@@ -5729,13 +5729,13 @@ static psa_status_t mbedtls_psa_random_seed( mbedtls_psa_random_context_t *rng )
 }
 
 psa_status_t psa_generate_random( uint8_t *output,
-                                  size_t output_size )
+                                  mbedtls_size_t output_size )
 {
     GUARD_MODULE_INITIALIZED;
 
 #if defined(MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG)
 
-    size_t output_length = 0;
+    mbedtls_size_t output_length = 0;
     psa_status_t status = mbedtls_psa_external_get_random( &global_data.rng,
                                                            output, output_size,
                                                            &output_length );
@@ -5751,7 +5751,7 @@ psa_status_t psa_generate_random( uint8_t *output,
 
     while( output_size > 0 )
     {
-        size_t request_size =
+        mbedtls_size_t request_size =
             ( output_size > MBEDTLS_PSA_RANDOM_MAX_REQUEST ?
               MBEDTLS_PSA_RANDOM_MAX_REQUEST :
               output_size );
@@ -5782,7 +5782,7 @@ psa_status_t psa_generate_random( uint8_t *output,
 #if defined (MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG)
 int mbedtls_psa_get_random( void *p_rng,
                             unsigned char *output,
-                            size_t output_size )
+                            mbedtls_size_t output_size )
 {
     /* This function takes a pointer to the RNG state because that's what
      * classic mbedtls functions using an RNG expect. The PSA RNG manages
@@ -5802,7 +5802,7 @@ int mbedtls_psa_get_random( void *p_rng,
 #include "entropy_poll.h"
 
 psa_status_t mbedtls_psa_inject_entropy( const uint8_t *seed,
-                                         size_t seed_size )
+                                         mbedtls_size_t seed_size )
 {
     if( global_data.initialized )
         return( PSA_ERROR_NOT_PERMITTED );
@@ -5830,7 +5830,7 @@ psa_status_t mbedtls_psa_inject_entropy( const uint8_t *seed,
  *         the two is not supported.
  */
 static psa_status_t psa_validate_key_type_and_size_for_key_generation(
-    psa_key_type_t type, size_t bits )
+    psa_key_type_t type, mbedtls_size_t bits )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
 
@@ -5872,7 +5872,7 @@ static psa_status_t psa_validate_key_type_and_size_for_key_generation(
 
 psa_status_t psa_generate_key_internal(
     const psa_key_attributes_t *attributes,
-    uint8_t *key_buffer, size_t key_buffer_size, size_t *key_buffer_length )
+    uint8_t *key_buffer, mbedtls_size_t key_buffer_size, mbedtls_size_t *key_buffer_length )
 {
     psa_status_t status = PSA_ERROR_CORRUPTION_DETECTED;
     psa_key_type_t type = attributes->core.type;
@@ -5931,7 +5931,7 @@ psa_status_t psa_generate_key( const psa_key_attributes_t *attributes,
     psa_status_t status;
     psa_key_slot_t *slot = NULL;
     psa_se_drv_table_entry_t *driver = NULL;
-    size_t key_buffer_size;
+    mbedtls_size_t key_buffer_size;
 
     *key = MBEDTLS_SVC_KEY_ID_INIT;
 

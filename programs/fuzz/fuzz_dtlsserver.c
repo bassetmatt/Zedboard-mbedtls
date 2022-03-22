@@ -27,14 +27,14 @@ static mbedtls_pk_context pkey;
 #endif
 #endif // MBEDTLS_SSL_PROTO_DTLS
 
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+int LLVMFuzzerTestOneInput(const uint8_t *Data, mbedtls_size_t Size) {
 #if defined(MBEDTLS_SSL_PROTO_DTLS) && \
     defined(MBEDTLS_SSL_SRV_C) && \
     defined(MBEDTLS_ENTROPY_C) && \
     defined(MBEDTLS_CTR_DRBG_C) && \
     defined(MBEDTLS_TIMING_C)
     int ret;
-    size_t len;
+    mbedtls_size_t len;
     mbedtls_ssl_context ssl;
     mbedtls_ssl_config conf;
     mbedtls_ctr_drbg_context ctr_drbg;

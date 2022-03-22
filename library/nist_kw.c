@@ -127,7 +127,7 @@ void mbedtls_nist_kw_free( mbedtls_nist_kw_context *ctx )
  */
 static void calc_a_xor_t( unsigned char A[KW_SEMIBLOCK_LENGTH], uint64_t t )
 {
-    size_t i = 0;
+    mbedtls_size_t i = 0;
     for( i = 0; i < sizeof( t ); i++ )
     {
         A[i] ^= ( t >> ( ( sizeof( t ) - 1 - i ) * 8 ) ) & 0xff;
@@ -140,13 +140,13 @@ static void calc_a_xor_t( unsigned char A[KW_SEMIBLOCK_LENGTH], uint64_t t )
  */
 int mbedtls_nist_kw_wrap( mbedtls_nist_kw_context *ctx,
                           mbedtls_nist_kw_mode_t mode,
-                          const unsigned char *input, size_t in_len,
-                          unsigned char *output, size_t *out_len, size_t out_size )
+                          const unsigned char *input, mbedtls_size_t in_len,
+                          unsigned char *output, mbedtls_size_t *out_len, mbedtls_size_t out_size )
 {
     int ret = 0;
-    size_t semiblocks = 0;
-    size_t s;
-    size_t olen, padlen = 0;
+    mbedtls_size_t semiblocks = 0;
+    mbedtls_size_t s;
+    mbedtls_size_t olen, padlen = 0;
     uint64_t t = 0;
     unsigned char outbuff[KW_SEMIBLOCK_LENGTH * 2];
     unsigned char inbuff[KW_SEMIBLOCK_LENGTH * 2];
@@ -281,13 +281,13 @@ cleanup:
  * 4. A is a buffer to hold the first semiblock of the input buffer.
  */
 static int unwrap( mbedtls_nist_kw_context *ctx,
-                   const unsigned char *input, size_t semiblocks,
+                   const unsigned char *input, mbedtls_size_t semiblocks,
                    unsigned char A[KW_SEMIBLOCK_LENGTH],
-                   unsigned char *output, size_t* out_len )
+                   unsigned char *output, mbedtls_size_t* out_len )
 {
     int ret = 0;
-    const size_t s = 6 * ( semiblocks - 1 );
-    size_t olen;
+    const mbedtls_size_t s = 6 * ( semiblocks - 1 );
+    mbedtls_size_t olen;
     uint64_t t = 0;
     unsigned char outbuff[KW_SEMIBLOCK_LENGTH * 2];
     unsigned char inbuff[KW_SEMIBLOCK_LENGTH * 2];
@@ -344,11 +344,11 @@ cleanup:
  */
 int mbedtls_nist_kw_unwrap( mbedtls_nist_kw_context *ctx,
                             mbedtls_nist_kw_mode_t mode,
-                            const unsigned char *input, size_t in_len,
-                            unsigned char *output, size_t *out_len, size_t out_size )
+                            const unsigned char *input, mbedtls_size_t in_len,
+                            unsigned char *output, mbedtls_size_t *out_len, mbedtls_size_t out_size )
 {
     int ret = 0;
-    size_t i, olen;
+    mbedtls_size_t i, olen;
     unsigned char A[KW_SEMIBLOCK_LENGTH];
     unsigned char diff, bad_padding = 0;
 
@@ -390,7 +390,7 @@ int mbedtls_nist_kw_unwrap( mbedtls_nist_kw_context *ctx,
     }
     else if( mode == MBEDTLS_KW_MODE_KWP )
     {
-        size_t padlen = 0;
+        mbedtls_size_t padlen = 0;
         uint32_t Plen;
         /*
          * According to SP 800-38F Table 1, the ciphertext length for KWP
@@ -527,8 +527,8 @@ static const unsigned char kw_msg[KW_TESTS][40] = {
       0x74, 0x74, 0x92, 0xba, 0x09, 0xa0, 0x4d, 0xd1 }
 };
 
-static const size_t kw_msg_len[KW_TESTS] = { 16, 40, 24 };
-static const size_t kw_out_len[KW_TESTS] = { 24, 48, 32 };
+static const mbedtls_size_t kw_msg_len[KW_TESTS] = { 16, 40, 24 };
+static const mbedtls_size_t kw_out_len[KW_TESTS] = { 24, 48, 32 };
 static const unsigned char kw_res[KW_TESTS][48] = {
     { 0x03, 0x1f, 0x6b, 0xd7, 0xe6, 0x1e, 0x64, 0x3d,
       0xf6, 0x85, 0x94, 0x81, 0x6f, 0x64, 0xca, 0xa3,
@@ -566,7 +566,7 @@ static const unsigned char kwp_msg[KW_TESTS][31] = {
       0x91, 0x56, 0x75, 0x8c, 0x13, 0x16, 0x8f },
     { 0xd1 }
 };
-static const size_t kwp_msg_len[KW_TESTS] = { 9, 31, 1 };
+static const mbedtls_size_t kwp_msg_len[KW_TESTS] = { 9, 31, 1 };
 
 static const unsigned char kwp_res[KW_TESTS][48] = {
     { 0x41, 0xec, 0xa9, 0x56, 0xd4, 0xaa, 0x04, 0x7e,
@@ -580,13 +580,13 @@ static const unsigned char kwp_res[KW_TESTS][48] = {
     { 0x06, 0xba, 0x7a, 0xe6, 0xf3, 0x24, 0x8c, 0xfd,
       0xcf, 0x26, 0x75, 0x07, 0xfa, 0x00, 0x1b, 0xc4  }
 };
-static const size_t kwp_out_len[KW_TESTS] = { 24, 40, 16 };
+static const mbedtls_size_t kwp_out_len[KW_TESTS] = { 24, 40, 16 };
 
 int mbedtls_nist_kw_self_test( int verbose )
 {
     mbedtls_nist_kw_context ctx;
     unsigned char out[48];
-    size_t olen;
+    mbedtls_size_t olen;
     int i;
     int ret = 0;
     mbedtls_nist_kw_init( &ctx );

@@ -90,9 +90,9 @@ void mbedtls_everest_free( mbedtls_ecdh_context_everest *ctx );
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_everest_make_params( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_make_params( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng );
 
 /**
@@ -175,9 +175,9 @@ int mbedtls_everest_get_params( mbedtls_ecdh_context_everest *ctx, const mbedtls
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng );
 
 /**
@@ -198,7 +198,7 @@ int mbedtls_everest_make_public( mbedtls_ecdh_context_everest *ctx, size_t *olen
  * \return      An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
 int mbedtls_everest_read_public( mbedtls_ecdh_context_everest *ctx,
-                                 const unsigned char *buf, size_t blen );
+                                 const unsigned char *buf, mbedtls_size_t blen );
 
 /**
  * \brief           This function derives and exports the shared secret.
@@ -222,9 +222,9 @@ int mbedtls_everest_read_public( mbedtls_ecdh_context_everest *ctx,
  * \return          \c 0 on success.
  * \return          An \c MBEDTLS_ERR_ECP_XXX error code on failure.
  */
-int mbedtls_everest_calc_secret( mbedtls_ecdh_context_everest *ctx, size_t *olen,
-                                 unsigned char *buf, size_t blen,
-                                 int( *f_rng )( void *, unsigned char *, size_t ),
+int mbedtls_everest_calc_secret( mbedtls_ecdh_context_everest *ctx, mbedtls_size_t *olen,
+                                 unsigned char *buf, mbedtls_size_t blen,
+                                 int( *f_rng )( void *, unsigned char *, mbedtls_size_t ),
                                  void *p_rng );
 
 #ifdef __cplusplus

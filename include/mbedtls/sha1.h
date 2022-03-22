@@ -142,7 +142,7 @@ int mbedtls_sha1_starts( mbedtls_sha1_context *ctx );
  */
 int mbedtls_sha1_update( mbedtls_sha1_context *ctx,
                          const unsigned char *input,
-                         size_t ilen );
+                         mbedtls_size_t ilen );
 
 /**
  * \brief          This function finishes the SHA-1 operation, and writes
@@ -205,7 +205,7 @@ int mbedtls_internal_sha1_process( mbedtls_sha1_context *ctx,
  *
  */
 int mbedtls_sha1( const unsigned char *input,
-                  size_t ilen,
+                  mbedtls_size_t ilen,
                   unsigned char output[20] );
 
 #if defined(MBEDTLS_SELF_TEST)
