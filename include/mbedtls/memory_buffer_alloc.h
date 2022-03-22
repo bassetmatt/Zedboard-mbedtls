@@ -1,3 +1,8 @@
+#include <xalTypes.h>
+#include <xalStdio.h>
+#include <xalString.h>
+
+
 /**
  * \file memory_buffer_alloc.h
  *
