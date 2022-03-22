@@ -1,3 +1,7 @@
+#include <xalTypes.h>
+#include <xalStdio.h>
+#include <xalString.h>
+
 /**
  * \file platform.h
  *
