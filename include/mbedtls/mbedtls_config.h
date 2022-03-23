@@ -131,7 +131,7 @@
  *
  * Comment if your system does not support time functions
  */
-#define MBEDTLS_HAVE_TIME
+//#define MBEDTLS_HAVE_TIME
 
 /**
  * \def MBEDTLS_HAVE_TIME_DATE
@@ -152,7 +152,7 @@
  * mbedtls_platform_gmtime_r() at compile-time by using the macro
  * MBEDTLS_PLATFORM_GMTIME_R_ALT.
  */
-#define MBEDTLS_HAVE_TIME_DATE
+//#define MBEDTLS_HAVE_TIME_DATE
 
 /**
  * \def MBEDTLS_PLATFORM_MEMORY
@@ -3137,7 +3137,7 @@
 /* MBEDTLS_PLATFORM_XXX_MACRO and MBEDTLS_PLATFORM_XXX_ALT cannot both be defined */
 //#define MBEDTLS_PLATFORM_CALLOC_MACRO        calloc /**< Default allocator macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_FREE_MACRO            free /**< Default free macro to use, can be undefined */
-//#define MBEDTLS_PLATFORM_EXIT_MACRO            exit /**< Default exit macro to use, can be undefined */
+#define MBEDTLS_PLATFORM_EXIT_MACRO            void /**< Default exit macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_TIME_MACRO            time /**< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
 //#define MBEDTLS_PLATFORM_TIME_TYPE_MACRO       time_t /**< Default time macro to use, can be undefined. MBEDTLS_HAVE_TIME must be enabled */
 //#define MBEDTLS_PLATFORM_FPRINTF_MACRO      fprintf /**< Default fprintf macro to use, can be undefined */
