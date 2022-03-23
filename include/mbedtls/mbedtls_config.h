@@ -1,5 +1,3 @@
-#include <xalStdio.h>
-
 /**
  * \file mbedtls_config.h
  *

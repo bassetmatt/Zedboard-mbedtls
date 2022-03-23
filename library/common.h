@@ -27,6 +27,10 @@
 
 #include <stdint.h>
 
+#include <xalTypes.h>
+#include <xalString.h>
+#include <xalStdio.h>
+
 /** Helper to define a function as static except when building invasive tests.
  *
  * If a function is only used inside its own source file and should be

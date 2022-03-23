@@ -1,9 +1,10 @@
-
 # Also see "include/mbedtls/mbedtls_config.h"
 
 CFLAGS	?= -O2
 WARNING_CFLAGS ?=  -Wall -Wextra -Wformat=2 -Wno-format-nonliteral
 LDFLAGS ?=
+
+include ../config.mk
 
 # Include ../include for public headers and . for private headers.
 # Note that . needs to be included explicitly for the sake of library
