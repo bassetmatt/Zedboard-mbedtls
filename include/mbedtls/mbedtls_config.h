@@ -794,7 +794,7 @@
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256
  */
-#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
+//#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
@@ -819,7 +819,7 @@
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256
  *      MBEDTLS_TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
  */
-#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
+//#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
@@ -851,7 +851,7 @@
  *             See dhm.h for more details.
  *
  */
-#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
+//#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
@@ -874,7 +874,7 @@
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256
  */
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
+//#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
@@ -940,7 +940,7 @@
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256
  *      MBEDTLS_TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384
  */
-#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
+//#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
 
 /**
  * \def MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
@@ -1128,7 +1128,7 @@
  *
  * This enables support for PKCS#1 v1.5 operations.
  */
-#define MBEDTLS_PKCS1_V15
+//#define MBEDTLS_PKCS1_V15
 
 /**
  * \def MBEDTLS_PKCS1_V21
@@ -1139,7 +1139,7 @@
  *
  * This enables support for RSAES-OAEP and RSASSA-PSS operations.
  */
-#define MBEDTLS_PKCS1_V21
+//#define MBEDTLS_PKCS1_V21
 
 /** \def MBEDTLS_PSA_CRYPTO_BUILTIN_KEYS
  *
@@ -2699,7 +2699,7 @@
  *
  * Requires: MBEDTLS_BIGNUM_C, MBEDTLS_OID_C
  */
-#define MBEDTLS_RSA_C
+//#define MBEDTLS_RSA_C
 
 /**
  * \def MBEDTLS_SHA1_C
@@ -3145,7 +3145,7 @@
 //#define MBEDTLS_PLATFORM_FPRINTF_MACRO      fprintf /**< Default fprintf macro to use, can be undefined */
 #define MBEDTLS_PLATFORM_PRINTF_MACRO        XalPrintf  /**< Default printf macro to use, can be undefined */
 /* Note: your snprintf must correctly zero-terminate the buffer! */
-//#define MBEDTLS_PLATFORM_SNPRINTF_MACRO    snprintf /**< Default snprintf macro to use, can be undefined */
+#define MBEDTLS_PLATFORM_SNPRINTF_MACRO    nothing /**< Default snprintf macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_VSNPRINTF_MACRO    vsnprintf /**< Default vsnprintf macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_NV_SEED_READ_MACRO   mbedtls_platform_std_nv_seed_read /**< Default nv_seed_read function to use, can be undefined */
 //#define MBEDTLS_PLATFORM_NV_SEED_WRITE_MACRO  mbedtls_platform_std_nv_seed_write /**< Default nv_seed_write function to use, can be undefined */
