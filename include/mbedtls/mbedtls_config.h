@@ -1925,7 +1925,7 @@
  *
  * PEM_PARSE uses AES for decrypting encrypted keys.
  */
-//#define MBEDTLS_AES_C
+#define MBEDTLS_AES_C
 
 /**
  * \def MBEDTLS_ASN1_PARSE_C
@@ -2173,7 +2173,7 @@
  *
  * This module provides the CTR_DRBG AES random number generator.
  */
-//#define MBEDTLS_CTR_DRBG_C
+#define MBEDTLS_CTR_DRBG_C
 
 /**
  * \def MBEDTLS_DEBUG_C
