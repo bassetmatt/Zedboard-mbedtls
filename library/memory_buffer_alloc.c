@@ -306,7 +306,7 @@ static void *buffer_alloc_calloc( xalSize_t n, xalSize_t size )
 #endif
 
         if( ( heap.verify & MBEDTLS_MEMORY_VERIFY_ALLOC ) && verify_chain() != 0 )
-            mbedtls_exit( 1 );
+            {mbedtls_exit( 1 );}
 
         ret = (unsigned char *) cur + sizeof( memory_header );
         memset( ret, 0, original_len );
@@ -364,7 +364,7 @@ static void *buffer_alloc_calloc( xalSize_t n, xalSize_t size )
 #endif
 
     if( ( heap.verify & MBEDTLS_MEMORY_VERIFY_ALLOC ) && verify_chain() != 0 )
-        mbedtls_exit( 1 );
+        {mbedtls_exit( 1 );}
 
     ret = (unsigned char *) cur + sizeof( memory_header );
     memset( ret, 0, original_len );
@@ -393,7 +393,7 @@ static void buffer_alloc_free( void *ptr )
     hdr = (memory_header *) p;
 
     if( verify_header( hdr ) != 0 )
-        mbedtls_exit( 1 );
+        {mbedtls_exit( 1 );}
 
     if( hdr->alloc != 1 )
     {
@@ -486,7 +486,7 @@ static void buffer_alloc_free( void *ptr )
     }
 
     if( ( heap.verify & MBEDTLS_MEMORY_VERIFY_FREE ) && verify_chain() != 0 )
-        mbedtls_exit( 1 );
+        {mbedtls_exit( 1 );}
 }
 
 void mbedtls_memory_buffer_set_verify( int verify )
