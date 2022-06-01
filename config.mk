@@ -7,7 +7,7 @@
 ################################################################################
 
 ifndef CROSS_CC
-CROSS_CC = /opt/xilinx/SDK/2019.1/gnu/aarch32/lin/gcc-arm-none-eabi/bin/arm-none-eabi-gcc
+CROSS_CC = /opt/Xilinx/Vitis/2019.2/gnu/aarch32/lin/gcc-arm-none-eabi/bin/arm-none-eabi-gcc
 endif
 ifdef XILINX_ARM_CC_ROOT
 CROSS_CC = ${XILINX_ARM_CC_ROOT}/arm-none-eabi-gcc
