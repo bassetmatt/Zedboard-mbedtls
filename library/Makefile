@@ -124,6 +124,7 @@ OBJS_CRYPTO= \
 	     platform.o \
 	     platform_util.o \
 	     poly1305.o \
+		 printf.o \
 	     psa_crypto.o \
 	     psa_crypto_aead.o \
 	     psa_crypto_cipher.o \

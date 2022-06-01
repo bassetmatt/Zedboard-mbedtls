@@ -38,6 +38,8 @@
 
 #include "mbedtls/build_info.h"
 
+#include "mbedtls/printf.h"
+
 #if defined(MBEDTLS_HAVE_TIME)
 #include "mbedtls/platform_time.h"
 #endif
