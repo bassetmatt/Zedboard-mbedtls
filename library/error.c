@@ -31,7 +31,10 @@
 #define mbedtls_snprintf snprintf
 #endif
 
+#if !defined(MBEDTLS_PLATFORM_SNPRINTF_MACRO) &&\
+    !defined(MBEDTLS_PLATFORM_STD_SNPRINTF)
 #include <stdio.h>
+#endif  
 #include <string.h>
 
 #if defined(MBEDTLS_AES_C)
