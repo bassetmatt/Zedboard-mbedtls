@@ -335,7 +335,6 @@ int mbedtls_entropy_func( void *data, unsigned char *output, xalSize_t len )
 
         if( ( ret = entropy_gather_internal( ctx ) ) != 0 )
             goto exit;
-
         thresholds_reached = 1;
         strong_size = 0;
         for( i = 0; i < ctx->source_count; i++ )
@@ -511,8 +510,8 @@ int mbedtls_entropy_update_seed_file( mbedtls_entropy_context *ctx, const char *
 /*
  * Dummy source function
  */
-static int entropy_dummy_source( void *data, unsigned char *output,
-                                 xalSize_t len, xalSize_t *olen )
+int entropy_dummy_source( void *data, unsigned char *output,
+                          xalSize_t len, xalSize_t *olen )
 {
     ((void) data);
 

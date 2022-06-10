@@ -217,6 +217,14 @@ int mbedtls_entropy_func( void *data, unsigned char *output, xalSize_t len );
 int mbedtls_entropy_update_manual( mbedtls_entropy_context *ctx,
                            const unsigned char *data, xalSize_t len );
 
+#if defined(MBEDTLS_SELF_TEST)
+/*
+ * Dummy source function
+ */
+int entropy_dummy_source( void *data, unsigned char *output,
+                                 xalSize_t len, xalSize_t *olen );
+#endif
+
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
 /**
  * \brief           Trigger an update of the seed file in NV by using the
