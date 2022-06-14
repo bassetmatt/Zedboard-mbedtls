@@ -28,6 +28,13 @@
 
 #include <string.h>
 
+int strncmp__(const char* haystack, const char* needle, xalSize_t needle_len) {
+    while (needle_len-- > 0) 
+        if (*haystack++ != *needle++) 
+            return *--haystack - *--needle;
+    return 0;
+}
+
 /* Structure linking OIDs for X.509 DN AttributeTypes to their
  * string representations and default string encodings used by Mbed TLS. */
 typedef struct {
@@ -111,7 +118,7 @@ static const x509_attr_descriptor_t *x509_attr_descr_from_name( const char *name
 
     for( cur = x509_attrs; cur->name != NULL; cur++ )
         if( cur->name_len == name_len &&
-            strncmp( cur->name, name, name_len ) == 0 )
+            strncmp__( cur->name, name, name_len ) == 0 )
             break;
 
     if ( cur->name == NULL )
